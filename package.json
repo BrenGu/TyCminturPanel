@@ -5,6 +5,8 @@
   "homepage": "http://hansjal.esy.es/panel-turismo",
   "dependencies": {
     "draft-js": "^0.10.5",
+    "draft-js-export-html": "^1.4.1",
+    "draft-js-import-html": "^1.4.1",
     "react": "^16.7.0",
     "react-dom": "^16.6.0",
     "react-router-dom": "^4.3.1",

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Consumer } from "../../../context";
 import Msg from "../../utiles/Msg";
-
+import MyEditor from "../../paginas/subcomponentes/MyEditor";
 /*
     Parámetros:
     id: Id de la Novedad
@@ -22,6 +22,7 @@ class FormNov extends Component {
         titulo: "",
         subtitulo: "",
         descripcion: "",
+        descripcionHTML:"",
         latitud: 0,
         longitud: 0,
         foto_uno: "default.jpg",
@@ -39,8 +40,19 @@ class FormNov extends Component {
     this.saveData = this.saveData.bind(this);
     this.askDelete = this.askDelete.bind(this);
     this.okDelete = this.okDelete.bind(this);
+    this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(this);
   }
 
+  handlDescripcionHTMLChange(desHTML, des) {
+ 
+    this.setState({
+      registro: {
+        ...this.state.registro,
+        descripcionHTML: desHTML,
+        descripcion: des
+      },
+    });
+  }
   handleImgChange(event) {
     //disparador ej: file-1-${this.state.registro.id
     //imagen ej: img-1-${this.state.registro.id
@@ -82,7 +94,7 @@ class FormNov extends Component {
   saveData(event) {
     event.preventDefault();
     const formData = new FormData();
-    Object.keys(this.state.registro).forEach(key =>
+    Object.keys(this.state.registro).forEach((key) =>
       formData.append(key, this.state.registro[key])
     );
     //Imágenes
@@ -108,8 +120,8 @@ class FormNov extends Component {
           msg: {
             tipo: 0,
             visible: true,
-            body: "El tamaño de la primer imágen supera los 4MB."
-          }
+            body: "El tamaño de la primer imágen supera los 4MB.",
+          },
         });
         return false;
       }
@@ -120,8 +132,8 @@ class FormNov extends Component {
           msg: {
             tipo: 0,
             visible: true,
-            body: "El tamaño de la segunda imágen supera los 4MB."
-          }
+            body: "El tamaño de la segunda imágen supera los 4MB.",
+          },
         });
         return false;
       }
@@ -129,37 +141,38 @@ class FormNov extends Component {
     //Guardar los cambios
     let token = this.context.token;
     fetch(
-      `${process.env.REACT_APP_API_HOST}/novedad/${this.state.registro.id}`,
+      //console.log(this.)
+      `${process.env.REACT_APP_API_HOST}/novedad/${this.state.id}`,
       {
         method: "POST",
         headers: {
-          Authorization: token
+          Authorization: token,
         },
-        body: formData
+        body: formData,
       }
     )
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(
-        result => {
+        (result) => {
           if (!result.err) {
             this.setState({
               msg: {
                 tipo: 0,
                 visible: true,
-                body: "Los datos se guardaron correctamente"
-              }
+                body: "Los datos se guardaron correctamente",
+              },
             });
           } else {
             this.setState({
               msg: {
                 tipo: 0,
                 visible: true,
-                body: result.errMsgs
-              }
+                body: result.errMsgs,
+              },
             });
           }
         },
-        error => {
+        (error) => {
           //???
           console.log(error);
         }
@@ -182,8 +195,10 @@ class FormNov extends Component {
     let token = this.context.token;
     this.setState(
       {
+        
         id: this.props.id
       },
+
       () => {
         fetch(`${process.env.REACT_APP_API_HOST}/novedad/${this.state.id}`, {
           method: "GET",
@@ -201,7 +216,7 @@ class FormNov extends Component {
                     registro: result.data.registros[0],
                     loading: false
                   });
-                  console.log(result.data);
+                 // console.log(result.data);
                 } else {
                   console.log("No hay registro: " + this.state.id);
                 }
@@ -370,14 +385,10 @@ class FormNov extends Component {
                   <div className="col">
                     <div className="form-group">
                       <label htmlFor="descripcion">Descripción</label>
-                      <textarea
-                        rows="5"
-                        name="descripcion"
-                        id="descripcion"
-                        className="form-control"
-                        value={this.state.registro.descripcion}
-                        onChange={this.handleInputChange}
-                      />
+                      <MyEditor
+                      descripcionHTML={this.handlDescripcionHTMLChange}
+                      contenido={this.state.registro.descripcionHTML}
+                    />
                     </div>
                   </div>
                 </div>

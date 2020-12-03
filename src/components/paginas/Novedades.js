@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import FromNov from "./comnovedades/FormNov";
 import Msg from "../utiles/Msg";
-
+import MyEditor from "./subcomponentes/MyEditor";
 class Novedades extends Component {
   constructor(props) {
     super(props);
@@ -14,6 +14,7 @@ class Novedades extends Component {
         titulo: "",
         subtitulo: "",
         descripcion: "",
+        descripcionHTML:"",
         latitud: "0",
         longitud: "0",
         foto_uno: "default.jpg",
@@ -31,6 +32,7 @@ class Novedades extends Component {
     this.handleImgChange = this.handleImgChange.bind(this);
     this.handleFromNovSubmit = this.handleFromNovSubmit.bind(this);
     this.eliminarNovedad = this.eliminarNovedad.bind(this);
+    this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(this);
   }
 
   eliminarNovedad(id) {
@@ -78,6 +80,17 @@ class Novedades extends Component {
     );
   }
 
+  handlDescripcionHTMLChange(desHTML, des) {
+ console.log(desHTML)
+    this.setState({
+      novedad: {
+        ...this.state.evento,
+        descripcionHTML: desHTML,
+        descripcion: des
+      },
+    });
+  }
+
   handleFromNovSubmit(event) {
     event.preventDefault();
     const data = new FormData();
@@ -87,6 +100,8 @@ class Novedades extends Component {
     data.append("titulo", this.state.novedad.titulo);
     data.append("subtitulo", this.state.novedad.subtitulo);
     data.append("descripcion", this.state.novedad.descripcion);
+    data.append("descripcionHTML", this.state.novedad.descripcionHTML);
+    console.log(this.state.novedad.descripcionHTML)
     data.append("latitud", this.state.novedad.latitud);
     data.append("longitud", this.state.novedad.longitud);
     //Imágenes
@@ -346,14 +361,11 @@ class Novedades extends Component {
                     <div className="col">
                       <div className="form-group">
                         <label htmlFor="descripcion">Descripción</label>
-                        <textarea
-                          rows="5"
-                          name="descripcion"
-                          id="descripcion"
-                          className="form-control"
-                          value={this.state.novedad.descripcion}
-                          onChange={this.handleInputChange}
+                        <MyEditor
+                          //descripcion={this.handlDescripcionChange}
+                          descripcionHTML={this.handlDescripcionHTMLChange}
                         />
+
                       </div>
                     </div>
                   </div>

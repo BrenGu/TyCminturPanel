@@ -41,12 +41,10 @@ class Eventos extends Component {
     this.handleImgChange = this.handleImgChange.bind(this);
     this.handleFormEveSubmit = this.handleFormEveSubmit.bind(this);
     this.eliminarEvento = this.eliminarEvento.bind(this);
-    this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(
-      this
-    );
-    this.handlDescripcionChange = this.handlDescripcionChange.bind(this);
+    this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(this);
+    //this.handlDescripcionChange = this.handlDescripcionChange.bind(this);
   }
-  handlDescripcionChange(des) {
+  /*handlDescripcionChange(des) {
     console.log(des);
     this.setState({
       evento: {
@@ -55,7 +53,7 @@ class Eventos extends Component {
       },
     });
     console.log(this.state.descripcionHTML);
-  }
+  }*/
   handlDescripcionHTMLChange(desHTML, des) {
  
     this.setState({

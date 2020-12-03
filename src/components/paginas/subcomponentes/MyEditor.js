@@ -1,42 +1,42 @@
 import React, { Component } from "react";
-import { Editor, EditorState, RichUtils, getDefaultKeyBinding,convertFromHTML, contentState } from "draft-js"
-import {stateToHTML} from 'draft-js-export-html';
-var stateFromHTML = require('draft-js-import-html').stateFromHTML;
+import {
+  Editor,
+  EditorState,
+  RichUtils,
+  getDefaultKeyBinding,
+  convertFromHTML,
+  contentState,
+} from "draft-js";
+import { stateToHTML } from "draft-js-export-html";
+var stateFromHTML = require("draft-js-import-html").stateFromHTML;
 class MyEditor extends React.Component {
   constructor(props) {
     super(props);
-//Esta seccion me convierte el html de la BD en contenido del Rich Text
-    if(this.props.contenido!= undefined)
-    {
-
-const contentState= stateFromHTML(this.props.contenido);
+    //Esta seccion me convierte el html de la BD en contenido del Rich Text
+    if (this.props.contenido != undefined) {
+      console.log(this.props.contenido)
+      const contentState = stateFromHTML(this.props.contenido);
 
       this.state = {
         editorState: EditorState.createWithContent(contentState),
       };
-  
-  
+    } else {
+      this.state = { editorState: EditorState.createEmpty() };
     }
-else{
-
-    this.state = { editorState: EditorState.createEmpty() };
-}
     this.focus = () => this.refs.editor.focus();
     //Esta seccion me convierte el contenido del Rich Text en texto plano y en html
-    this.onChange = (editorState) => {this.setState({ editorState });
-    
-    const contentState = editorState.getCurrentContent();
-    var deshtml = stateToHTML(contentState);
-  
-    var des= contentState.getPlainText();
-    
-  // console.log(deshtml)
-   // this.props.descripcion(des);
-    this.props.descripcionHTML(deshtml, des);
-    
-   
+    this.onChange = (editorState) => {
+      this.setState({ editorState });
 
-}
+      const contentState = editorState.getCurrentContent();
+      var deshtml = stateToHTML(contentState);
+
+      var des = contentState.getPlainText();
+
+      // console.log(deshtml)
+      // this.props.descripcion(des);
+      this.props.descripcionHTML(deshtml, des);
+    };
 
     this.handleKeyCommand = this._handleKeyCommand.bind(this);
     this.mapKeyToEditorCommand = this._mapKeyToEditorCommand.bind(this);
@@ -44,9 +44,7 @@ else{
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
   }
 
-  componentDidMount(editorState) {
-
-  }
+  componentDidMount(editorState) {}
 
   _handleKeyCommand(command, editorState) {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -90,7 +88,12 @@ else{
     let className = "RichEditor-editor";
     var contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
-      if (contentState.getBlockMap().first().getType() !== "unstyled") {
+      if (
+        contentState
+          .getBlockMap()
+          .first()
+          .getType() !== "unstyled"
+      ) {
         className += " RichEditor-hidePlaceholder";
       }
     }
@@ -113,7 +116,7 @@ else{
             handleKeyCommand={this.handleKeyCommand}
             keyBindingFn={this.mapKeyToEditorCommand}
             onChange={this.onChange}
-            placeholder="Tell a story..."
+           // placeholder=""
             ref="editor"
             spellCheck={true}
           />

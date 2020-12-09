@@ -84,7 +84,7 @@ class Novedades extends Component {
  console.log(desHTML)
     this.setState({
       novedad: {
-        ...this.state.evento,
+        ...this.state.novedad,
         descripcionHTML: desHTML,
         descripcion: des
       },

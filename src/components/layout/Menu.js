@@ -29,6 +29,8 @@ const Menu = () => {
                                     <Link className="dropdown-item" to="/guiasturismo">Guías de Turismo</Link>
                                     <div className="dropdown-divider"></div>
                                     <a className="dropdown-item" href={`${process.env.REACT_APP_API_HOST}/exportmails`}>Exportar Mails</a>
+                                    <div className="dropdown-divider"></div>
+                                    <a className="dropdown-item" href={`${process.env.REACT_APP_API_HOST}/exportguias`}>Exportar Alojamientos</a>
                                 </div>
                             </li>
                             {/*

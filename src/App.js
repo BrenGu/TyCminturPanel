@@ -43,6 +43,18 @@ class App extends Component {
 		});
 	}
 
+	handleLogAuth = () => {
+		this.setState({authorized: false});
+	}
+
+	componentDidMount() {
+		if("WebTurToken" in localStorage) {
+			if(localStorage.getItem("WebTurToken").length > 0) {
+				this.setState({authorized: true});
+			}
+		}
+	}
+
 	render() {
 		const authorized = this.state.authorized;
 		return (
@@ -52,7 +64,7 @@ class App extends Component {
 					<Router history={Router.hashHistory}>
 						<React.Fragment>
 							<Navbar />
-							<Menu />
+							<Menu logout={this.handleLogAuth}/>
 							<div className="container">
 								<div className="row">
 									<div className="col">
@@ -67,7 +79,6 @@ class App extends Component {
 											<Route path="/eventos" component={Eventos} />
 											<Route path="/guiasturismo"component={GuiasTurismo} />
 											<Route component={NoFound} />
-
 										</Switch>
 									</div>
 								</div>

@@ -30,6 +30,7 @@ export class Provider extends Component {
                     auth: true,
                     token: respuesta.data.token
                 });
+                localStorage.setItem("WebTurToken", respuesta.data.token);
                 return { "err": false };
             }
         } catch(e) {

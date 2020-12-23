@@ -189,7 +189,6 @@ class Zona extends Component {
             isLoaded: false,
         }, () => {
             const token = this.context.token;
-            console.log("Token: " + token);
             fetch(`${process.env.REACT_APP_API_HOST}/ciudades`, {
                 method: "GET",
                 headers: new Headers({

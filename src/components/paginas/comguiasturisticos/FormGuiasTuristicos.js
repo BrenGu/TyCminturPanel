@@ -16,13 +16,15 @@ class FormGuiasTuristicos extends Component {
       loading: true,
       id: 0,
       registro: {
+        id: 0,
         idciudad: 6, //Ciudad de San Luis por defecto
         legajo: "",
         categoria: "",
         nombre: "",
         telefono: "",
         ambito: "",
-        correo: ""
+        correo: "",
+        adhiereDosep: false
       },
       localidades: [],
       msg: {
@@ -88,25 +90,13 @@ class FormGuiasTuristicos extends Component {
 
   saveData(event) {
     event.preventDefault();
-    const formData = new FormData();
-    Object.keys(this.state.registro).forEach(key =>
-      formData.append(key, this.state.registro[key])
-    );
-    //Imágenes
-    /*
-        for(var pair of formData.entries()) {
-            console.log(pair[0]+ ', '+ pair[1]);
-        }
-        */
-    //Verificar tamaño de las imágenes no mas de 4MB
-    //Guardar los cambios
-    let token = this.context.token;
     fetch(`${process.env.REACT_APP_API_HOST}/guiasturismo/${this.state.id}`, {
       method: "POST",
       headers: {
-        Authorization: token
+        "Authorization": "asdssffsdff",
+        "Content-Type": "application/json"
       },
-      body: formData
+      body: JSON.stringify(this.state.registro)
     })
       .then(res => res.json())
       .then(
@@ -137,14 +127,13 @@ class FormGuiasTuristicos extends Component {
   }
 
   handleInputChange(event) {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
+    const target = event.target.name;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     this.setState({
-      registro: {
-        ...this.state.registro,
-        [name]: value
-      }
+        registro: {
+            ...this.state.registro,
+            [target]: value
+        }
     });
   }
 
@@ -198,6 +187,46 @@ class FormGuiasTuristicos extends Component {
               });
             }
           );
+          fetch(
+            `${process.env.REACT_APP_API_HOST}/ciudades`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: token
+                //"Content-Type": "application/json"
+              }
+            }
+          )
+            .then(res => res.json())
+            .then(
+              result => {
+                if (!result.err) {
+                  if (parseInt(result.data.count, 10) > 0) {
+                    this.setState({
+                      localidades: result.data.registros
+                    });
+                  } else {
+                    console.log("No hay registro: " + this.state.id);
+                  }
+                } else {
+                  this.setState({
+                    msg: {
+                      visible: true,
+                      body: result.errMsg
+                    }
+                  });
+                }
+              },
+              error => {
+                //???
+                this.setState({
+                  msg: {
+                    visible: true,
+                    body: error
+                  }
+                });
+              }
+            );
       }
     );
   }
@@ -331,6 +360,23 @@ class FormGuiasTuristicos extends Component {
                     </div>
                   </div>
                 </div>
+                <div className="row">
+                <div className="col-4">
+                    <div className="form-check">
+                    { this.state.registro.adhiereDosep >= 1 ? 
+                      (
+                      <input name="adhiereDosep" id="adhiereDosep" className="form-check-input" type="checkbox" value={this.state.registro.adhiereDosep} onChange={this.handleInputChange} checked={ this.state.registro.adhiereDosep ? "checked": false} />)
+                      : (
+                        <input name="adhiereDosep" id="adhiereDosep" className="form-check-input" type="checkbox" value={this.state.registro.adhiereDosep} onChange={this.handleInputChange} />
+                          )
+                    }  
+                    <label className="form-check-label" htmlFor="adhiereDosep">
+                            Adhiere Dosep?
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                <br></br>
                 <div className="row">
                   <div className="col">
                     <div className="d-flex justify-content-between">

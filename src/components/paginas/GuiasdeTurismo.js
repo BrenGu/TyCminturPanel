@@ -14,7 +14,8 @@ class guiasdeturismo extends Component {
         nombre: "",
         telefono: "",
         ambito: "",
-        correo: ""
+        correo: "",
+        adhiereDosep: false
       },
       novedades: [],
       localidades: [],
@@ -88,22 +89,13 @@ class guiasdeturismo extends Component {
 
   handleFromNovSubmit(event) {
     event.preventDefault();
-    const data = new FormData();
-    data.append("idciudad", this.state.novedad.idciudad);
-    //Falta validar la fecha!
-    data.append("legajo", this.state.novedad.legajo);
-    data.append("categoria", this.state.novedad.categoria);
-    data.append("nombre", this.state.novedad.nombre);
-    data.append("telefono", this.state.novedad.telefono);
-    data.append("ambito", this.state.novedad.ambito);
-    data.append("correo", this.state.novedad.correo);
-    console.log(data);
     fetch(`${process.env.REACT_APP_API_HOST}/guiasturismox`, {
       method: "POST",
       headers: {
-        Authorization: ""
+        "Authorization": "asdssffsdff",
+        "Content-Type": "application/json"
       },
-      body: data
+      body: JSON.stringify(this.state.novedad)
     })
       .then(res => res.json())
       .then(
@@ -147,7 +139,8 @@ class guiasdeturismo extends Component {
         nombre: "",
         telefono: "",
         ambito: "",
-        correo: ""
+        correo: "",
+        adhiereDosep: false
       }
     });
     document.getElementById("frm-novedades").reset();
@@ -272,7 +265,7 @@ class guiasdeturismo extends Component {
     const localidades = this.state.localidades.map(localidad => {
       return (
         <option key={`loc-${localidad.id}`} value={localidad.id}>
-          {localidad.ciudad}
+          {localidad.nombre}
         </option>
       );
     });
@@ -375,6 +368,7 @@ class guiasdeturismo extends Component {
                         />
                       </div>
                     </div>
+            
                   </div>
                 </div>
                 <div>
@@ -390,6 +384,12 @@ class guiasdeturismo extends Component {
                         onChange={this.handleInputChange}
                       />
                     </div>
+                    <div className="form-check">                   
+                        <input name="adhiereDosep" id="adhiereDosep" className="form-check-input" type="checkbox" value={this.state.novedad.adhiereDosep} onChange={this.handleInputChange} />                          
+                        <label className="form-check-label" htmlFor="adhiereDosep">
+                            Adhiere Dosep?
+                        </label>
+                      </div>
                   </div>
                 </div>
               </div>

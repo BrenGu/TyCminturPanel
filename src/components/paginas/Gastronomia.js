@@ -43,7 +43,8 @@ class Gastronomia extends Component {
         viernes: "",
         sabado: "",
         domingo: "",
-        imperdible: 0
+        imperdible: 0,
+        adhiereDosep: 0
       };
       fetch(
         `${process.env.REACT_APP_API_HOST}/gastronomia/new/${

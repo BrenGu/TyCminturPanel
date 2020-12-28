@@ -32,7 +32,8 @@ class Restaurante extends Component {
                 viernes: "",
                 sabado: "",
                 domingo: "",
-                imperdible: false
+                imperdible: false,
+                adhiereDosep: false
             },
             Msg: {
                 MsgTipo: 0,
@@ -295,13 +296,34 @@ class Restaurante extends Component {
                                         </div>
                                         <div className="col-sm-12 col-md-4 d-flex align-items-center justify-content-center">
                                             <div className="form-check">
-                                                <input name="imperdible" id="imperdible" className="form-check-input" type="checkbox" value={this.state.atractivo.imperdible} onChange={this.handleChange} />
+                                            { this.state.atractivo.imperdible >= 1 ? 
+                                                (<input name="imperdible" id="imperdible" className="form-check-input" type="checkbox" value={this.state.atractivo.imperdible} onChange={this.handleChange} checked={ this.state.atractivo.imperdible ? "checked": false} />)
+                                                : (
+                                                    <input name="imperdible" id="imperdible" className="form-check-input" type="checkbox" value={this.state.atractivo.imperdible} onChange={this.handleChange} />
+                                                    )
+                                                }  
                                                 <label className="form-check-label" htmlFor="imperdible">
                                                     Imperdible?
+                                                </label>
+                                            </div>                                           
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-sm-12 col-md-4">
+                                            <div className="form-check">
+                                            { this.state.atractivo.adhiereDosep >= 1 ? 
+                                                (<input type="checkbox" name="adhiereDosep" id="adhiereDosep" className="form-check-input" value={this.state.atractivo.adhiereDosep} onChange={this.handleChange}                           checked={ this.state.atractivo.adhiereDosep ? "checked": false} />)
+                                                : (
+                                                    <input name="adhiereDosep" id="adhiereDosep" className="form-check-input" type="checkbox" value={this.state.atractivo.adhiereDosep} onChange={this.handleChange} />
+                                                    )
+                                                }  
+                                                <label className="form-check-label" htmlFor="adhiereDosep">
+                                                    Adhiere Dosep?
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
+                                    <br></br>
                                     <div className="row">
                                         <div className="col">
                                             <div className="form-group">

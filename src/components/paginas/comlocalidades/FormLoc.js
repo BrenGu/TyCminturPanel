@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ddToDms from "../../../gm";
-
+import MyEditor from "../../paginas/subcomponentes/MyEditor";
 /*
     Parámetros:
     id: Id de la Ciudad (Localidad)
@@ -30,6 +30,7 @@ class FormLoc extends Component {
                 latitudg: 0,
                 longitudg: 0,
                 descripcion: "",
+                descripcionHTML: "",
                 video: "",
                 mdireccion: "",
                 mtelefono: "",
@@ -47,6 +48,7 @@ class FormLoc extends Component {
         this.handleCancel = this.handleCancel.bind(this);
         //this.handleFormError = this.handleFormError.bind(this);
         this.setLatLng = this.setLatLng.bind(this);
+        this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(this);
     }
 
     setLatLng() {
@@ -69,6 +71,7 @@ class FormLoc extends Component {
     }
 
     setData() {
+
         fetch(`${process.env.REACT_APP_API_HOST}/departamentos`, {
             method: 'GET',
             headers: {
@@ -96,6 +99,7 @@ class FormLoc extends Component {
                                 latitudg: 0,
                                 longitudg: 0,
                                 descripcion: "",
+                                descripcionHTML: "",
                                 video: "",
                                 mdireccion: "",
                                 mtelefono: "",
@@ -112,7 +116,8 @@ class FormLoc extends Component {
                                 fiestas: "",
                                 departamento: "",
                                 color: ""
-                            }
+                            },
+                            isLoaded: false
                         });
                     } else {
                         fetch(`${process.env.REACT_APP_API_HOST}/ciudad/${this.props.id}`, {
@@ -125,7 +130,10 @@ class FormLoc extends Component {
                         .then(res => res.json())
                         .then((result) => {
                             if(!result.err) {
-                                this.setState({registro: result.data.registros[0]});
+                                this.setState({
+                                    registro: result.data.registros[0],
+                                    isLoaded: false
+                                });
                             } else {
                                 this.props.error(result.errMsg);
                             }
@@ -140,8 +148,17 @@ class FormLoc extends Component {
             }
         }, (error) => { //???
             this.props.error(error);
+        }); 
+    }
+
+    handlDescripcionHTMLChange(desHTML, des) {
+        this.setState({
+          registro: {
+            ...this.state.registro,
+            descripcionHTML: desHTML,
+            descripcion: des
+          },
         });
-        
     }
 
     componentDidMount() {
@@ -150,7 +167,11 @@ class FormLoc extends Component {
 
     componentDidUpdate(prevProps) {
         if(this.props.id !== prevProps.id) {
-            this.setData();
+            this.setState({
+                isLoaded: true
+            }, () => {
+                this.setData();
+            })
         }
     }
 
@@ -183,6 +204,8 @@ class FormLoc extends Component {
             {
                 this.state.isLoaded
                 ?
+                <h1>Cargando...</h1>
+                :
                 <React.Fragment>
                     <div className="col-sm-12 col-md-12 bg-primary text-white p-2 mb-3">
                         <div style={{fontSize: "1.4rem"}}>{this.state.registro.nombre}</div>
@@ -254,7 +277,19 @@ class FormLoc extends Component {
                             <div className="col">
                                 <div className="form-group">
                                     <label htmlFor="descripcion">Descripción</label>
-                                    <textarea rows="8" name="descripcion" id="descripcion" className="form-control" value={this.state.registro.descripcion} onChange={(e) => this.setState({registro: {...this.state.registro, descripcion: e.target.value}})} autoComplete="off" />
+                                    {
+                                        this.state.registro.descripcionHTML === "" ?
+                                        <MyEditor
+                                            descripcionHTML={this.handlDescripcionHTMLChange}
+                                            contenido={this.state.registro.descripcion}
+                                        />
+                                        :
+                                        <MyEditor
+                                            descripcionHTML={this.handlDescripcionHTMLChange}
+                                            contenido={this.state.registro.descripcionHTML}
+                                        />
+                                    }
+                                    {/*<textarea rows="8" name="descripcion" id="descripcion" className="form-control" value={this.state.registro.descripcion} onChange={(e) => this.setState({registro: {...this.state.registro, descripcion: e.target.value}})} autoComplete="off" />*/}
                                 </div>
                             </div>
                         </div>
@@ -344,8 +379,6 @@ class FormLoc extends Component {
                         </div>
                     </div>
                 </React.Fragment>
-                :
-                <h1>Cargando...</h1>
             }
             </React.Fragment>
         );

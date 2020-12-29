@@ -28,6 +28,7 @@ class Atractivos extends Component {
                 nombre: "(Nuevo Atractivo Turístico [Editar])",
                 domicilio: "",
                 descripcion: "",
+                descripcionHTML: "",
                 latitud: 0,
                 longitud: 0,
                 latitudg: "",

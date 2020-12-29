@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Msg from "../../utiles/Msg";
 import Galeria from "./GaleriaResto";
 import ddToDms from "../../../gm";
+import MyEditor from "../../paginas/subcomponentes/MyEditor";
 
 class Restaurante extends Component {
     constructor(props) {
@@ -17,6 +18,7 @@ class Restaurante extends Component {
                 nombre: "",
                 domicilio: "",
                 descripcion: "",
+                descripcionHTML: "",
                 latitud: 0,
                 longitud: 0,
                 latitudg: 0,
@@ -49,6 +51,17 @@ class Restaurante extends Component {
         this.setDays = this.setDays.bind(this);
         this.msgDelAtractivo = this.msgDelAtractivo.bind(this);
         this.delAtractivo = this.delAtractivo.bind(this);
+        this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(this);
+    }
+
+    handlDescripcionHTMLChange(desHTML, des) {
+        this.setState({
+            atractivo: {
+            ...this.state.atractivo,
+            descripcionHTML: desHTML,
+            descripcion: des
+          },
+        });
     }
 
     msgDelAtractivo(id, nombre) {
@@ -210,6 +223,12 @@ class Restaurante extends Component {
     render() {
         return (
             <React.Fragment>
+            {
+                 this.state.loading
+                 ?
+                 <h1>Cargando...</h1>
+                 :
+                 <React.Fragment>
                 <div className="card">
                     <div className="card-header" id={`atractivo-${this.state.atractivo.id}`}>
                         <h5 className="mb-0 d-flex justify-content-between">
@@ -241,7 +260,19 @@ class Restaurante extends Component {
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="descripcion">Descripción</label>
-                                                <textarea rows="8" type="text" name="descripcion" id="descripcion" className="form-control" value={this.state.atractivo.descripcion} onChange={this.handleChange} autoComplete="off" />
+                                                {
+                                                    this.state.atractivo.descripcionHTML === "" ?
+                                                    <MyEditor
+                                                        descripcionHTML={this.handlDescripcionHTMLChange}
+                                                        contenido={this.state.atractivo.descripcion}
+                                                    />
+                                                    :
+                                                    <MyEditor
+                                                        descripcionHTML={this.handlDescripcionHTMLChange}
+                                                        contenido={this.state.atractivo.descripcionHTML}
+                                                    />
+                                                }
+                                                {/*<textarea rows="8" type="text" name="descripcion" id="descripcion" className="form-control" value={this.state.atractivo.descripcion} onChange={this.handleChange} autoComplete="off" />*/}
                                             </div>
                                         </div>
                                     </div>
@@ -398,7 +429,10 @@ class Restaurante extends Component {
                 <style jsx="true">{`
                     
                 `}</style>
+             </React.Fragment>
+                }
             </React.Fragment>
+           
         );
     }
 }

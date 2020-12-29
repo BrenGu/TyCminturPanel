@@ -28,6 +28,7 @@ class Gastronomia extends Component {
         nombre: "(Nuevo espacio gastronomico [Editar])",
         domicilio: "",
         descripcion: "",
+        descripcionHTML: "",
         latitud: 0,
         longitud: 0,
         latitudg: "",

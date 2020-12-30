@@ -2,6 +2,7 @@ import { CompositeDecorator } from "draft-js";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
+
 class Menu extends Component {
     constructor(props) {
         super(props);
@@ -21,6 +22,7 @@ class Menu extends Component {
                     <div className="row">
                         <div className="col">
                             <ul className="d-flex flex-direction-row justify-content-center h-menu">
+                            <li><Link to="/carruselhome">Carrusel Home</Link></li>
                                 <li><Link to="/">Zonas</Link></li>
                                 <li className="nav-item dropdown">
                                     <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Localidades</button>
@@ -40,6 +42,8 @@ class Menu extends Component {
                                         <Link className="dropdown-item" to="/oficinas">Oficinas de Turísmo</Link>
                                         <div className="dropdown-divider"></div>
                                         <Link className="dropdown-item" to="/guiasturismo">Guías de Turismo</Link>
+                                        <div className="dropdown-divider"></div>
+                                        <Link className="dropdown-item" to="/agencias-viajes">Agencias de Viaje</Link>
                                         <div className="dropdown-divider"></div>
                                         <a className="dropdown-item" href={`${process.env.REACT_APP_API_HOST}/exportmails`}>Exportar Mails</a>
                                         <div className="dropdown-divider"></div>

@@ -17,7 +17,8 @@ class agenciaviajes extends Component {
         mail:"",
         web:"",
         representante: "",
-        adhiereDosep:""
+        adhiereDosep:"0",
+        adhiereCovid: "0"
       },
       novedades: [],
       localidades: [],
@@ -91,26 +92,27 @@ class agenciaviajes extends Component {
 
   handleFromNovSubmit(event) {
     event.preventDefault();
-    const data = new FormData();
-    data.append("idlocalidad", this.state.novedad.idlocalidad);
-    //Falta validar la fecha!
-    data.append("legajo", this.state.novedad.legajo);
-    data.append("registro", this.state.novedad.registro);
-    data.append("nombre", this.state.novedad.nombre);
-    data.append("domicilio", this.state.novedad.domicilio);
-    data.append("telefono", this.state.novedad.telefono);
-    data.append("mail", this.state.novedad.mail);
-    data.append("web", this.state.novedad.web);
-    data.append("representante", this.state.novedad.representante);
-    data.append("adhiereDosep", this.state.novedad.adhiereDosep);
-
-    console.log(data);
+    let data = {
+      "idlocalidad": this.state.novedad.idlocalidad,
+      "legajo": this.state.novedad.legajo,
+      "registro": this.state.novedad.registro,
+      "nombre":this.state.novedad.nombre,
+      "domicilio": this.state.novedad.domicilio,
+      "telefono": this.state.novedad.telefono,
+      "mail": this.state.novedad.mail,
+      "web": this.state.novedad.web,
+      "representante": this.state.novedad.representante,
+      "adhiereDosep": this.state.novedad.adhiereDosep,
+      "adhiereCovid": this.state.novedad.adhiereCovid
+    };
+    
     fetch(`${process.env.REACT_APP_API_HOST}/addagenciadeviajes`, {
       method: "POST",
       headers: {
-        Authorization: ""
+        Authorization: "asdssffsdff",
+        "Content-Type": "application/json"
       },
-      body: data
+      body: JSON.stringify(data)
     })
       .then(res => res.json())
       .then(
@@ -157,14 +159,14 @@ class agenciaviajes extends Component {
         mail:"",
         web:"",
         representante: "",
-        adhiereDosep:""
+        adhiereDosep:"",
+        adhiereCovid: ""
       }
     });
     document.getElementById("frm-novedades").reset();
   }
 
   handleInputChange(event) {
-      console.log(event.target.value)
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -229,8 +231,7 @@ class agenciaviajes extends Component {
         .then(
           result => {
             if (!result.err) {       
-                   console.log(result.data.registros);
-
+                  
               this.setState(
                 {
                   localidades: result.data.registros
@@ -441,8 +442,22 @@ class agenciaviajes extends Component {
                         <label className="form-check-label" htmlFor="adhiereDosep">
                             Adhiere Dosep?
                         </label>
+                        
                       </div>
-                  </div>        
+                  </div>
+                  <div className="col">
+                  <div className="form-check">                   
+                        <input name="adhiereCovid" id="adhiereCovid" 
+                        className="form-check-input" 
+                        type="checkbox" 
+                        value={this.state.novedad.adhiereCovid} 
+                        onChange={this.handleInputChange} />                          
+                        <label className="form-check-label" htmlFor="adhiereCovid">
+                            Adhiere Covid?
+                        </label>
+                        
+                      </div>
+                  </div>                
                 </div>
               
               </div>

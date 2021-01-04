@@ -25,7 +25,8 @@ class FormAgenciasViajes extends Component {
         mail:"",
         web:"",
         representante: "",
-        adhiereDosep:""
+        adhiereDosep:"",
+        adhiereCovid:""
       },
       localidades: [],
       msg: {
@@ -394,6 +395,27 @@ class FormAgenciasViajes extends Component {
                     }  
                     <label className="form-check-label" htmlFor="adhiereDosep">
                             Adhiere Dosep?
+                        </label>
+                    </div>
+                  </div>
+                  <div className="col-4">
+                    <div className="form-check">
+                    { this.state.registro.adhiereCovid >= 1 ? 
+                      (
+                      <input name="adhiereCovid" id="adhiereCovid" 
+                              className="form-check-input" 
+                              type="checkbox" 
+                              value={this.state.registro.adhiereCovid} 
+                              onChange={this.handleInputChange} 
+                              checked={ this.state.registro.adhiereCovid ? "checked": false} />)
+                      : (
+                        <input name="adhiereCovid" id="adhiereCovid" 
+                        className="form-check-input" 
+                        type="checkbox" value={this.state.registro.adhiereCovid} onChange={this.handleInputChange} />
+                          )
+                    }  
+                    <label className="form-check-label" htmlFor="adhiereDosep">
+                            Adhiere Covid?
                         </label>
                     </div>
                   </div>

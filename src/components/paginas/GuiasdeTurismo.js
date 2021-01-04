@@ -385,7 +385,11 @@ class guiasdeturismo extends Component {
                       />
                     </div>
                     <div className="form-check">                   
-                        <input name="adhiereDosep" id="adhiereDosep" className="form-check-input" type="checkbox" value={this.state.novedad.adhiereDosep} onChange={this.handleInputChange} />                          
+                        <input name="adhiereDosep" id="adhiereDosep" 
+                        className="form-check-input" 
+                        type="checkbox" 
+                        value={this.state.novedad.adhiereDosep} 
+                        onChange={this.handleInputChange} />                          
                         <label className="form-check-label" htmlFor="adhiereDosep">
                             Adhiere Dosep?
                         </label>

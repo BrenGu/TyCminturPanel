@@ -51,10 +51,11 @@ class agenciaviajes extends Component {
         loading: true
       },
       () => {
-        fetch(`${process.env.REACT_APP_API_HOST}/guiasturismo/${id}`, {
+        fetch(`${process.env.REACT_APP_API_HOST}/agencias/${id}`, {
           method: "DELETE",
           headers: {
-            Authorization: ""
+            "Authorization": "asdssffsdff",
+            "Content-Type": "application/json"
           }
         })
           .then(res => res.json())

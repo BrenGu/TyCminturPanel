@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import Loading from "../utiles/loading";
+import { Row, Col, Card, Button, CardImg, CardImgOverlay, Input } from "reactstrap";
+import ModalMsg from "../utiles/ModalMsg";
 
-
+/*
 class CarruselHome extends Component{
     constructor (props){
     super(props);
@@ -11,12 +14,8 @@ class CarruselHome extends Component{
     this.addAtractivo = this.addAtractivo.bind(this);
     this.fireUpdate = this.fireUpdate.bind(this);
 
-}
-/*
-import React, { Component } from "react";
-import Loading from "../../utiles/loading";
-import { Row, Col, Card, Button, CardImg, CardImgOverlay, Input } from "reactstrap";
-import ModalMsg from "../../utiles/ModalMsg";
+}*/
+
 
 class CarruselHome extends Component {
     constructor(props) {
@@ -203,7 +202,4 @@ class CarruselHome extends Component {
     }
 }
 
-export default CarruselHome
-*/
-}
 export default CarruselHome

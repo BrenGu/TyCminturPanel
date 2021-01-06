@@ -166,7 +166,7 @@ class FormAgenciasViajes extends Component {
                     registro: result.data.registros[0],
                     loading: false
                   });
-                  console.log(result.data);
+                 
                 } else {
                   console.log("No hay registro: " + this.state.id);
                 }
@@ -427,10 +427,11 @@ class FormAgenciasViajes extends Component {
                       <button
                         type="button"
                         className="btn btn-danger"
-                        onClick={e =>
-                          this.props.eliminar(this.state.registro.id)
+                        onClick={/*e =>
+                          this.props.eliminar(this.state.registro.id)*/(e) => { this.askDelete(this.state.registro.nombre, e) }
                         }
                       >
+                        
                         <i className="fas fa-trash" />
                       </button>
                       <button type="submit" className="btn btn-primary">

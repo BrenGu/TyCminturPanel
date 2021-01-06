@@ -46,49 +46,43 @@ class agenciaviajes extends Component {
   }
 
   eliminarNovedad(id) {
-    this.setState(
-      {
-        loading: true
-      },
-      () => {
-        fetch(`${process.env.REACT_APP_API_HOST}/agencias/${id}`, {
-          method: "DELETE",
-          headers: {
-            "Authorization": "asdssffsdff",
-            "Content-Type": "application/json"
-          }
-        })
-          .then(res => res.json())
-          .then(
-            result => {
-              if (!result.err) {
-                this.setState(
-                  {
-                    msg: {
-                      visible: true,
-                      body: "El guía se elimino correctamente."
-                    }
-                  },
-                  () => {
-                    this.getData();
-                  }
-                );
-              } else {
-                this.setState({
-                  msg: {
-                    visible: true,
-                    body: result.errMsgs
-                  }
-                });
-              }
-            },
-            error => {
-              //???
-              console.log(error);
-            }
-          );
+    fetch(`${process.env.REACT_APP_API_HOST}/agencias/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": "asdssffsdff",
+        "Content-Type": "application/json"
       }
-    );
+    })
+      .then(res => res.json())
+      .then((result) => {
+          if (!result.err) {
+            this.setState(
+              {
+                loading: false,
+                msg: {
+                  visible: true,
+                  body: "El guía se elimino correctamente."
+                }
+  
+              },
+              () => {
+                this.getData();
+              }
+            );
+          } else {
+            this.setState({
+              loading: false,
+              msg: {
+                visible: true,
+                body: result.errMsgs
+              }
+            });
+          }
+        },
+        (error) => {
+          console.log(error);
+        });
+          
   }
 
   handleFromNovSubmit(event) {
@@ -162,7 +156,8 @@ class agenciaviajes extends Component {
         representante: "",
         adhiereDosep:"",
         adhiereCovid: ""
-      }
+      },
+      loading: true
     });
     document.getElementById("frm-novedades").reset();
   }

@@ -16,7 +16,7 @@ import Eventos from "./components/paginas/Eventos";
 import Login from "./components/paginas/Login";
 import GuiasTurismo from "./components/paginas/GuiasdeTurismo";
 import Gastronomia from "./components/paginas/Gastronomia";
-import CarruselHome from "./components/paginas/CarruselHome";
+//import CarruselHome from "./components/paginas/CarruselHome";
 import AgenciaViajes from "./components/paginas/AgenciaViajes"
 import FormAgenciasViajes from "./components/paginas/comguiasturisticos/FormAgenciasViajes"
 
@@ -81,7 +81,7 @@ class App extends Component {
 											<Route path="/novedades" component={Novedades} />
 											<Route path="/eventos" component={Eventos} />
 											<Route path="/guiasturismo"component={GuiasTurismo} />
-											<Route path="/carruselhome"component={CarruselHome} />
+											{/*<Route path="/carruselhome"component={CarruselHome} />*/}
 											<Route path="/agencias-viajes"component={AgenciaViajes} />
 											<Route path="/form-agencia-viajes"component={FormAgenciasViajes} />
 											<Route component={NoFound} />

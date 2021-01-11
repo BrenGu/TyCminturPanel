@@ -522,13 +522,13 @@ class CarruselHome extends Component {
         image: "default.jpg",
       },
     });
-    document.getElementById("frm-novedades").reset();
+    document.getElementById("frm-carrusel").reset();
     document
       .getElementById("img-upl-nov-uno")
       .setAttribute(
         "src",
         `${process.env.REACT_APP_API_HOST}/${
-          process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
+          process.env.REACT_APP_API_DIRECTORY_CARRUSEL
         }/default.jpg`
       );
   }
@@ -614,7 +614,7 @@ class CarruselHome extends Component {
             <form
               method="post"
               onSubmit={this.handleFromNovSubmit}
-              id="frm-novedades"
+              id="frm-carrusel"
             >
               <div className="grid-noveades">
                 <div className="noveades-span-row-2">

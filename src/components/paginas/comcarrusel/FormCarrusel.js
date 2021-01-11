@@ -77,7 +77,7 @@ class FormCarrusel extends Component {
       {
         msg: {
           visible: false,
-          body: "",
+          body: "Se elimino correctamente",
           tipo: 0,
         },
       },

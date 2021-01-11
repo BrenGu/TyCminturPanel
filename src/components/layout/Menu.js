@@ -45,9 +45,14 @@ class Menu extends Component {
                                         <div className="dropdown-divider"></div>
                                         <Link className="dropdown-item" to="/agencias-viajes">Agencias de Viaje</Link>
                                         <div className="dropdown-divider"></div>
-                                        <a className="dropdown-item" href={`${process.env.REACT_APP_API_HOST}/exportmails`}>Exportar Mails</a>
+                                        <Link className="dropdown-item" to="/aeropuertos">Aeropuertos</Link>
                                         <div className="dropdown-divider"></div>
-                                        <a className="dropdown-item" href={`${process.env.REACT_APP_API_HOST}/exportguias`}>Exportar Alojamientos</a>
+                                        <Link className="dropdown-item" to="/alquilerautos">Alquiler de autos</Link>
+                                        <div className="dropdown-divider"></div>
+                                        <Link className="dropdown-item" to="/casacambio">Casas de cambio</Link>
+                                        {/*<a className="dropdown-item" href={`${process.env.REACT_APP_API_HOST}/exportmails`}>Exportar Mails</a>
+                                        <div className="dropdown-divider"></div>
+        <a className="dropdown-item" href={`${process.env.REACT_APP_API_HOST}/exportguias`}>Exportar Alojamientos</a>*/}
                                     </div>
                                 </li>
                                 <li>{

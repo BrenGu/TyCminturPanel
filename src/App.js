@@ -10,6 +10,9 @@ import Zonas from "./components/paginas/Zonas";
 import Localidades from "./components/paginas/Localidades";
 import Atractivos from "./components/paginas/Atractivos";
 import nuevousuario from "./components/paginas/nuevousuario";
+import Aeropuertos from "./components/paginas/Aeropuertos";
+import AlquilerAutos from "./components/paginas/AlquilerAutos";
+import CasaCambio from "./components/paginas/CasaCambio";
 import Oficinas from "./components/paginas/Oficinas";
 import Novedades from "./components/paginas/Novedades";
 import Eventos from "./components/paginas/Eventos";
@@ -81,6 +84,9 @@ class App extends Component {
 											<Route path="/novedades" component={Novedades} />
 											<Route path="/eventos" component={Eventos} />
 											<Route path="/guiasturismo"component={GuiasTurismo} />
+											<Route path="/aeropuertos"component={Aeropuertos} />
+											<Route path="/alquilerautos"component={AlquilerAutos} />
+											<Route path="/casacambio"component={CasaCambio} />
 											{/*<Route path="/carruselhome"component={CarruselHome} />*/}
 											<Route path="/agencias-viajes"component={AgenciaViajes} />
 											<Route path="/form-agencia-viajes"component={FormAgenciasViajes} />

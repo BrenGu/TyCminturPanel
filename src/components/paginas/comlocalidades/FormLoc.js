@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ddToDms from "../../../gm";
 import MyEditor from "../../paginas/subcomponentes/MyEditor";
+import Galeria from "./GaleriaLoc";
 /*
     Parámetros:
     id: Id de la Ciudad (Localidad)
@@ -32,6 +33,7 @@ class FormLoc extends Component {
                 descripcion: "",
                 descripcionHTML: "",
                 video: "",
+                foto: "",
                 mdireccion: "",
                 mtelefono: "",
                 minterno: "",
@@ -101,6 +103,7 @@ class FormLoc extends Component {
                                 descripcion: "",
                                 descripcionHTML: "",
                                 video: "",
+                                foto: "",
                                 mdireccion: "",
                                 mtelefono: "",
                                 minterno: "",
@@ -378,6 +381,21 @@ class FormLoc extends Component {
                             <FormOptions id={this.state.registro.id} />
                         </div>
                     </div>
+   
+                    <div className="col">
+                    <hr></hr>
+                    <div className="row mb-3">
+                        <div className="col-sm-12 col-md-12">
+                            <span className="bg-dark text-white p-2 rounded d-block">Imagen</span>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-sm-12 col-md-12">
+                            <Galeria idLocalidad={this.state.registro.id} />
+                        </div>
+                    </div>
+                    </div>
+                    
                 </React.Fragment>
             }
             </React.Fragment>

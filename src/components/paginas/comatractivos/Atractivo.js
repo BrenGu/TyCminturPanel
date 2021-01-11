@@ -255,7 +255,11 @@ class Atractivo extends Component {
                                         <div className="col">
                                             <div className="form-group">
                                                 <label htmlFor="nombre">Nombre</label>
-                                                <input type="text" name="nombre" id="nombre" className="form-control" value={this.state.atractivo.nombre} onChange={this.handleChange} autoComplete="off" />
+                                                <input type="text" name="nombre" id="nombre" 
+                                                className="form-control" 
+                                                value={this.state.atractivo.nombre} 
+                                                onChange={this.handleChange} 
+                                                autoComplete="off" />
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="descripcion">Descripción</label>

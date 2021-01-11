@@ -17,7 +17,7 @@ class ModalMsg extends Component {
     if (this.props.msg == "Los datos se actualizaron correctamente!") {
       // console.log(this.props.nuevo);
       if (this.state.nuevo) {
-        fetch(process.env.REACT_APP_URL_API_SERVER_2 + "/guia/ultimo").then(
+        fetch(process.env.REACT_APP_API_RECURSOS + "/guia/ultimo").then(
           (res) => {
             if (res.ok && res.status === 200) {
               res.json().then((data) => {

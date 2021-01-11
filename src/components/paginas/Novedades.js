@@ -14,17 +14,17 @@ class Novedades extends Component {
         titulo: "",
         subtitulo: "",
         descripcion: "",
-        descripcionHTML:"",
+        descripcionHTML: "",
         latitud: "0",
         longitud: "0",
         foto_uno: "default.jpg",
-        foto_dos: "default.jpg"
+        foto_dos: "default.jpg",
       },
       novedades: [],
       msg: {
         visible: false,
-        body: ""
-      }
+        body: "",
+      },
     };
     this.getData = this.getData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -32,31 +32,33 @@ class Novedades extends Component {
     this.handleImgChange = this.handleImgChange.bind(this);
     this.handleFromNovSubmit = this.handleFromNovSubmit.bind(this);
     this.eliminarNovedad = this.eliminarNovedad.bind(this);
-    this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(this);
+    this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(
+      this
+    );
   }
 
   eliminarNovedad(id) {
     this.setState(
       {
-        loading: true
+        loading: true,
       },
       () => {
         fetch(`${process.env.REACT_APP_API_HOST}/novedad/${id}`, {
           method: "DELETE",
           headers: {
-            Authorization: ""
-          }
+            Authorization: "",
+          },
         })
-          .then(res => res.json())
+          .then((res) => res.json())
           .then(
-            result => {
+            (result) => {
               if (!result.err) {
                 this.setState(
                   {
                     msg: {
                       visible: true,
-                      body: "Los datos se eliminaron correctamente."
-                    }
+                      body: "Los datos se eliminaron correctamente.",
+                    },
                   },
                   () => {
                     this.getData();
@@ -66,12 +68,12 @@ class Novedades extends Component {
                 this.setState({
                   msg: {
                     visible: true,
-                    body: result.errMsgs
-                  }
+                    body: result.errMsgs,
+                  },
                 });
               }
             },
-            error => {
+            (error) => {
               //???
               console.log(error);
             }
@@ -81,17 +83,18 @@ class Novedades extends Component {
   }
 
   handlDescripcionHTMLChange(desHTML, des) {
- console.log(desHTML)
+    console.log(desHTML);
     this.setState({
       novedad: {
         ...this.state.novedad,
         descripcionHTML: desHTML,
-        descripcion: des
+        descripcion: des,
       },
     });
   }
 
   handleFromNovSubmit(event) {
+    console.log(this.state.novedad.foto_uno);
     event.preventDefault();
     const data = new FormData();
     data.append("localidad", this.state.novedad.localidad);
@@ -101,7 +104,7 @@ class Novedades extends Component {
     data.append("subtitulo", this.state.novedad.subtitulo);
     data.append("descripcion", this.state.novedad.descripcion);
     data.append("descripcionHTML", this.state.novedad.descripcionHTML);
-    console.log(this.state.novedad.descripcionHTML)
+    console.log(this.state.novedad.descripcionHTML);
     data.append("latitud", this.state.novedad.latitud);
     data.append("longitud", this.state.novedad.longitud);
     //Imágenes
@@ -116,20 +119,20 @@ class Novedades extends Component {
     fetch(`${process.env.REACT_APP_API_HOST}/novedad`, {
       method: "POST",
       headers: {
-        Authorization: ""
+        Authorization: "",
       },
-      body: data
+      body: data,
     })
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(
-        result => {
+        (result) => {
           if (!result.err) {
             this.setState(
               {
                 msg: {
                   visible: true,
-                  body: "Los datos se agregaron correctamente"
-                }
+                  body: "Los datos se agregaron correctamente",
+                },
               },
               () => {
                 this.resetForm();
@@ -140,12 +143,12 @@ class Novedades extends Component {
             this.setState({
               msg: {
                 visible: true,
-                body: result.errMsgs
-              }
+                body: result.errMsgs,
+              },
             });
           }
         },
-        error => {
+        (error) => {
           //???
           console.log(error);
         }
@@ -164,8 +167,8 @@ class Novedades extends Component {
         latitud: "0",
         longitud: "0",
         foto_uno: "default.jpg",
-        foto_dos: "default.jpg"
-      }
+        foto_dos: "default.jpg",
+      },
     });
     document.getElementById("frm-novedades").reset();
     document
@@ -193,8 +196,8 @@ class Novedades extends Component {
     this.setState({
       novedad: {
         ...this.state.novedad,
-        [name]: value
-      }
+        [name]: value,
+      },
     });
   }
 
@@ -212,32 +215,33 @@ class Novedades extends Component {
     fetch(`${process.env.REACT_APP_API_HOST}/novedades/12`, {
       method: "GET",
       headers: {
-        Authorization: ""
-      }
+        Authorization: "",
+      },
     })
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(
-        result => {
+        (result) => {
           if (!result.err) {
             this.setState({
-              novedades: result.data.registros
+              novedades: result.data.registros,
             });
+            console.log(this.state.novedades);
           } else {
             this.setState({
               msg: {
                 visible: true,
-                body: result.errMsg
-              }
+                body: result.errMsg,
+              },
             });
           }
         },
-        error => {
+        (error) => {
           //???
           console.log(error);
         }
       );
     this.setState({
-      loading: false
+      loading: false,
     });
   }
 
@@ -246,7 +250,7 @@ class Novedades extends Component {
   }
 
   render() {
-    const lista_novedades = this.state.novedades.map(novedad => {
+    const lista_novedades = this.state.novedades.map((novedad) => {
       return (
         <FromNov
           key={`novedad-${novedad.id}`}
@@ -365,7 +369,6 @@ class Novedades extends Component {
                           //descripcion={this.handlDescripcionChange}
                           descripcionHTML={this.handlDescripcionHTMLChange}
                         />
-
                       </div>
                     </div>
                   </div>
@@ -393,7 +396,7 @@ class Novedades extends Component {
                             process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
                           }/${this.state.novedad.foto_uno}`}
                           alt="Foto"
-                          onClick={e => {
+                          onClick={(e) => {
                             document.getElementById("upl-nov-uno").click();
                           }}
                         />
@@ -414,7 +417,7 @@ class Novedades extends Component {
                             process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
                           }/${this.state.novedad.foto_dos}`}
                           alt="Foto"
-                          onClick={e => {
+                          onClick={(e) => {
                             document.getElementById("upl-nov-dos").click();
                           }}
                         />

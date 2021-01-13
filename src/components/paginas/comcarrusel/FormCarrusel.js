@@ -188,7 +188,7 @@ class FormCarrusel extends Component {
       },
 
       () => {
-        fetch(`${process.env.REACT_APP_API_HOST}/carrusel/${this.state.id}`, {
+        fetch(`${process.env.REACT_APP_API_HOST}/carruseles`, {
           method: "GET",
           headers: {
             Authorization: token,
@@ -218,13 +218,7 @@ class FormCarrusel extends Component {
               }
             },
             (error) => {
-              //???
-              this.setState({
-                msg: {
-                  visible: true,
-                  body: error,
-                },
-              });
+             console.log("el error es " + error);
             }
           );
       }

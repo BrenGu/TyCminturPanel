@@ -292,7 +292,7 @@ class Novedades extends Component {
                     </div>
                     <div className="col-md-12">
                       <div className="form-group">
-                        <label htmlFor="titulo">Título</label>
+                        <label htmlFor="titulo">Título 1er Renglón</label>
                         <input
                           type="text"
                           name="titulo"
@@ -306,7 +306,7 @@ class Novedades extends Component {
                     </div>
                     <div className="col-md-12">
                       <div className="form-group">
-                        <label htmlFor="subtitulo">Sub Título</label>
+                        <label htmlFor="subtitulo">Título 2do Renglón</label>
                         <input
                           type="text"
                           name="subtitulo"

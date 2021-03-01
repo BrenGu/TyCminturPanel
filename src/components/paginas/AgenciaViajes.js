@@ -99,6 +99,7 @@ class agenciaviajes extends Component {
       "representante": this.state.novedad.representante,
       "adhiereDosep": this.state.novedad.adhiereDosep,
       "adhiereCovid": this.state.novedad.adhiereCovid
+      
     };
     
     fetch(`${process.env.REACT_APP_API_HOST}/addagenciadeviajes`, {
@@ -137,6 +138,8 @@ class agenciaviajes extends Component {
         error => {
           //???
           console.log(error);
+          console.log(data);
+
         }
       );
   }
@@ -210,6 +213,7 @@ class agenciaviajes extends Component {
         error => {
           //???
           console.log(error);
+          
         }
       );
     this.setState({

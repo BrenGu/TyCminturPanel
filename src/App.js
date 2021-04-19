@@ -18,6 +18,7 @@ import Novedades from "./components/paginas/Novedades";
 import Eventos from "./components/paginas/Eventos";
 import Login from "./components/paginas/Login";
 import GuiasTurismo from "./components/paginas/GuiasdeTurismo";
+import Estadisticas from "./components/paginas/Estadisticas";
 import Gastronomia from "./components/paginas/Gastronomia";
 import CarruselHome from "./components/paginas/CarruselHome";
 import AgenciaViajes from "./components/paginas/AgenciaViajes"
@@ -81,6 +82,7 @@ class App extends Component {
 											<Route path="/gastronomia" component={Gastronomia} />
 											<Route path="/nuevousuario" component={nuevousuario} />
 											<Route path="/oficinas" component={Oficinas} />
+											<Route path="/estadisticas" component={Estadisticas} />
 											<Route path="/novedades" component={Novedades} />
 											<Route path="/eventos" component={Eventos} />
 											<Route path="/guiasturismo"component={GuiasTurismo} />

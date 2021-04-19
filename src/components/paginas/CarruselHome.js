@@ -444,8 +444,6 @@ class CarruselHome extends Component {
   }
 
   handleFromNovSubmit(event) {
-    console.log(this.state.foto.image);
-    console.log(this.state.foto.idGaleria);
     event.preventDefault();
 
     const data = new FormData();

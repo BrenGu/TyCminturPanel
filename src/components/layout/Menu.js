@@ -1,13 +1,44 @@
 import { CompositeDecorator } from "draft-js";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import ExportExcel from "react-export-excel";
 
+const ExcelFile = ExportExcel.ExcelFile; // Indica el archivo que se va a crer
+const ExcelSheet = ExportExcel.ExcelSheet; // Indica una hoja
+const ExcelColumn = ExportExcel.ExcelColumn; // Indica una columna
 
 class Menu extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            emails: []
+        }
         this.handleLogOut = this.handleLogOut.bind(this);
+        this.TodoslosMails = this.TodoslosMails.bind(this);
 	}
+
+    TodoslosMails = (event) => {
+        fetch(`${process.env.REACT_APP_API_HOST}/exportmails`, {
+            method: "GET",
+            headers: {
+              Authorization: "asdssffsdff",
+              "Content-Type": "application/json"
+            }
+     }).then((res) => {
+       if (res.ok && res.status === 200) {
+         res.json().then((data) => {
+           this.setState({
+             emails: data.data.registros,
+           });
+         });
+       }
+     });
+   };
+
+   componentDidMount(){
+    // Carga todos los mails 
+    this.TodoslosMails();
+   }
 
     handleLogOut = () => {
 		localStorage.clear();
@@ -50,9 +81,19 @@ class Menu extends Component {
                                         <Link className="dropdown-item" to="/alquilerautos">Alquiler de autos</Link>
                                         <div className="dropdown-divider"></div>
                                         <Link className="dropdown-item" to="/casacambio">Casas de cambio</Link>
-                                        {/*<a className="dropdown-item" href={`${process.env.REACT_APP_API_HOST}/exportmails`}>Exportar Mails</a>
                                         <div className="dropdown-divider"></div>
-        <a className="dropdown-item" href={`${process.env.REACT_APP_API_HOST}/exportguias`}>Exportar Alojamientos</a>*/}
+                                        <ExcelFile
+                                            element={
+                                                <button className="dropdown-item" style={{outline: "none"}} onClick={this.TodoslosMails}>
+                                                    Exportar a excel los Emails
+                                                </button>
+                                            }
+                                            filename="Excel Emails Newsletter"
+                                        >
+                                            <ExcelSheet data={this.state.emails} name="Pagina1">
+                                                <ExcelColumn label="Emails" value="email" />
+                                            </ExcelSheet>
+                                        </ExcelFile>
                                     </div>
                                 </li>
                                 <li>{

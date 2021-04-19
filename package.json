@@ -4,11 +4,13 @@
   "private": true,
   "homepage": "http://hansjal.esy.es/panel-turismo",
   "dependencies": {
+    "chart.js": "^2.9.4",
     "draft-js": "^0.10.5",
     "draft-js-export-html": "^1.4.1",
     "draft-js-import-html": "^1.4.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
+    "react-export-excel": "^0.5.3",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.0.5",
     "reactstrap": "^8.8.1"

@@ -4,6 +4,7 @@ import Msg from "../utiles/Msg";
 import FormReport from "../paginas/comestadisticas/FormReport";
 import FormGrafico from "./comestadisticas/FormGrafico";
 import FormValores from "./comestadisticas/FormValores";
+import FormTipos from "./comestadisticas/FormTipos";
 
 class Estadisticas extends Component {
     constructor(props) {
@@ -69,12 +70,6 @@ class Estadisticas extends Component {
             }
           );
       }
-    
-      /* componentDidUpdate(prevState){
-        if(this.state.renderComponente !== prevState.renderComponente ){
-          this.getData(); 
-        }
-       }*/
 
       componentDidMount() {
         this.getData();
@@ -110,8 +105,8 @@ class Estadisticas extends Component {
             tipo={element.tipoGrafico}
             data={this.state.dataFinal[pos].data}
             title={this.state.dataFinal[pos].title}
-            color={["#F7464A", "#46BFBD", "#FDB45C", '#3e517a', '#b08ea2', '#BBB6DF']}
-          />
+            color={["#F7464A", "#46BFBD", "#FDB45C", '#3e517a', '#b08ea2', '#BBB6DF', '#20E000', '#8032BF', '#FF8B09', '#D5FF42', '#F77373', '#66FFEE', '#F0F57D']}
+            />
         </div>
         );
       }
@@ -125,6 +120,16 @@ class Estadisticas extends Component {
               <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
                 <i className="fas fa-chart-line" /> Estadisticas
               </h4>
+              <button onClick={() => {this.setState({visible: !this.state.visible})}} className="btn btn-warning">
+                  <i className="fas fa-arrow-right" /> Desea agregar un tipo-grafico?
+              </button>
+              {this.state.visible?
+              <div>
+                <br></br>
+                <FormTipos actualizarComponente={()=> { this.setState({ renderComponente: !this.state.renderComponente }, () => { this.getData() })}} />
+                <hr />
+              </div>
+            : <hr />}
               <FormReport actualizarComponente={()=> {
                 this.setState({
                   renderComponente: !this.state.renderComponente
@@ -133,7 +138,7 @@ class Estadisticas extends Component {
                 })
               }}></FormReport>
               <hr />
-              <FormGrafico   actualizarComponente={()=> { this.setState({renderComponente: !this.state.renderComponente}, () => {this.getData()})
+              <FormGrafico actualizarGraph={this.getData} actualizarComponente={()=> { this.setState({renderComponente: !this.state.renderComponente}, () => {this.getData()})
               }}></FormGrafico>
               <hr />
               <FormValores actualizarComponente={!this.state.renderComponente} actualizarGraph={this.getData}></FormValores>

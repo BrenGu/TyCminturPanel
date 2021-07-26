@@ -125,7 +125,8 @@ class FormGrafico extends Component {
             (result) => {
                 result.data.registros.unshift({
                     id: 0,
-                    tipo: "Seleccione un tipo"
+                    tipo: "Seleccione un tipo",
+                    nombre: ""
                 });
                 this.setState({
                  tipos: result.data.registros
@@ -143,7 +144,7 @@ class FormGrafico extends Component {
 
   render() {
     const tipos = this.state.tipos.map((tipo) => {
-        return(<option key={`tipo-${tipo.id}`} value={tipo.id}>{tipo.tipo}</option>);
+        return(<option key={`tipo-${tipo.id}`} value={tipo.id}>{tipo.id == 0? `${tipo.tipo}${tipo.nombre}`: `${tipo.tipo} / (${tipo.nombre})`} </option>);
     });
       return (
         <div>

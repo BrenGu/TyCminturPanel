@@ -14,6 +14,7 @@ class Atractivo extends Component {
             atractivo: {
                 id: 0,
                 idlocalidad: 0,
+                idTipo: 0,
                 tipo: "",
                 nombre: "",
                 domicilio: "",

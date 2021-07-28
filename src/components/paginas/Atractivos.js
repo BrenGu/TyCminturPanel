@@ -25,6 +25,7 @@ class Atractivos extends Component {
             let data = {
                 idlocalidad: this.state.localidadSelect.id,
                 tipo: "No especificado",
+                idTipo: 0,
                 nombre: "(Nuevo Atractivo Turístico [Editar])",
                 domicilio: "",
                 descripcion: "",

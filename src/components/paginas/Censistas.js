@@ -68,9 +68,9 @@ const Censistas = () => {
         fetch(`${process.env.REACT_APP_API_HOST}/censista/new`, {
             method: "POST",
             headers: {
-                Authorization: "",
+              "Authorization": ""
             },
-            body: data
+            body: data,
         })
         .then(res => res.json())
         .then(
@@ -199,7 +199,6 @@ const Censistas = () => {
                 method="post"
                 onSubmit={handleFromNovSubmit}
                 id="frm-novedades"
-                encType="multipart/form-data"
             >
                 <div className="grid-noveades">
                 <div className="noveades-span-row-2">
@@ -318,9 +317,18 @@ const Censistas = () => {
                   </div>
                 <div className="row mt-3">
                     <div className="col">
-                        <button type="submit" className="btn btn-primary">
-                            <i className="fas fa-arrow-down" /> Agregar Censista
-                        </button>
+                        <div className="d-flex justify-content-between">
+                            <button
+                            type="button"
+                            className="btn btn-warning"
+                            onClick={resetForm}
+                            >
+                              <i className="far fa-window-restore" />
+                            </button>
+                            <button type="submit" className="btn btn-primary">
+                                <i className="fas fa-arrow-down" /> Agregar Censista
+                            </button>
+                         </div>
                     </div>
                 </div>
                 

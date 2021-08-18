@@ -11,6 +11,7 @@ class Atractivo extends Component {
             loading: true,
             error: false,
             errMsg: "",
+            tipos: [],
             atractivo: {
                 id: 0,
                 idlocalidad: 0,
@@ -52,6 +53,7 @@ class Atractivo extends Component {
         this.msgDelAtractivo = this.msgDelAtractivo.bind(this);
         this.delAtractivo = this.delAtractivo.bind(this);
         this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(this);
+        this.handleTipoChange = this.handleTipoChange.bind(this);
     }
 
     handlDescripcionHTMLChange(desHTML, des) {
@@ -218,9 +220,59 @@ class Atractivo extends Component {
                 errMsg: error
             });
         });
+
+        fetch(`${process.env.REACT_APP_API_HOST}/clasificacion/all`, {
+            method: "GET",
+            headers: {
+                "Authorization": "asdssffsdff",
+                //"Content-Type": "multipart/form-data"
+            }
+        })
+        .then(res => res.json())
+        .then((result) => {
+            if(!result.err) {
+                result.data.registros.unshift({
+                    id: 0,
+                    nombre: "Todos los Tipos"
+                });
+                this.setState({
+                    tipos: result.data.registros,
+                    loading: false
+                });
+            } else {
+                this.setState({
+                    loading: false,
+                    error: true,
+                    errMsg: result.errMsg
+                });
+            }
+        }, (error) => { //???
+            this.setState({
+                loading: false,
+                error: true,
+                errMsg: error
+            });
+        });
+
+    }
+
+    handleTipoChange(event) {
+        this.setState({
+          atractivo: {
+            ...this.state.atractivo,
+            idTipo: event.target.value,
+          },
+        });
     }
 
     render() {
+        const tipos = this.state.tipos.map((tip) => {
+            return (
+              <option key={`loc-${tip.id}`} value={tip.id}>
+                {tip.nombre}
+              </option>
+            );
+        });
         return (
             <React.Fragment>
             {
@@ -247,9 +299,21 @@ class Atractivo extends Component {
                                     <div className="row">
                                         <div className="col">
                                             <div className="form-group">
+                                                <label htmlFor="idTipo">Tipo</label>
+                                                <select
+                                                name="idTipo"
+                                                id="idTipo"
+                                                className="form-control"
+                                                value={this.state.atractivo.idTipo}
+                                                onChange={this.handleTipoChange}
+                                                >
+                                                {tipos}
+                                                </select>
+                                            </div>
+                                            {/*<div className="form-group">
                                                 <label htmlFor="tipo">Tipo</label>
                                                 <input type="text" name="tipo" id="tipo" className="form-control" value={this.state.atractivo.tipo} onChange={this.handleChange} autoComplete="off" />
-                                            </div>
+                                            </div>*/}
                                         </div>
                                     </div>
                                     <div className="row">

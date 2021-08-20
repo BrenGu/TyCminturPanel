@@ -1,388 +1,18 @@
-/*import React, { Component } from "react";
-import Loading from "../utiles/loading";
-import {
-  Row,
-  Col,
-  Card,
-  Button,
-  CardImg,
-  CardImgOverlay,
-  Input,
-} from "reactstrap";
-import ModalMsg from "../utiles/ModalMsg";
-
-/*class CarruselHome extends Component{
-    constructor (props){
-    super(props);
-    this.state = {
-        carrusel:[]
-    }
-    this.handleFClick = this.handleFClick.bind(this);
-    this.addAtractivo = this.addAtractivo.bind(this);
-    this.fireUpdate = this.fireUpdate.bind(this);
-
-}
-
-class CarruselHome extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-      foto: {
-        activo: "",
-        idGaleria: "",
-        horizontal: "",
-        vertical: "",
-        image: "",
-      },
-      galeria: [],
-      modal: {
-        idDelete: 0,
-        msg: "",
-        open: false,
-        onlyOk: false,
-      },
-    };
-    this.findGalery = this.findGalery.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-    this.handleImgChange = this.handleImgChange.bind(this);
-    this.saveCarrusel = this.saveCarrusel.bind(this);
-  }
-  handleImgChange = (event) => {
-    const data = new FormData();
-    data.append("imgup", event.target.files[0]);
-    fetch(`${process.env.REACT_APP_API_HOST}/addimgcarrusel/${5}/imagen`, {
-      method: "POST",
-      headers: {
-        Authorization: "asdadtytuiop",
-        //"Content-Type": "multipart/form-data"
-      },
-      body: data,
-    }).then((res) => {
-      if (res.ok && res.status === 201) {
-        this.setState(
-          {
-            loading: true,
-          },
-          () => {
-            this.findGalery();
-          }
-        );
-      }
-    });
-  };
-
-  handleCancel = () => {
-    this.setState({
-      modal: {
-        ...this.state.modal,
-        open: false,
-      },
-    });
-  };
-
-  handleDelete = () => {
-    this.setState({
-      modal: {
-        ...this.state.modal,
-        open: false,
-      },
-    });
-    //alert(`Eliminar: ${this.state.modal.idDelete}`);
-    fetch(
-      `${process.env.REACT_APP_API_HOST}/delimagen/${
-        this.state.modal.idDelete
-      }`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: localStorage.getItem("WebTurToken"),
-        },
-      }
-    ).then((res) => {
-      if (res.ok && res.status === 200) {
-        this.setState(
-          {
-            loading: true,
-          },
-          () => {
-            this.findGalery();
-          }
-        );
-      } else {
-        res.json().then((data) => {
-          alert(data.errMsg);
-        });
-      }
-    });
-  };
-
-  askDelete = (id, imagen, e) => {
-    this.setState({
-      modal: {
-        ...this.state.modal,
-        idDelete: id,
-        msg: `Seguro de eliminar la imagen? (${imagen})`,
-        open: true,
-      },
-    });
-  };
-
-  findGalery = () => {
-    fetch(`${process.env.REACT_APP_API_RECURSOS}/carruseles`).then((res) => {
-      if (res.ok && res.status === 200) {
-        res.json().then((data) => {
-          this.setState({
-            galeria: data.data.registros,
-            loading: false,
-          });
-          console.log(this.state.galeria);
-        });
-      }
-    });
-  };
-  saveCarrusel() {
-    fetch(
-      `${process.env.REACT_APP_API_RECURSOS}/upimgcarrusel/${
-        this.state.galeria.id
-      }`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: "asdssffsdff",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(this.state.galeria),
-      }
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          console.log(result);
-          if (!result.err) {
-            this.fireMsg("Los datos se guardaron correctamente.", 0, 0);
-          } else {
-            if (result.errMsgs.length) {
-              this.fireMsg(result.errMsgs, 0, 0);
-            } else {
-              this.fireMsg(result.errMsg, 0, 0);
-            }
-          }
-        },
-        (error) => {
-          //???
-          console.log(error);
-        }
-      );
-  }
-
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
-    this.setState({
-      foto: {
-        ...this.state.foto,
-        [name]: value,
-      },
-    });
-  }
-
-  componentDidMount() {
-    //Obtener la Galeria
-    this.findGalery();
-  }
-
-  render() {
-    const loading = this.state.loading;
-    const galeria = this.state.galeria.map((foto) => {
-     
-      return (
-        <Col xs="6" md="3" key={`foto-${foto.id}`}>
-          <Card inverse className="mb-4">
-            <CardImg
-              width="100%"
-              className="img-card"
-              src={`${process.env.REACT_APP_API_HOST}/carrusel/${foto.image}`}
-              alt="Img"
-            />
-            <CardImgOverlay>
-              <Button
-                className="close bg-dark p-2 rounded"
-                aria-label="Close"
-                onClick={(e) =>
-                  this.askDelete(this.state.foto.id, this.state.foto.image, e)
-                }
-              >
-                <span aria-hidden="true">&times;</span>
-              </Button>
-            </CardImgOverlay>
-          </Card>
-
-          <div>
-            <div className="col-md-12">
-              <div className="form-group">
-                <label htmlFor="idGaleria">{foto.id}</label>
-                <input
-                  type="text"
-                  name="idGaleria"
-                  id="idGaleria"
-                  className="form-control"
-                  value={this.state.foto.idGaleria}
-                  onChange={this.handleInputChange}
-                  maxLength="50"
-                />
-              </div>
-            </div>
-            <span aria-hidden="true">
-              Activo
-              {"           "}
-            </span>
-            <input
-              type="checkbox"
-              name="activo"
-              id="activo"
-              value={this.state.foto.activo}
-              onChange={this.handleInputChange}
-              autoComplete="off"
-            />
-          </div>
-          <div>
-            <span aria-hidden="true">Vertical {"           "}</span>
-            <input
-              type="checkbox"
-              name="vertical"
-              id="vertical"
-              value={this.state.foto.vertical}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div>
-            <span aria-hidden="true">Horizontal {"           "}</span>
-            <input
-              type="checkbox"
-              name="horizontal"
-              id="horizontal"
-              value={this.state.foto.horizontal}
-              onChange={this.handleInputChange}
-            />
-          </div>
-
-          <center>
-            <button
-              className="btn btn-primary float-right"
-              onClick={this.saveCarrusel}
-            >
-              Guardar
-            </button>
-            {/*<Button
-              color="primary"
-              onClick={(e) => {
-                document.getElementById("uploadImage").click();
-              }}
-              style={{marginTop:"20px"}}
-            >
-              Cambiar{" "}
-            </Button>}
-          </center>
-        </Col>
-      );
-    });
-    return (
-      <div className="Galeria">
-        {loading ? (
-          <Loading />
-        ) : (
-          <div className="mb-4">
-            <Row>
-              <Col xs="12" md="12">
-                <div className="d-flex justify-content-start mb-3">
-                  <Input
-                    id="uploadImage"
-                    name="uploadImage"
-                    type="file"
-                    className="d-none"
-                    accept="image/*"
-                    onChange={this.handleImgChange}
-                  />
-                  <Button
-                    color="primary"
-                    onClick={(e) => {
-                      document.getElementById("uploadImage").click();
-                    }}
-                  >
-                    <i className="fas fa-camera" />
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-            <Row>{galeria}</Row>
-            <Row>
-              <Col xs="12" md="12">
-                <div className="alert alert-warning mt-4" role="alert">
-                  Advertencia!: Los cambios realizados a la galería de imágenes
-                  se guardan automáticamente!.
-                </div>
-              </Col>
-            </Row>
-          </div>
-        )}
-        <ModalMsg
-          open={this.state.modal.open}
-          titulo="Eliminar"
-          msg={this.state.modal.msg}
-          onlyOk={this.state.modal.onlyOk}
-          handleAceptar={this.handleDelete}
-          handleCancelar={this.handleCancel}
-        />
-        <style jsx="true">{`
-          .card-img-ovelay {
-            padding: 5px;
-          }
-          .card-img {
-            height: 200px;
-          }
-          @media only screen and (max-width: 990px) {
-            .card-img {
-              height: 100px;
-            }
-          }
-          @media only screen and (max-width: 778px) {
-            .card-img {
-              height: 200px;
-            }
-          }
-          @media only screen and (max-width: 400px) {
-            .card-img {
-              height: 130px;
-            }
-          }
-        `}</style>
-      </div>
-    );
-  }
-}
-export default CarruselHome;
-*/
-
 import React, { Component } from "react";
 import FormCarrusel from "./comcarrusel/FormCarrusel";
 import Msg from "../utiles/Msg";
-import MyEditor from "./subcomponentes/MyEditor";
+
 class CarruselHome extends Component {
   constructor(props) {
     super(props);
-    let date = new Date().toISOString().substr(0, 10);
     this.state = {
       loading: true,
       foto: {
-        activo: "",
-        idGaleria: "",
-        horizontal: "",
-        vertical: "",
-        image: "default.jpg",
+        activo: false,
+        idGHome: "",
+        horizontal: false,
+        vertical: false,
+        image: "default.jpg"
       },
       galeria: [],
       msg: {
@@ -445,21 +75,19 @@ class CarruselHome extends Component {
 
   handleFromNovSubmit(event) {
     event.preventDefault();
-
-    const data = new FormData();
-    data.append("activo", this.state.foto.activo);
-    data.append("idGaleria", this.state.foto.idGaleria);
-    data.append("horizontal", this.state.foto.horizontal);
-    data.append("vertical", this.state.foto.vertical);
-
+    const data = this.state.foto
     //Imágenes
     var img_uno = document.getElementById("upl-nov-uno").files[0];
-    console.log();
+    
     if (img_uno) {
-      data.append("img-uno", img_uno, img_uno.name);
+      Object.defineProperty(data, "img-uno", {
+        value: img_uno,
+        writable: true,
+        enumerable: true
+      });
     }
     //Verificar tamaño de las imágenes no mas de 4MB
-    if (data.has("img-uno")) {
+    /*if (data.has("img-uno")) {
       if (data.get("img-uno").size > 500000) {
         this.setState({
           msg: {
@@ -469,13 +97,15 @@ class CarruselHome extends Component {
         });
         return false;
       }
-    }
+    }*/
+    console.log(data)
     fetch(`${process.env.REACT_APP_API_HOST}/addimgcarrusel`, {
       method: "POST",
       headers: {
-        Authorization: "",
+        "Authorization": "asdssffsdff",
+        "Content-Type": "application/json"
       },
-      body: data,
+      body: JSON.stringify(data)
     })
       .then((res) => res.json())
       .then(
@@ -510,13 +140,12 @@ class CarruselHome extends Component {
       );
   }
   resetForm() {
-    let date = new Date().toISOString().substr(0, 10);
     this.setState({
       foto: {
-        activo: "",
-        idGaleria: "",
-        horizontal: "",
-        vertical: "",
+        activo: false,
+        idGHome: "",
+        horizontal: false,
+        vertical: false,
         image: "default.jpg",
       },
     });
@@ -532,16 +161,16 @@ class CarruselHome extends Component {
   }
 
   handleInputChange(event) {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
+    const target = event.target.name;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     this.setState({
       foto: {
         ...this.state.foto,
-        [name]: value,
+        [target]: value
       },
     });
   }
+  
   handleImgChange(event) {
     let id = "img-" + event.target.id;
     var reader = new FileReader();
@@ -634,13 +263,13 @@ class CarruselHome extends Component {
                     </div>
                     <div className="col-md-12">
                       <div className="form-group">
-                        <label htmlFor="idGaleria">IdGaleria</label>
+                        <label htmlFor="idGHome">IdGaleria</label>
                         <input
                           type="text"
-                          name="idGaleria"
-                          id="idGaleria"
+                          name="idGHome"
+                          id="idGHome"
                           className="form-control"
-                          value={this.state.foto.idGaleria}
+                          value={this.state.foto.idGHome}
                           onChange={this.handleInputChange}
                           maxLength="50"
                         />
@@ -658,7 +287,6 @@ class CarruselHome extends Component {
                           id="horizontal"
                           value={this.state.foto.horizontal}
                           onChange={this.handleInputChange}
-                          maxLength="75"
                         />
                       </div>
                     </div>

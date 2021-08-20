@@ -1,26 +1,19 @@
 import React, { Component } from "react";
 import { Consumer } from "../../../context";
 import Msg from "../../utiles/Msg";
-import MyEditor from "../../paginas/subcomponentes/MyEditor";
-/*
-    Parámetros:
-    id: Id de la Novedad
-    eliminar: manejador de evento de eliminación
-*/
 
 class FormCarrusel extends Component {
   constructor(props) {
     super(props);
-    let date = new Date().toISOString().substr(0, 10);
     this.state = {
       loading: true,
       id: 0,
       registro: {
         id: 0,
-        activo: "",
-        idGaleria: "",
-        horizontal: "",
-        vertical: "",
+        activo: false,
+        idGHome: "",
+        horizontal: false,
+        vertical: false,
         image: "default.jpg",
       },
       msg: {
@@ -35,20 +28,8 @@ class FormCarrusel extends Component {
     this.saveData = this.saveData.bind(this);
     this.askDelete = this.askDelete.bind(this);
     this.okDelete = this.okDelete.bind(this);
-    this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(
-      this
-    );
   }
 
-  handlDescripcionHTMLChange(desHTML, des) {
-    this.setState({
-      registro: {
-        ...this.state.registro,
-        descripcionHTML: desHTML,
-        descripcion: des,
-      },
-    });
-  }
   handleImgChange(event) {
     //disparador ej: file-1-${this.state.registro.id
     //imagen ej: img-1-${this.state.registro.id
@@ -93,7 +74,7 @@ class FormCarrusel extends Component {
     let date = {
         "id": this.state.registro.id,
         "activo": this.state.registro.activo,
-        "idGaleria": this.state.registro.idGaleria,
+        "idGHome": this.state.registro.idGHome,
         "horizontal": this.state.registro.horizontal,
         "vertical": this.state.registro.vertical,
         "image": this.state.registro.image,
@@ -108,12 +89,6 @@ class FormCarrusel extends Component {
       formData.append("image", image, image.name);
     }
 
-    /*
-        for(var pair of formData.entries()) {
-            console.log(pair[0]+ ', '+ pair[1]);
-        }
-        */
-    //Verificar tamaño de las imágenes no mas de 4MB
     if (formData.has("image")) {
       if (formData.get("image").size > 500000) {
         this.setState({
@@ -323,13 +298,13 @@ class FormCarrusel extends Component {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <label htmlFor="idGaleria">Id Galeria</label>
+                      <label htmlFor="idGHome">Id Galeria</label>
                       <input
                         type="text"
-                        name="idGaleria"
-                        id="idGaleria"
+                        name="idGHome"
+                        id="idGHome"
                         className="form-control"
-                        value={this.state.registro.idGaleria}
+                        value={this.state.registro.idGHome}
                         onChange={this.handleInputChange}
                         maxLength="75"
                       />

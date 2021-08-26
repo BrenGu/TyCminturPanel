@@ -70,36 +70,15 @@ class FormCarrusel extends Component {
 
   saveData(event) {
     event.preventDefault();
+    const data = this.state.registro     
     const formData = new FormData();
-    let date = {
-        "id": this.state.registro.id,
-        "activo": this.state.registro.activo,
-        "idGHome": this.state.registro.idGHome,
-        "horizontal": this.state.registro.horizontal,
-        "vertical": this.state.registro.vertical,
-        "image": this.state.registro.image,
-      };
-    Object.keys(this.state.registro).forEach((key) =>
-      formData.append(key, this.state.registro[key])
+    Object.keys(data).forEach((key) =>
+      formData.append(key, data[key])
     );
     //Imágenes
-    let image = document.getElementById(`file-1-${this.state.registro.id}`)
-      .files[0];
-    if (image) {
-      formData.append("image", image, image.name);
-    }
-
-    if (formData.has("image")) {
-      if (formData.get("image").size > 500000) {
-        this.setState({
-          msg: {
-            tipo: 0,
-            visible: true,
-            body: "El tamaño de la primer imágen supera los 4MB.",
-          },
-        });
-        return false;
-      }
+    var img_uno = document.getElementById("upl-nov-uno").files[0];
+    if (img_uno) {
+     formData.append("img-uno", img_uno, img_uno.name);
     }
 
     //Guardar los cambios
@@ -145,7 +124,7 @@ class FormCarrusel extends Component {
 
   handleInputChange(event) {
     const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
+    const value = target.type === "checkbox" ? (target.checked? 1 : 0) : target.value;
     const name = target.name;
     this.setState({
       registro: {
@@ -163,7 +142,7 @@ class FormCarrusel extends Component {
       },
 
       () => {
-        fetch(`${process.env.REACT_APP_API_HOST}/carruseles`, {
+        fetch(`${process.env.REACT_APP_API_HOST}/carrusel/${this.state.id}`, {
           method: "GET",
           headers: {
             Authorization: token,
@@ -254,7 +233,17 @@ class FormCarrusel extends Component {
                     <div className="form-group">
                     <span aria-hidden="true">Activo
                           {"           "}
-                      </span>
+                    </span>
+                    {this.state.registro.activo == 1?
+                        <input
+                        type="checkbox"
+                        name="activo"
+                        id="activo"
+                        checked
+                        value={this.state.registro.activo}
+                        onChange={this.handleInputChange}
+                         />
+                      :
                       <input
                         type="checkbox"
                         name="activo"
@@ -262,6 +251,7 @@ class FormCarrusel extends Component {
                         value={this.state.registro.activo}
                         onChange={this.handleInputChange}
                          />
+                    }
                     </div>
                   </div>
                 </div>
@@ -271,13 +261,24 @@ class FormCarrusel extends Component {
                     <span aria-hidden="true">Horizontal
                           {"           "}
                       </span>
-                      <input
+                      {this.state.registro.horizontal == 1?
+                          <input
+                          type="checkbox"
+                          name="horizontal"
+                          id="horizontal"
+                          checked
+                          value={this.state.registro.horizontal}
+                          onChange={this.handleInputChange}
+                          />
+                        :
+                        <input
                         type="checkbox"
                         name="horizontal"
                         id="horizontal"
                         value={this.state.registro.horizontal}
                         onChange={this.handleInputChange}
                         />
+                    }
                     </div>
                   </div>
                   <div className="col-sm-12 col-md-3">
@@ -285,13 +286,24 @@ class FormCarrusel extends Component {
                     <span aria-hidden="true">Vertical
                           {"           "}
                       </span>
-                      <input
+                      {this.state.registro.vertical == 1?
+                          <input
+                          type="checkbox"
+                          name="vertical"
+                          id="vertical"
+                          checked
+                          value={this.state.registro.vertical}
+                          onChange={this.handleInputChange}
+                        />
+                        :
+                        <input
                         type="checkbox"
                         name="vertical"
                         id="vertical"
                         value={this.state.registro.vertical}
                         onChange={this.handleInputChange}
                       />
+                    }
                     </div>
                   </div>
                 </div>

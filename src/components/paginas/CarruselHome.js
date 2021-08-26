@@ -74,38 +74,28 @@ class CarruselHome extends Component {
   }
 
   handleFromNovSubmit(event) {
-    event.preventDefault();
+    event.preventDefault();    
     const data = this.state.foto
+    data.activo? data.activo = 1 :data.activo = 0;
+    data.vertical? data.vertical = 1 :data.vertical = 0;
+    data.horizontal? data.horizontal = 1 :data.horizontal = 0;
+     
+    const formData = new FormData();
+    Object.keys(data).forEach((key) =>
+      formData.append(key, data[key])
+    );
     //Imágenes
     var img_uno = document.getElementById("upl-nov-uno").files[0];
-    
     if (img_uno) {
-      Object.defineProperty(data, "img-uno", {
-        value: img_uno,
-        writable: true,
-        enumerable: true
-      });
+     formData.append("img-uno", img_uno, img_uno.name);
     }
-    //Verificar tamaño de las imágenes no mas de 4MB
-    /*if (data.has("img-uno")) {
-      if (data.get("img-uno").size > 500000) {
-        this.setState({
-          msg: {
-            visible: true,
-            body: "El tamaño de la primer imágen supera los 4MB.",
-          },
-        });
-        return false;
-      }
-    }*/
-    console.log(data)
+
     fetch(`${process.env.REACT_APP_API_HOST}/addimgcarrusel`, {
       method: "POST",
       headers: {
-        "Authorization": "asdssffsdff",
-        "Content-Type": "application/json"
+        "Authorization": "asdssffsdff"
       },
-      body: JSON.stringify(data)
+      body: formData
     })
       .then((res) => res.json())
       .then(

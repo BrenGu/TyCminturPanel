@@ -9,12 +9,13 @@ class CarruselHome extends Component {
       loading: true,
       foto: {
         activo: false,
-        idGHome: "",
+        idGHome: 1,
         horizontal: false,
         vertical: false,
         image: "default.jpg"
       },
       galeria: [],
+      galHome: [],
       msg: {
         visible: false,
         body: "",
@@ -23,6 +24,7 @@ class CarruselHome extends Component {
     this.getData = this.getData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.resetForm = this.resetForm.bind(this);
+    this.handleGalChange = this.handleGalChange.bind(this);
     this.handleImgChange = this.handleImgChange.bind(this);
     this.handleFromNovSubmit = this.handleFromNovSubmit.bind(this);
     this.eliminarNovedad = this.eliminarNovedad.bind(this);
@@ -90,6 +92,7 @@ class CarruselHome extends Component {
      formData.append("img-uno", img_uno, img_uno.name);
     }
 
+    formData.forEach(e => console.log(e))
     fetch(`${process.env.REACT_APP_API_HOST}/addimgcarrusel`, {
       method: "POST",
       headers: {
@@ -133,7 +136,7 @@ class CarruselHome extends Component {
     this.setState({
       foto: {
         activo: false,
-        idGHome: "",
+        idGHome: 1,
         horizontal: false,
         vertical: false,
         image: "default.jpg",
@@ -199,8 +202,45 @@ class CarruselHome extends Component {
           console.log(error);
         }
       );
+
+      fetch(`${process.env.REACT_APP_API_HOST}/galeriaHome`, {
+      method: "GET",
+      headers: {
+        Authorization: "",
+      },
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (!result.err) {
+            this.setState({
+              galHome: result.data.registros,
+            });
+          } else {
+            this.setState({
+              msg: {
+                visible: true,
+                body: result.errMsg,
+              },
+            });
+          }
+        },
+        (error) => {
+          //???
+          console.log(error);
+        }
+      );
     this.setState({
       loading: false,
+    });
+  }
+
+  handleGalChange(event) {
+    this.setState({
+      foto: {
+        ...this.state.foto,
+        idGHome: event.target.value,
+      },
     });
   }
 
@@ -209,6 +249,13 @@ class CarruselHome extends Component {
   }
 
   render() {
+    const gal = this.state.galHome.map((g) => {
+      return (
+      <option key={`loc-${g.id}`} value={g.id}>
+        {g.nombre}
+      </option>)
+    })
+
     const fotos = this.state.galeria.map((foto) => {
       return (
         <FormCarrusel
@@ -218,6 +265,7 @@ class CarruselHome extends Component {
         />
       );
     });
+
     return (
       <div className="Novedades">
         {this.state.loading ? (
@@ -254,15 +302,15 @@ class CarruselHome extends Component {
                     <div className="col-md-12">
                       <div className="form-group">
                         <label htmlFor="idGHome">IdGaleria</label>
-                        <input
-                          type="text"
-                          name="idGHome"
-                          id="idGHome"
-                          className="form-control"
-                          value={this.state.foto.idGHome}
-                          onChange={this.handleInputChange}
-                          maxLength="50"
-                        />
+                        <select
+                        name="idGHome"
+                        id="idGHome"
+                        className="form-control"
+                        value={this.state.foto.idGHome}
+                        onChange={this.handleGalChange}
+                        >
+                          {gal}
+                        </select>
                       </div>
                     </div>
                     <div className="col-md-12">
@@ -301,8 +349,6 @@ class CarruselHome extends Component {
                 <div>
                   <div className="row">
                     <div className="col mb-2">
-                      Tamaño sugerido no menor a 800px de ancho 600px de alto
-                      72ppp
                     </div>
                     <div className="d-flex">
                       <div className="col">

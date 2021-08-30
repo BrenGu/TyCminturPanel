@@ -16,6 +16,7 @@ class FormCarrusel extends Component {
         vertical: false,
         image: "default.jpg",
       },
+      galHome: [],
       msg: {
         visible: false,
         body: "",
@@ -25,6 +26,7 @@ class FormCarrusel extends Component {
     this.setData = this.setData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleImgChange = this.handleImgChange.bind(this);
+    this.handleGalChange = this.handleGalChange.bind(this);
     this.saveData = this.saveData.bind(this);
     this.askDelete = this.askDelete.bind(this);
     this.okDelete = this.okDelete.bind(this);
@@ -134,6 +136,15 @@ class FormCarrusel extends Component {
     });
   }
 
+  handleGalChange(event) {
+    this.setState({
+      registro: {
+        ...this.state.registro,
+        idGHome: event.target.value,
+      },
+    });
+  }
+
   setData() {
     let token = this.context.token;
     this.setState(
@@ -177,6 +188,34 @@ class FormCarrusel extends Component {
           );
       }
     );
+
+    fetch(`${process.env.REACT_APP_API_HOST}/galeriaHome`, {
+      method: "GET",
+      headers: {
+        Authorization: "",
+      },
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (!result.err) {
+            this.setState({
+              galHome: result.data.registros,
+            });
+          } else {
+            this.setState({
+              msg: {
+                visible: true,
+                body: result.errMsg,
+              },
+            });
+          }
+        },
+        (error) => {
+          //???
+          console.log(error);
+        }
+      );
   }
 
   componentDidMount() {
@@ -190,6 +229,13 @@ class FormCarrusel extends Component {
   }
 
   render() {
+    const gal = this.state.galHome.map((g) => {
+      return (
+      <option key={`loc-${g.id}`} value={g.id}>
+        {g.nombre}
+      </option>)
+    })
+
     return (
       <React.Fragment>
         {this.state.loading ? (
@@ -310,16 +356,16 @@ class FormCarrusel extends Component {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <label htmlFor="idGHome">Id Galeria</label>
-                      <input
-                        type="text"
-                        name="idGHome"
-                        id="idGHome"
-                        className="form-control"
-                        value={this.state.registro.idGHome}
-                        onChange={this.handleInputChange}
-                        maxLength="75"
-                      />
+                      <label htmlFor="idGHome">IdGaleria</label>
+                      <select
+                      name="idGHome"
+                      id="idGHome"
+                      className="form-control"
+                      value={this.state.registro.idGHome}
+                      onChange={this.handleGalChange}
+                      >
+                        {gal}
+                      </select>
                     </div>
                   </div>
                 </div>

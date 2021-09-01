@@ -33,8 +33,6 @@ class FormCarrusel extends Component {
   }
 
   handleImgChange(event) {
-    //disparador ej: file-1-${this.state.registro.id
-    //imagen ej: img-1-${this.state.registro.id
     let disparador = event.target.id.split("-");
     let id = `img-${disparador[1]}-${disparador[2]}`;
     var reader = new FileReader();
@@ -78,7 +76,7 @@ class FormCarrusel extends Component {
       formData.append(key, data[key])
     );
     //Imágenes
-    var img_uno = document.getElementById("upl-nov-uno").files[0];
+    var img_uno = document.getElementById(`file-1-${data.id}`).files[0];
     if (img_uno) {
      formData.append("img-uno", img_uno, img_uno.name);
     }

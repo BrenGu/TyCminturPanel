@@ -126,12 +126,21 @@ class FormCarrusel extends Component {
     const target = event.target;
     const value = target.type === "checkbox" ? (target.checked? 1 : 0) : target.value;
     const name = target.name;
-    this.setState({
+    this.setState(name == "horizontal" ? {
       registro: {
         ...this.state.registro,
+        vertical: false,
         [name]: value,
       },
-    });
+    }: name == "vertical" ? {
+      registro: {
+      ...this.state.registro,
+      horizontal: false,
+      [name]: value
+    }}:{registro: {
+      ...this.state.registro,
+      [name]: value
+    }} );
   }
 
   handleGalChange(event) {
@@ -300,10 +309,9 @@ class FormCarrusel extends Component {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-sm-12 col-md-9">
+                  <div className="col-sm-12 col-md-8">
                     <div className="form-group">
-                    <span aria-hidden="true">Horizontal
-                          {"           "}
+                    <span aria-hidden="true">Horizontal (Para versión web) {" "} 
                       </span>
                       {this.state.registro.horizontal == 1?
                           <input
@@ -325,10 +333,9 @@ class FormCarrusel extends Component {
                     }
                     </div>
                   </div>
-                  <div className="col-sm-12 col-md-3">
+                  <div className="col-sm-12 col-md-4">
                     <div className="form-group">
-                    <span aria-hidden="true">Vertical
-                          {"           "}
+                    <span aria-hidden="true">Vertical (Para versión mobile) {" "} 
                       </span>
                       {this.state.registro.vertical == 1?
                           <input

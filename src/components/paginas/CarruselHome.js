@@ -156,12 +156,21 @@ class CarruselHome extends Component {
   handleInputChange(event) {
     const target = event.target.name;
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-    this.setState({
+    this.setState(target == "horizontal" ? {
       foto: {
         ...this.state.foto,
-        [target]: value
+        vertical: false,
+        [target]: value,
       },
-    });
+    }: target == "vertical" ? {
+      foto: {
+      ...this.state.foto,
+      horizontal: false,
+      [target]: value
+    }}:{foto: {
+      ...this.state.foto,
+      [target]: value
+    }} );
   }
   
   handleImgChange(event) {
@@ -173,6 +182,7 @@ class CarruselHome extends Component {
     };
     reader.readAsDataURL(event.target.files[0]);
   }
+  
   getData() {
     fetch(`${process.env.REACT_APP_API_HOST}/carruseles`, {
       method: "GET",
@@ -318,7 +328,19 @@ class CarruselHome extends Component {
                         <span aria-hidden="true">
                           Horizontal
                           {"           "}
+                          (Para versión web)
+                          {"           "}
                         </span>
+                        {
+                          this.state.foto.horizontal?
+                          <input
+                          type="checkbox"
+                          name="horizontal"
+                          checked
+                          id="horizontal"
+                          value={this.state.foto.horizontal}
+                          onChange={this.handleInputChange}
+                        />:
                         <input
                           type="checkbox"
                           name="horizontal"
@@ -326,6 +348,8 @@ class CarruselHome extends Component {
                           value={this.state.foto.horizontal}
                           onChange={this.handleInputChange}
                         />
+                        }
+                        
                       </div>
                     </div>
 
@@ -334,14 +358,29 @@ class CarruselHome extends Component {
                         <span aria-hidden="true">
                           Vertical
                           {"           "}
+                          (Para versión mobile)
+                          {"           "}
                         </span>
-                        <input
+                        {
+                          this.state.foto.vertical?
+                          <input
                           type="checkbox"
                           name="vertical"
                           id="vertical"
+                          checked
                           value={this.state.foto.vertical}
                           onChange={this.handleInputChange}
                         />
+                        :
+                        <input
+                        type="checkbox"
+                        name="vertical"
+                        id="vertical"
+                        value={this.state.foto.vertical}
+                        onChange={this.handleInputChange}
+                      />
+                        }
+                       
                       </div>
                     </div>
                   </div>

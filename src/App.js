@@ -21,6 +21,7 @@ import GuiasTurismo from "./components/paginas/GuiasdeTurismo";
 import Estadisticas from "./components/paginas/Estadisticas";
 import Gastronomia from "./components/paginas/Gastronomia";
 import CarruselHome from "./components/paginas/CarruselHome";
+import GaleriaHome from "./components/paginas/GaleriaHome";
 import AgenciaViajes from "./components/paginas/AgenciaViajes"
 import FormAgenciasViajes from "./components/paginas/comguiasturisticos/FormAgenciasViajes"
 import Censistas from "./components/paginas/Censistas";
@@ -92,6 +93,7 @@ class App extends Component {
 											<Route path="/alquilerautos"component={AlquilerAutos} />
 											<Route path="/casacambio"component={CasaCambio} />
 											<Route path="/carruselhome"component={CarruselHome} />
+											<Route path="/galeriahome" component={GaleriaHome}/>
 											<Route path="/agencias-viajes"component={AgenciaViajes} />
 											<Route path="/form-agencia-viajes"component={FormAgenciasViajes} />
 											<Route component={NoFound} />

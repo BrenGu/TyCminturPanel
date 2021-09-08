@@ -53,7 +53,14 @@ class Menu extends Component {
                     <div className="row">
                         <div className="col">
                             <ul className="d-flex flex-direction-row justify-content-center h-menu">
-                                <li><Link to="/carruselhome">Carrusel Home</Link></li>
+                                <li className="nav-item dropdown">
+                                <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Carrusel</button>
+                                <div className="dropdown-menu">
+                                    <Link className="dropdown-item" to="/carruselhome">Carrusel Home</Link>
+                                    <div className="dropdown-divider"></div>
+                                    <Link className="dropdown-item" to="/galeriahome">Galerias Home</Link>                                       
+                                    </div>                                    
+                                    </li>
                                 <li><Link to="/">Zonas</Link></li>
                                 <li className="nav-item dropdown">
                                     <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Localidades</button>

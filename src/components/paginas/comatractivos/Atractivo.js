@@ -1,5 +1,9 @@
-import React, { Component } from "react";
+import React, { Component, useState} from "react";
 import Msg from "../../utiles/Msg";
+
+import 'bootstrap/dist/css/bootstrap.min.css'
+import axios from "axios";
+
 import Galeria from "./Galeria";
 import ddToDms from "../../../gm";
 import MyEditor from "../../paginas/subcomponentes/MyEditor";
@@ -36,13 +40,14 @@ class Atractivo extends Component {
                 viernes: "",
                 sabado: "",
                 domingo: "",
-                imperdible: false
+                audio:""
             },
             Msg: {
                 MsgTipo: 0,
                 MsgVisible: false,
                 MsgBody: ""
             },
+            file:'',
             idDelete: 0
         };
         this.handleChange = this.handleChange.bind(this);
@@ -54,6 +59,7 @@ class Atractivo extends Component {
         this.delAtractivo = this.delAtractivo.bind(this);
         this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(this);
         this.handleTipoChange = this.handleTipoChange.bind(this);
+        this.handleFile =this.handleFile.bind(this);
     }
 
     handlDescripcionHTMLChange(desHTML, des) {
@@ -152,18 +158,64 @@ class Atractivo extends Component {
         });
     }
 
-    saveAtractivo() {
+    handleFile(e){
+        
+        const file = e.target.files[0]
+        this.setState({file:file})
+
+        console.log(file, "AAAAA");
+      
+    }
+
+    saveAtractivo (id) {  
+        let data = {
+            
+            idlocalidad: this.state.idlocalidad,
+            idTipo: this.state.idTipo,
+            tipo: this.state.tipo,
+            nombre: this.state.nombre,
+            domicilio: this.state.domicilio,
+            descripcion: this.state.descripcion,
+            descripcionHTML: this.state.descripcionHTML,
+            latitud: this.state.longitud,
+            longitud: this.state.longitud,
+            latitudg: this.state.latitudg,
+            longitudg: this.state.longitudg,
+            telefono: this.state.telefono,
+            mail: this.state.mail,
+            web: this.state.web,
+            costo: this.state.costo,
+            lunes: this.state.lunes,
+            martes: this.state.martes,
+            miercoles: this.state.miercoles,
+            jueves: this.state.jueves,
+            viernes: this.state.viernes,
+            sabado: this.state.sabado,
+            domingo: this.state.domingo,
+            audio: file
+            
+        }
+      const file = this.state.file
+       /* const formData = new FormData();
+
+        console.log ("The STATE ----------SSS", this.state);
+
+       formData.append('audio', file);
+       formData.append('name', 'audio');
+*/
         fetch(`${process.env.REACT_APP_API_HOST}/atractivo/${this.state.atractivo.id}`, {
             method: 'PATCH',
             headers: {
                 "Authorization": "asdssffsdff",
+                //"Content-Type": "multipart/form-data"
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(this.state.atractivo)
+           body: JSON.stringify(data)
+           
         })
         .then(res => res.json())
         .then((result) => {
-            console.log(result);
+            console.log("APERR",this.state.atractivo);
             if(!result.err) {
                 this.fireMsg("Los datos se guardaron correctamente.", 0, 0);
             } else {
@@ -273,6 +325,9 @@ class Atractivo extends Component {
               </option>
             );
         });
+
+      
+
         return (
             <React.Fragment>
             {
@@ -452,6 +507,14 @@ class Atractivo extends Component {
                                                 <label htmlFor="domingo">Domingo</label>
                                                 <input type="text" name="domingo" id="domingo" className="form-control" value={this.state.atractivo.domingo} onChange={this.handleChange} autoComplete="off" />
                                             </div>
+                                            <div className="form-group
+                                            ">
+                                                <br/>
+                                                <input type="file" name="file" multiple onChange={(e)=> this.handleFile(e)} />
+                                                <br/>
+                                                
+                                            </div>
+
                                             <button className="btn btn-primary float-right" onClick={this.saveAtractivo}>Guardar</button>
                                         </div>
                                     </div>

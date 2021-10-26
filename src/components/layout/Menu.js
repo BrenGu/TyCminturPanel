@@ -57,8 +57,8 @@ class Menu extends Component {
                                 <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Carrusel</button>
                                 <div className="dropdown-menu">
                                     <Link className="dropdown-item" to="/carruselhome">Carrusel Home</Link>
-                                    <div className="dropdown-divider"></div>
-                                    <Link className="dropdown-item" to="/galeriahome">Galerias Home</Link>                                       
+                                    {/*<div className="dropdown-divider"></div>
+                                    <Link className="dropdown-item" to="/galeriahome">Galerias Home</Link>*/}                                       
                                     </div>                                    
                                     </li>
                                 <li><Link to="/">Zonas</Link></li>

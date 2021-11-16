@@ -18,14 +18,14 @@ class FormGuiasTuristicos extends Component {
       id: 0,
       registro: {
         idciudad: 6, //Ciudad de San Luis por defecto
-        legajo: "",
+        legajo: 0,
         categoria: "Guía profesional de Turismo",
         nombre: "",
         telefono: "",
         ambito: "",
         correo: "",
-        adhiereDosep: false,
-        adhiereCovid: false,
+        adhiereDosep: 0,
+        adhiereCovid: 0,
         fechUltimaRenovacion: date,
         dni: 0,
         fechNac: date,

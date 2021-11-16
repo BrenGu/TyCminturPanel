@@ -12,22 +12,22 @@ class guiasdeturismo extends Component {
       id: 0,
       guia: {
         idciudad: 6, //Ciudad de San Luis por defecto
-        legajo: "",
+        legajo: 0,
         categoria: "Guía profesional de Turismo",
         nombre: "",
         telefono: "",
         ambito: "",
         correo: "",
-        adhiereDosep: false,
-        adhiereCovid: false,
+        adhiereDosep: 0,
+        adhiereCovid: 0,
         fechUltimaRenovacion: date,
         dni: 0,
         fechNac: date,
         direccion: "",
         foto: "default.jpg",
-        capacitaciones: "",
-        certificados: "",
-        titulo: "",
+        capacitaciones: "default",
+        certificados: "default",
+        titulo: "default",
       },
       guias: [],
       localidades: [],
@@ -141,7 +141,7 @@ class guiasdeturismo extends Component {
     data.append("dni", this.state.guia.dni);
     data.append("fechNac", this.state.guia.fechNac);
     data.append("direccion", this.state.guia.direccion);
-  
+
     //ARCHIVOS
     var img = document.getElementById("upl-nov-uno").files[0];
     if (img) {
@@ -163,11 +163,14 @@ class guiasdeturismo extends Component {
       data.append("titulo-file", titulo, titulo.name);
     }
 
-    let token = this.context.token;
+    data.forEach(e => {
+      console.log(e);
+    })
+
     fetch(`${process.env.REACT_APP_API_HOST}/guiasturismox/new`, {
       method: "POST",
       headers: {
-        "Authorization": token,
+        "Authorization": ""
       },
       body: data,
     })
@@ -209,35 +212,35 @@ class guiasdeturismo extends Component {
     this.setState({
       guia: {
         idciudad: 6, //Ciudad de San Luis por defecto
-        legajo: "",
+        legajo: 0,
         categoria: "Guía profesional de Turismo",
         nombre: "",
         telefono: "",
         ambito: "",
         correo: "",
-        adhiereDosep: false,
-        adhiereCovid: false,
+        adhiereDosep: 0,
+        adhiereCovid: 0,
         fechUltimaRenovacion: date,
         dni: 0,
         fechNac: date,
         direccion: "",
         foto: "default.jpg",
-        capacitaciones: "",
-        certificados: "",
-        titulo: "",
+        capacitaciones: "default",
+        certificados: "default",
+        titulo: "default",
       }
     });
     document.getElementById("frm-novedades").reset();
   }
 
   handleInputChange(event) {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
+    const target = event.target.name;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+
     this.setState({
       guia: {
         ...this.state.guia,
-        [name]: value
+        [target]: value
       }
     });
   }

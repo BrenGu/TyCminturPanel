@@ -174,7 +174,7 @@ class Atractivo extends Component {
         if (file_uno) {
             formData.append("file-uno", file_uno, file_uno.name);
         }
-        formData.forEach((e) => console.log(e));
+
         fetch(`${process.env.REACT_APP_API_HOST}/atractivo/${this.props.idAtractivo}`, {
             method: 'POST',
             headers: {

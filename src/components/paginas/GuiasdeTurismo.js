@@ -1,24 +1,37 @@
 import React, { Component } from "react";
 import FormGuiasTuristicos from "./comguiasturisticos/FormGuiasTuristicos";
 import Msg from "../utiles/Msg";
+import AreasServicio from "./comguiasturisticos/AreasServicio";
 
 class guiasdeturismo extends Component {
   constructor(props) {
     super(props);
+    let date = new Date().toISOString().substr(0, 10);
     this.state = {
       loading: true,
-      novedad: {
+      id: 0,
+      guia: {
         idciudad: 6, //Ciudad de San Luis por defecto
         legajo: "",
-        categoria: "",
+        categoria: "Guía profesional de Turismo",
         nombre: "",
         telefono: "",
         ambito: "",
         correo: "",
-        adhiereDosep: false
+        adhiereDosep: false,
+        adhiereCovid: false,
+        fechUltimaRenovacion: date,
+        dni: 0,
+        fechNac: date,
+        direccion: "",
+        foto: "default.jpg",
+        capacitaciones: "",
+        certificados: "",
+        titulo: "",
       },
-      novedades: [],
+      guias: [],
       localidades: [],
+      categorias: ["Guía profesional de Turismo", "Guía idóneo", "Guía baqueano"],
       msg: {
         visible: false,
         body: ""
@@ -28,21 +41,44 @@ class guiasdeturismo extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.resetForm = this.resetForm.bind(this);
     this.handleImgChange = this.handleImgChange.bind(this);
-    this.handleFromNovSubmit = this.handleFromNovSubmit.bind(this);
-    this.eliminarNovedad = this.eliminarNovedad.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.eliminarGuia = this.eliminarGuia.bind(this);
     this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
+    this.handleCategoriaChange = this.handleCategoriaChange.bind(this);
+    this.handleFileChange = this.handleFileChange.bind(this);
+  }
+
+  handleFileChange(event){
+    const target = event.target.name.slice(4);
+    console.log(target);
+    const value = document.getElementById(`${event.target.name}`).files[0].name;
+    this.setState({
+        guia: {
+            ...this.state.guia,
+            [target]: value
+        }
+    });
   }
 
   handleLocalidadChange(event) {
     this.setState({
-      novedad: {
-        ...this.state.novedad,
+      guia: {
+        ...this.state.guia,
         idciudad: event.target.value
       }
     });
   }
 
-  eliminarNovedad(id) {
+  handleCategoriaChange(event) {
+    this.setState({
+      guia: {
+        ...this.state.guia,
+        categoria: event.target.value
+      }
+    });
+  }
+
+  eliminarGuia(id) {
     this.setState(
       {
         loading: true
@@ -87,15 +123,53 @@ class guiasdeturismo extends Component {
     );
   }
 
-  handleFromNovSubmit(event) {
+  handleFormSubmit(event) {
     event.preventDefault();
-    fetch(`${process.env.REACT_APP_API_HOST}/guiasturismox`, {
+
+    const data = new FormData();
+    
+    data.append("idciudad", this.state.guia.idciudad);
+    data.append("legajo", this.state.guia.legajo);
+    data.append("categoria", this.state.guia.categoria);
+    data.append("nombre", this.state.guia.nombre);
+    data.append("telefono", this.state.guia.telefono);
+    data.append("ambito", this.state.guia.ambito);
+    data.append("correo", this.state.guia.correo);
+    data.append("adhiereDosep", this.state.guia.adhiereDosep);
+    data.append("adhiereCovid", this.state.guia.adhiereCovid);
+    data.append("fechUltimaRenovacion", this.state.guia.fechUltimaRenovacion);
+    data.append("dni", this.state.guia.dni);
+    data.append("fechNac", this.state.guia.fechNac);
+    data.append("direccion", this.state.guia.direccion);
+  
+    //ARCHIVOS
+    var img = document.getElementById("upl-nov-uno").files[0];
+    if (img) {
+      data.append("foto-file", img, img.name);
+    }
+
+    var cap = document.getElementById("upl-capacitaciones").files[0];
+    if (cap) {
+      data.append("capacitaciones-file", cap, cap.name);
+    }
+
+    var cer = document.getElementById("upl-certificados").files[0];
+    if (cer) {
+      data.append("certificados-file", cer, cer.name);
+    }
+
+    var titulo = document.getElementById("upl-titulo").files[0];
+    if (titulo) {
+      data.append("titulo-file", titulo, titulo.name);
+    }
+
+    let token = this.context.token;
+    fetch(`${process.env.REACT_APP_API_HOST}/guiasturismox/new`, {
       method: "POST",
       headers: {
-        "Authorization": "asdssffsdff",
-        "Content-Type": "application/json"
+        Authorization: token,
       },
-      body: JSON.stringify(this.state.novedad)
+      body: data,
     })
       .then(res => res.json())
       .then(
@@ -103,6 +177,7 @@ class guiasdeturismo extends Component {
           if (!result.err) {
             this.setState(
               {
+                id: result.insertId,
                 msg: {
                   visible: true,
                   body: "Los datos se agregaron correctamente"
@@ -132,15 +207,24 @@ class guiasdeturismo extends Component {
   resetForm() {
     let date = new Date().toISOString().substr(0, 10);
     this.setState({
-      novedad: {
-        idciudad: "",
+      guia: {
+        idciudad: 6, //Ciudad de San Luis por defecto
         legajo: "",
-        categoria: "",
+        categoria: "Guía profesional de Turismo",
         nombre: "",
         telefono: "",
         ambito: "",
         correo: "",
-        adhiereDosep: false
+        adhiereDosep: false,
+        adhiereCovid: false,
+        fechUltimaRenovacion: date,
+        dni: 0,
+        fechNac: date,
+        direccion: "",
+        foto: "default.jpg",
+        capacitaciones: "",
+        certificados: "",
+        titulo: "",
       }
     });
     document.getElementById("frm-novedades").reset();
@@ -151,8 +235,8 @@ class guiasdeturismo extends Component {
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
     this.setState({
-      novedad: {
-        ...this.state.novedad,
+      guia: {
+        ...this.state.guia,
         [name]: value
       }
     });
@@ -180,7 +264,7 @@ class guiasdeturismo extends Component {
         result => {
           if (!result.err) {
             this.setState({
-              novedades: result.data.registros
+              guias: result.data.registros
             });
           } else {
             this.setState({
@@ -240,6 +324,7 @@ class guiasdeturismo extends Component {
           }
         );
     });
+
     Promise.all([ciudades]).then(values => {
       this.setState({
         loading: false
@@ -252,14 +337,22 @@ class guiasdeturismo extends Component {
   }
 
   render() {
-    const lista_guias = this.state.novedades.map(novedad => {
+    const lista_guias = this.state.guias.map(novedad => {
       return (
         <FormGuiasTuristicos
           key={`novedad-${novedad.id}`}
           id={novedad.id}
           localidades={this.state.localidades}
-          eliminar={this.eliminarNovedad}
+          eliminar={this.eliminarGuia}
         />
+      );
+    });
+    
+    const categorias = this.state.categorias.map(cat => {
+      return (
+        <option key={`cat-${cat}`} value={cat}>
+          {cat}
+        </option>
       );
     });
     const localidades = this.state.localidades.map(localidad => {
@@ -280,7 +373,7 @@ class guiasdeturismo extends Component {
             </h4>
             <form
               method="post"
-              onSubmit={this.handleFromNovSubmit}
+              onSubmit={this.handleFormSubmit}
               id="frm-novedades"
             >
               <div className="grid-noveades">
@@ -293,7 +386,7 @@ class guiasdeturismo extends Component {
                           name="idciudad"
                           id="idciudad"
                           className="form-control"
-                          value={this.state.novedad.idciudad}
+                          value={this.state.guia.idciudad}
                           onChange={this.handleLocalidadChange}
                         >
                           {localidades}
@@ -308,7 +401,7 @@ class guiasdeturismo extends Component {
                           name="legajo"
                           id="legajo"
                           className="form-control"
-                          value={this.state.novedad.legajo}
+                          value={this.state.guia.legajo}
                           onChange={this.handleInputChange}
                           maxLength="50"
                         />
@@ -317,15 +410,24 @@ class guiasdeturismo extends Component {
                     <div className="col-md-12">
                       <div className="form-group">
                         <label htmlFor="categoria">Categoría</label>
-                        <input
+                        <select
+                          name="categoria"
+                          id="categoria"
+                          className="form-control"
+                          value={this.state.guia.categoria}
+                          onChange={this.handleCategoriaChange}
+                        >
+                          {categorias}
+                        </select>
+                        {/*<input
                           type="text"
                           name="categoria"
                           id="categoria"
                           className="form-control"
-                          value={this.state.novedad.categoria}
+                          value={this.state.guia.categoria}
                           onChange={this.handleInputChange}
                           maxLength="75"
-                        />
+                        />*/}
                       </div>
                     </div>
 
@@ -337,7 +439,34 @@ class guiasdeturismo extends Component {
                           name="nombre"
                           id="nombre"
                           className="form-control"
-                          value={this.state.novedad.nombre}
+                          value={this.state.guia.nombre}
+                          onChange={this.handleInputChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-group">
+                          <label htmlFor="dni">Dni</label>
+                          <input
+                            type="number"
+                            name="dni"
+                            id="dni"
+                            className="form-control"
+                            value={this.state.guia.dni}
+                            onChange={this.handleInputChange}
+                          />
+                        </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label htmlFor="direccion">Direccion</label>
+                        <input
+                          type="text"
+                          name="direccion"
+                          id="direccion"
+                          className="form-control"
+                          value={this.state.guia.direccion}
                           onChange={this.handleInputChange}
                         />
                       </div>
@@ -350,7 +479,7 @@ class guiasdeturismo extends Component {
                           name="telefono"
                           id="telefono"
                           className="form-control"
-                          value={this.state.novedad.telefono}
+                          value={this.state.guia.telefono}
                           onChange={this.handleInputChange}
                         />
                       </div>
@@ -363,7 +492,7 @@ class guiasdeturismo extends Component {
                           name="correo"
                           id="correo"
                           className="form-control"
-                          value={this.state.novedad.correo}
+                          value={this.state.guia.correo}
                           onChange={this.handleInputChange}
                         />
                       </div>
@@ -374,13 +503,103 @@ class guiasdeturismo extends Component {
                 <div>
                   <div className="col">
                     <div className="form-group">
+                      <label htmlFor="fecha">Fecha de nacimiento</label>
+                      <input
+                        type="date"
+                        name="fechNac"
+                        id="fechNac"
+                        className="form-control"
+                        value={this.state.guia.fechNac}
+                        onChange={this.handleInputChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="fecha">Fecha de ultima renovacion</label>
+                      <input
+                        type="date"
+                        name="fechUltimaRenovacion"
+                        id="fechUltimaRenovacion"
+                        className="form-control"
+                        value={this.state.guia.fechUltimaRenovacion}
+                        onChange={this.handleInputChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="upl-nov-uno">Foto</label>
+                        <br/>
+                        <input
+                          type="file"
+                          className="d-none"
+                          name="upl-nov-uno"
+                          id="upl-nov-uno"
+                          accept="image/*"
+                          onChange={this.handleImgChange}
+                        />
+                        <img
+                          id="img-upl-nov-uno"
+                          className="img-fluid img-novedad"
+                          src={`${process.env.REACT_APP_API_HOST}/${
+                            process.env.REACT_APP_API_DIRECTORY_GUIAS_FOTOS
+                          }/${this.state.guia.foto}`}
+                          alt="Foto"
+                          onClick={(e) => {
+                            document.getElementById("upl-nov-uno").click();
+                          }}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="upl-certificados">Certificado: </label>
+                        <input
+                          type="file"
+                          className="d-none"
+                          name="upl-certificados"
+                          id="upl-certificados"
+                          accept="application/msword, application/pdf"
+                          onChange={this.handleFileChange}
+                        />
+                        <i className="far fa-file-pdf" style={{marginLeft: "20px"}}  id="arc-upl-certificado" onClick={(e) => {
+                            document.getElementById("upl-certificados").click();
+                        }}></i>
+                        <span style={{marginLeft:"10px"}}>{this.state.guia.certificados}</span>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="upl-capacitaciones">Capacitacion: </label>
+                        <input
+                          type="file"
+                          className="d-none"
+                          name="upl-capacitaciones"
+                          id="upl-capacitaciones"
+                          accept="application/msword, application/pdf"
+                          onChange={this.handleFileChange}
+                        />
+                        <i className="far fa-file-pdf" style={{marginLeft: "20px"}}  id="arc-upl-capacitacion" onClick={(e) => {
+                            document.getElementById("upl-capacitaciones").click();
+                        }}></i>
+                        <span style={{marginLeft:"10px"}}>{this.state.guia.capacitaciones}</span>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="upl-titulo">Titulo: </label>
+                        <input
+                          type="file"
+                          className="d-none"
+                          name="upl-titulo"
+                          id="upl-titulo"
+                          accept="application/msword, application/pdf"
+                          onChange={this.handleFileChange}
+                        />
+                        <i className="far fa-file-pdf" style={{marginLeft: "20px"}}  id="arc-upl-titulo" onClick={(e) => {
+                            document.getElementById("upl-titulo").click();
+                        }}></i>
+                        <span style={{marginLeft:"10px"}}>{this.state.guia.titulo}</span>
+                    </div>
+                    {/*<div className="form-group">
                       <label htmlFor="ambito">Ámbito</label>
                       <input
                         type="text"
                         name="ambito"
                         id="ambito"
                         className="form-control"
-                        value={this.state.novedad.ambito}
+                        value={this.state.guia.ambito}
                         onChange={this.handleInputChange}
                       />
                     </div>
@@ -388,12 +607,12 @@ class guiasdeturismo extends Component {
                         <input name="adhiereDosep" id="adhiereDosep" 
                         className="form-check-input" 
                         type="checkbox" 
-                        value={this.state.novedad.adhiereDosep} 
+                        value={this.state.guia.adhiereDosep} 
                         onChange={this.handleInputChange} />                          
                         <label className="form-check-label" htmlFor="adhiereDosep">
                             Adhiere Dosep?
                         </label>
-                      </div>
+                      </div>*/}
                   </div>
                 </div>
               </div>
@@ -410,6 +629,16 @@ class guiasdeturismo extends Component {
                 </div>
               </div>
             </form>
+            <hr />
+            {this.state.id != 0 ?
+            <div>
+              <h5 className="bg-dark text-white p-3 mb-3 rounded">
+                 Agregar areas de cobertura de servicio
+              </h5>
+              <AreasServicio id ={this.state.id} />
+            </div> 
+            : ""
+            }
             <hr />
             <h5 className="bg-dark text-white p-3 mb-3 rounded">
               Listado de Guías de Turismo

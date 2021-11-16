@@ -167,7 +167,7 @@ class guiasdeturismo extends Component {
     fetch(`${process.env.REACT_APP_API_HOST}/guiasturismox/new`, {
       method: "POST",
       headers: {
-        Authorization: token,
+        "Authorization": token,
       },
       body: data,
     })

@@ -216,7 +216,7 @@ class FormNov extends Component {
                     registro: result.data.registros[0],
                     loading: false
                   });
-                 // console.log(result.data);
+                
                 } else {
                   console.log("No hay registro: " + this.state.id);
                 }

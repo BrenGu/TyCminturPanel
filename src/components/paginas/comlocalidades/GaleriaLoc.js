@@ -102,7 +102,7 @@ class GaleriaLoc extends Component {
           }
         },
         (error) => {
-          console.log(this.state.idLocalidad);
+        
           this.setState({
             loading: false,
           });

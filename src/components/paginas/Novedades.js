@@ -83,7 +83,7 @@ class Novedades extends Component {
   }
 
   handlDescripcionHTMLChange(desHTML, des) {
-    console.log(desHTML);
+ 
     this.setState({
       novedad: {
         ...this.state.novedad,
@@ -94,7 +94,7 @@ class Novedades extends Component {
   }
 
   handleFromNovSubmit(event) {
-    console.log(this.state.novedad.foto_uno);
+    
     event.preventDefault();
     const data = new FormData();
     data.append("localidad", this.state.novedad.localidad);
@@ -104,7 +104,6 @@ class Novedades extends Component {
     data.append("subtitulo", this.state.novedad.subtitulo);
     data.append("descripcion", this.state.novedad.descripcion);
     data.append("descripcionHTML", this.state.novedad.descripcionHTML);
-    console.log(this.state.novedad.descripcionHTML);
     data.append("latitud", this.state.novedad.latitud);
     data.append("longitud", this.state.novedad.longitud);
     //Imágenes
@@ -225,7 +224,7 @@ class Novedades extends Component {
             this.setState({
               novedades: result.data.registros,
             });
-            console.log(this.state.novedades);
+            
           } else {
             this.setState({
               msg: {

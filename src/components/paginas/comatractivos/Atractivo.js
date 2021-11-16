@@ -24,8 +24,8 @@ class Atractivo extends Component {
                 descripcionHTML: "",
                 latitud: 0,
                 longitud: 0,
-                latitudg: 0,
-                longitudg: 0,
+                latitudg: "",
+                longitudg: "",
                 telefono: "",
                 mail: "",
                 web: "",
@@ -37,6 +37,8 @@ class Atractivo extends Component {
                 viernes: "",
                 sabado: "",
                 domingo: "",
+                imperdible: 0,
+                zonaMoto: 0,
                 audio:""
             },
             Msg: {

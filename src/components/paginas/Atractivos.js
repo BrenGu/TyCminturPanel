@@ -46,7 +46,8 @@ class Atractivos extends Component {
                 sabado: "",
                 domingo: "",
                 imperdible: 0,
-                zonaMoto: 0
+                zonaMoto: 0,
+                audio: ""
             };
             fetch(`${process.env.REACT_APP_API_HOST}/atractivo/new/${this.state.localidadSelect.id}`, {
                 method: 'POST',

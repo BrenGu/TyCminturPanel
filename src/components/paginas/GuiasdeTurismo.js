@@ -163,9 +163,9 @@ class guiasdeturismo extends Component {
       data.append("titulo-file", titulo, titulo.name);
     }
 
-    data.forEach(e => {
+    /*data.forEach(e => {
       console.log(e);
-    })
+    })*/
 
     fetch(`${process.env.REACT_APP_API_HOST}/guiasturismox/new`, {
       method: "POST",

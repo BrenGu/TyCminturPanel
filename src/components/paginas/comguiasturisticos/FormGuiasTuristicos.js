@@ -101,7 +101,7 @@ class FormGuiasTuristicos extends Component {
     this.setState({
       msg: {
         visible: true,
-        body: `Seguro de eliminar "${nombre}"`,
+        body: `Está seguro de eliminar "${nombre}"`,
         tipo: 1
       }
     });
@@ -425,7 +425,7 @@ class FormGuiasTuristicos extends Component {
                     </div>
                     <div className="col-md-6">
                       <div className="form-group">
-                        <label htmlFor="direccion">Direccion</label>
+                        <label htmlFor="direccion">Dirección</label>
                         <input
                           type="text"
                           name="direccion"
@@ -479,7 +479,7 @@ class FormGuiasTuristicos extends Component {
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="fecha">Fecha de ultima renovacion</label>
+                      <label htmlFor="fecha">Fecha de ultima renovación</label>
                       <input
                         type="date"
                         name="fechUltimaRenovacion"
@@ -528,7 +528,7 @@ class FormGuiasTuristicos extends Component {
                           <span style={{marginLeft:"10px"}}>{this.state.registro.certificados}</span>
                     </div>
                     <div className="form-group">
-                        <label htmlFor={`upl-${this.state.id}-capacitaciones`}>Capacitacion: </label>
+                        <label htmlFor={`upl-${this.state.id}-capacitaciones`}>Capacitación: </label>
                         <input
                           type="file"
                           className="d-none"
@@ -543,7 +543,7 @@ class FormGuiasTuristicos extends Component {
                         <span style={{marginLeft:"10px"}}>{this.state.registro.capacitaciones}</span>
                     </div>
                     <div className="form-group">
-                        <label htmlFor={`upl-${this.state.id}-titulo`}>Titulo: </label>
+                        <label htmlFor={`upl-${this.state.id}-titulo`}>Título: </label>
                         <input
                           type="file"
                           className="d-none"
@@ -602,7 +602,7 @@ class FormGuiasTuristicos extends Component {
           </form>
           <br/>
           <h5 className="bg-dark text-white p-3 mb-3 rounded">
-            Agregar areas de cobertura de servicio
+            Agregar áreas de cobertura de servicio
           </h5>
           <AreasServicio id ={this.state.id} />       
           <hr className="mt-5 mb-5" /> 

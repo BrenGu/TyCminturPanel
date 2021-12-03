@@ -98,7 +98,7 @@ class guiasdeturismo extends Component {
                   {
                     msg: {
                       visible: true,
-                      body: "El guía se elimino correctamente."
+                      body: "El guía se eliminó correctamente."
                     }
                   },
                   () => {
@@ -124,87 +124,112 @@ class guiasdeturismo extends Component {
   }
 
   handleFormSubmit(event) {
-    event.preventDefault();
-
-    const data = new FormData();
+    event.preventDefault(); 
     
-    data.append("idciudad", this.state.guia.idciudad);
-    data.append("legajo", this.state.guia.legajo);
-    data.append("categoria", this.state.guia.categoria);
-    data.append("nombre", this.state.guia.nombre);
-    data.append("telefono", this.state.guia.telefono);
-    data.append("ambito", this.state.guia.ambito);
-    data.append("correo", this.state.guia.correo);
-    data.append("adhiereDosep", this.state.guia.adhiereDosep);
-    data.append("adhiereCovid", this.state.guia.adhiereCovid);
-    data.append("fechUltimaRenovacion", this.state.guia.fechUltimaRenovacion);
-    data.append("dni", this.state.guia.dni);
-    data.append("fechNac", this.state.guia.fechNac);
-    data.append("direccion", this.state.guia.direccion);
-
-    //ARCHIVOS
-    var img = document.getElementById("upl-nov-uno").files[0];
-    if (img) {
-      data.append("foto-file", img, img.name);
-    }
-
-    var cap = document.getElementById("upl-capacitaciones").files[0];
-    if (cap) {
-      data.append("capacitaciones-file", cap, cap.name);
-    }
-
-    var cer = document.getElementById("upl-certificados").files[0];
-    if (cer) {
-      data.append("certificados-file", cer, cer.name);
-    }
-
-    var titulo = document.getElementById("upl-titulo").files[0];
-    if (titulo) {
-      data.append("titulo-file", titulo, titulo.name);
-    }
-
-    /*data.forEach(e => {
-      console.log(e);
-    })*/
-
-    fetch(`${process.env.REACT_APP_API_HOST}/guiasturismox/new`, {
-      method: "POST",
-      headers: {
-        "Authorization": ""
-      },
-      body: data,
+    let flag = true;
+    
+    this.state.guias.map(e => {
+      console.log(e, this.state.guia.dni);
+        e.dni == this.state.guia.dni ?
+          flag = false
+        :
+          flag = true
     })
-      .then(res => res.json())
-      .then(
-        result => {
-          if (!result.err) {
-            this.setState(
-              {
-                id: result.insertId,
+
+    if(flag){
+      const data = new FormData();
+    
+      data.append("idciudad", this.state.guia.idciudad);
+      data.append("legajo", this.state.guia.legajo);
+      data.append("categoria", this.state.guia.categoria);
+      data.append("nombre", this.state.guia.nombre);
+      data.append("telefono", this.state.guia.telefono);
+      data.append("ambito", this.state.guia.ambito);
+      data.append("correo", this.state.guia.correo);
+      data.append("adhiereDosep", this.state.guia.adhiereDosep);
+      data.append("adhiereCovid", this.state.guia.adhiereCovid);
+      data.append("fechUltimaRenovacion", this.state.guia.fechUltimaRenovacion);
+      data.append("dni", this.state.guia.dni);
+      data.append("fechNac", this.state.guia.fechNac);
+      data.append("direccion", this.state.guia.direccion);
+  
+      //ARCHIVOS
+      var img = document.getElementById("upl-nov-uno").files[0];
+      if (img) {
+        data.append("foto-file", img, img.name);
+      }
+  
+      var cap = document.getElementById("upl-capacitaciones").files[0];
+      if (cap) {
+        data.append("capacitaciones-file", cap, cap.name);
+      }
+  
+      var cer = document.getElementById("upl-certificados").files[0];
+      if (cer) {
+        data.append("certificados-file", cer, cer.name);
+      }
+  
+      var titulo = document.getElementById("upl-titulo").files[0];
+      if (titulo) {
+        data.append("titulo-file", titulo, titulo.name);
+      }
+  
+      /*data.forEach(e => {
+        console.log(e);
+      })*/
+  
+      fetch(`${process.env.REACT_APP_API_HOST}/guiasturismox/new`, {
+        method: "POST",
+        headers: {
+          "Authorization": ""
+        },
+        body: data,
+      })
+        .then(res => res.json())
+        .then(
+          result => {
+            if (!result.err) {
+              this.setState(
+                {
+                  id: result.insertId,
+                  msg: {
+                    visible: true,
+                    body: "Los datos se agregaron correctamente"
+                  }
+                },
+                () => {
+                  this.resetForm();
+                  this.getData();
+                }
+              );
+            } else {
+              this.setState({
                 msg: {
                   visible: true,
-                  body: "Los datos se agregaron correctamente"
+                  body: result.errMsgs
                 }
-              },
-              () => {
-                this.resetForm();
-                this.getData();
-              }
-            );
-          } else {
-            this.setState({
-              msg: {
-                visible: true,
-                body: result.errMsgs
-              }
-            });
+              });
+            }
+          },
+          error => {
+            //???
+            console.log(error);
+          }
+        );
+    }else{
+      this.setState(
+        {
+          msg: {
+            visible: true,
+            body: "El DNI ingresado ya existe."
           }
         },
-        error => {
-          //???
-          console.log(error);
+        () => {
+          this.resetForm();
+          this.getData();
         }
       );
+    }
   }
 
   resetForm() {
@@ -229,8 +254,16 @@ class guiasdeturismo extends Component {
         certificados: "default",
         titulo: "default",
       }
+    }, ()=>{
+
+      let id = "img-upl-nov-uno";
+      let imagen = document.getElementById(id);
+      imagen.setAttribute("src", `${process.env.REACT_APP_API_HOST}/${
+        process.env.REACT_APP_API_DIRECTORY_GUIAS_FOTOS
+      }/default.jpg`);
+      
+      document.getElementById("frm-novedades").reset();
     });
-    document.getElementById("frm-novedades").reset();
   }
 
   handleInputChange(event) {
@@ -463,7 +496,7 @@ class guiasdeturismo extends Component {
                     </div>
                     <div className="col-md-6">
                       <div className="form-group">
-                        <label htmlFor="direccion">Direccion</label>
+                        <label htmlFor="direccion">Dirección</label>
                         <input
                           type="text"
                           name="direccion"
@@ -517,7 +550,7 @@ class guiasdeturismo extends Component {
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="fecha">Fecha de ultima renovacion</label>
+                      <label htmlFor="fecha">Fecha de ultima renovación</label>
                       <input
                         type="date"
                         name="fechUltimaRenovacion"
@@ -566,7 +599,7 @@ class guiasdeturismo extends Component {
                         <span style={{marginLeft:"10px"}}>{this.state.guia.certificados}</span>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="upl-capacitaciones">Capacitacion: </label>
+                        <label htmlFor="upl-capacitaciones">Capacitación: </label>
                         <input
                           type="file"
                           className="d-none"
@@ -581,7 +614,7 @@ class guiasdeturismo extends Component {
                         <span style={{marginLeft:"10px"}}>{this.state.guia.capacitaciones}</span>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="upl-titulo">Titulo: </label>
+                        <label htmlFor="upl-titulo">Título: </label>
                         <input
                           type="file"
                           className="d-none"
@@ -636,7 +669,7 @@ class guiasdeturismo extends Component {
             {this.state.id != 0 ?
             <div>
               <h5 className="bg-dark text-white p-3 mb-3 rounded">
-                 Agregar areas de cobertura de servicio
+                 Agregar áreas de cobertura de servicio
               </h5>
               <AreasServicio id ={this.state.id} />
             </div> 

@@ -74,6 +74,7 @@ class Menu extends Component {
                                 </li>
                                 <li><Link to="/novedades">Novedades</Link></li>
                                 <li><Link to="/eventos">Eventos</Link></li>
+                                <li><Link to="/estadisticas">Estadísticas</Link></li>
                                 <li className="nav-item dropdown">
                                     <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Extras</button>
                                     <div className="dropdown-menu">

@@ -1,7 +1,4 @@
 import React, { Component } from "react";
-import { Consumer } from "../../context";
-import LocSelect from "../utiles/LocSelect";
-import Atractivo from "./comatractivos/Atractivo";
 import Msg from "../utiles/Msg";
 
 class Atractivos extends Component {

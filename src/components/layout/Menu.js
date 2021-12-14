@@ -52,85 +52,106 @@ class Menu extends Component {
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col">
-                            <ul className="d-flex flex-direction-row justify-content-center h-menu">
-                                <li className="nav-item dropdown">
-                                <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Carrusel</button>
-                                <div className="dropdown-menu">
-                                    <Link className="dropdown-item" to="/carruselhome">Carrusel Home</Link>
-                                    {/*<div className="dropdown-divider"></div>
-                                    <Link className="dropdown-item" to="/galeriahome">Galerias Home</Link>*/}                                       
-                                    </div>                                    
+                            {this.props.permiso == 1 ? (
+                                <ul className="d-flex flex-direction-row justify-content-center h-menu">
+                                    <li className="nav-item dropdown">
+                                        <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Carrusel</button>
+                                        <div className="dropdown-menu">
+                                            <Link className="dropdown-item" to="/carruselhome">Carrusel Home</Link>
+                                            {/*<div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/galeriahome">Galerias Home</Link>*/}                                       
+                                        </div>                                    
+                                        </li>
+                                    <li><Link to="/">Zonas</Link></li>
+                                    <li className="nav-item dropdown">
+                                        <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Localidades</button>
+                                        <div className="dropdown-menu">
+                                            <Link className="dropdown-item" to="/localidades">Registros</Link>
+                                            <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/atractivos">Atractivos</Link>
+                                            <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/gastronomia">Gastronomía</Link>
+                                        </div>
                                     </li>
-                                <li><Link to="/">Zonas</Link></li>
-                                <li className="nav-item dropdown">
-                                    <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Localidades</button>
-                                    <div className="dropdown-menu">
-                                        <Link className="dropdown-item" to="/localidades">Registros</Link>
-                                        <div className="dropdown-divider"></div>
-                                        <Link className="dropdown-item" to="/atractivos">Atractivos</Link>
-                                        <div className="dropdown-divider"></div>
-                                        <Link className="dropdown-item" to="/gastronomia">Gastronomía</Link>
-                                    </div>
-                                </li>
-                                <li><Link to="/novedades">Novedades</Link></li>
-                                <li><Link to="/eventos">Eventos</Link></li>
-                                <li><Link to="/estadisticas">Estadísticas</Link></li>
-                                <li className="nav-item dropdown">
-                                    <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Extras</button>
-                                    <div className="dropdown-menu">
-                                        <Link className="dropdown-item" to="/oficinas">Oficinas de Turísmo</Link>
-                                        <div className="dropdown-divider"></div>
-                                        <Link className="dropdown-item" to="/guiasturismo">Guías de Turismo</Link>
-                                        <div className="dropdown-divider"></div>
-                                        <Link className="dropdown-item" to="/agencias-viajes">Agencias de Viaje</Link>
-                                        <div className="dropdown-divider"></div>
-                                        <Link className="dropdown-item" to="/aeropuertos">Aeropuertos</Link>
-                                        <div className="dropdown-divider"></div>
-                                        <Link className="dropdown-item" to="/alquilerautos">Alquiler de autos</Link>
-                                        <div className="dropdown-divider"></div>
-                                        <Link className="dropdown-item" to="/casacambio">Casas de cambio</Link>
-                                        <div className="dropdown-divider"></div>
-                                        <Link className="dropdown-item" to="/censistas">Censistas</Link>
-                                        <div className="dropdown-divider"></div>
-                                        <ExcelFile
-                                            element={
-                                                <button className="dropdown-item" style={{outline: "none"}} onClick={this.TodoslosMails}>
-                                                    Exportar a excel los Emails
-                                                </button>
-                                            }
-                                            filename="Excel Emails Newsletter"
-                                        >
-                                            <ExcelSheet data={this.state.emails} name="Pagina1">
-                                                <ExcelColumn label="Emails" value="email" />
-                                            </ExcelSheet>
-                                        </ExcelFile>
-                                    </div>
-                                </li>
-                                <li>{
-                                  <a href="" onClick={this.handleLogOut}>Cerrar sesión</a>
-                                }
-                                </li>
-                                {/*
-                                <li><a href="#">Alojamientos</a></li>
-                                <li><a href="#">Gastronomía</a></li>
-                                <li><a href="#">Notas</a></li>
-                                <li className="nav-item dropdown">
-                                    <a className="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Servicios</a>
-                                    <div className="dropdown-menu">
-                                        <a className="dropdown-item" href="#">Agencias de Viaje</a>
-                                        <a className="dropdown-item" href="#">Guías de Turismo</a>
-                                        <a className="dropdown-item" href="#">Turismo Estudiantíl</a>
-                                        <a className="dropdown-item" href="#">Oficinas de Informes</a>
-                                        <a className="dropdown-item" href="#">Terminales de Omnibus</a>
-                                        <a className="dropdown-item" href="#">Horarios de Colectivos</a>
-                                        <a className="dropdown-item" href="#">Cajeros Automáticos</a>
-                                        <a className="dropdown-item" href="#">Estaciones de GNC</a>
-                                        <div className="dropdown-divider"></div>
-                                        <a className="dropdown-item" href="#">Separated link</a>
-                                    </div>
-                                </li>
-                                */}
-                            </ul>
+                                    <li><Link to="/novedades">Novedades</Link></li>
+                                    <li><Link to="/eventos">Eventos</Link></li>
+                                    <li><Link to="/estadisticas">Estadísticas</Link></li>
+                                    <li><Link to="/guiasturismo">Guías de Turismo</Link></li>
+                                    <li className="nav-item dropdown">
+                                        <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Extras</button>
+                                        <div className="dropdown-menu">
+                                            <Link className="dropdown-item" to="/paneladmin">Panel Admin</Link>
+                                            <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/oficinas">Oficinas de Turísmo</Link>
+                                            <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/agencias-viajes">Agencias de Viaje</Link>
+                                            <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/aeropuertos">Aeropuertos</Link>
+                                            <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/alquilerautos">Alquiler de autos</Link>
+                                            <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/casacambio">Casas de cambio</Link>
+                                            <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/censistas">Censistas</Link>
+                                            <div className="dropdown-divider"></div>
+                                            <ExcelFile
+                                                element={
+                                                    <button className="dropdown-item" style={{outline: "none"}} onClick={this.TodoslosMails}>
+                                                        Exportar a excel los Emails
+                                                    </button>
+                                                }
+                                                filename="Excel Emails Newsletter"
+                                            >
+                                                <ExcelSheet data={this.state.emails} name="Pagina1">
+                                                    <ExcelColumn label="Emails" value="email" />
+                                                </ExcelSheet>
+                                            </ExcelFile>
+                                        </div>
+                                    </li>
+                                    <li>{
+                                    <a href="" onClick={this.handleLogOut}>Cerrar sesión</a>
+                                    }
+                                    </li>
+                                    {/*
+                                    <li><a href="#">Alojamientos</a></li>
+                                    <li><a href="#">Gastronomía</a></li>
+                                    <li><a href="#">Notas</a></li>
+                                    <li className="nav-item dropdown">
+                                        <a className="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Servicios</a>
+                                        <div className="dropdown-menu">
+                                            <a className="dropdown-item" href="#">Agencias de Viaje</a>
+                                            <a className="dropdown-item" href="#">Guías de Turismo</a>
+                                            <a className="dropdown-item" href="#">Turismo Estudiantíl</a>
+                                            <a className="dropdown-item" href="#">Oficinas de Informes</a>
+                                            <a className="dropdown-item" href="#">Terminales de Omnibus</a>
+                                            <a className="dropdown-item" href="#">Horarios de Colectivos</a>
+                                            <a className="dropdown-item" href="#">Cajeros Automáticos</a>
+                                            <a className="dropdown-item" href="#">Estaciones de GNC</a>
+                                            <div className="dropdown-divider"></div>
+                                            <a className="dropdown-item" href="#">Separated link</a>
+                                        </div>
+                                    </li>
+                                    */}
+                                </ul>
+                            ): this.props.permiso == 2 ?(
+                                <ul className="d-flex flex-direction-row justify-content-center h-menu">
+                                    <li><Link to="/">Eventos</Link></li>
+                                    <li>{
+                                    <a href="" onClick={this.handleLogOut}>Cerrar sesión</a>
+                                    }
+                                    </li>
+                                </ul>
+
+                            ): (
+                                <ul className="d-flex flex-direction-row justify-content-center h-menu">
+                                    <li><Link to="/">Guías de Turismo</Link></li>
+                                    <li>{
+                                    <a href="" onClick={this.handleLogOut}>Cerrar sesión</a>
+                                    }
+                                    </li>
+                                </ul>
+                            )}
+                            
                             <style jsx="true">{`
                                 .dropdown-toggle {
                                     cursor: pointer;

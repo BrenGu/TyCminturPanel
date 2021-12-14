@@ -35,7 +35,9 @@ class guiasdeturismo extends Component {
       msg: {
         visible: false,
         body: ""
-      }
+      },
+      nombreGuia: "",
+      filtro: []
     };
     this.getData = this.getData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -46,6 +48,7 @@ class guiasdeturismo extends Component {
     this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
     this.handleCategoriaChange = this.handleCategoriaChange.bind(this);
     this.handleFileChange = this.handleFileChange.bind(this);
+    this.handleBusquedaChange = this.handleBusquedaChange.bind(this);
   }
 
   handleFileChange(event){
@@ -129,11 +132,11 @@ class guiasdeturismo extends Component {
     let flag = true;
     
     this.state.guias.map(e => {
-      console.log(e, this.state.guia.dni);
-        e.dni == this.state.guia.dni ?
-          flag = false
-        :
-          flag = true
+        if(e.dni === this.state.guia.dni) {
+          flag = false;
+        }else{
+          flag = true;
+        }
     })
 
     if(flag){
@@ -232,6 +235,37 @@ class guiasdeturismo extends Component {
     }
   }
 
+  handleBusquedaChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    this.setState({
+        [name]: value
+    },
+    () => {
+      this.aplicarFiltro();
+    });
+  }
+
+  aplicarFiltro() {
+    let {nombreGuia} = this.state;
+    let filtrado = this.state.guias.filter((value) => {
+        let respuesta = true;
+      
+        if(nombreGuia.length) {
+            if(value.nombre.toLowerCase().search(nombreGuia.toLowerCase()) === -1) {
+                respuesta = false;
+            }
+        }
+    
+        return respuesta;
+    });
+
+    this.setState({
+        filtro: filtrado
+    });
+  }
+
   resetForm() {
     let date = new Date().toISOString().substr(0, 10);
     this.setState({
@@ -300,7 +334,8 @@ class guiasdeturismo extends Component {
         result => {
           if (!result.err) {
             this.setState({
-              guias: result.data.registros
+              guias: result.data.registros,
+              filtro: result.data.registros
             });
           } else {
             this.setState({
@@ -373,7 +408,7 @@ class guiasdeturismo extends Component {
   }
 
   render() {
-    const lista_guias = this.state.guias.map(novedad => {
+    const lista_guias = this.state.filtro.map(novedad => {
       return (
         <FormGuiasTuristicos
           key={`novedad-${novedad.id}`}
@@ -455,15 +490,6 @@ class guiasdeturismo extends Component {
                         >
                           {categorias}
                         </select>
-                        {/*<input
-                          type="text"
-                          name="categoria"
-                          id="categoria"
-                          className="form-control"
-                          value={this.state.guia.categoria}
-                          onChange={this.handleInputChange}
-                          maxLength="75"
-                        />*/}
                       </div>
                     </div>
 
@@ -628,27 +654,6 @@ class guiasdeturismo extends Component {
                         }}></i>
                         <span style={{marginLeft:"10px"}}>{this.state.guia.titulo}</span>
                     </div>
-                    {/*<div className="form-group">
-                      <label htmlFor="ambito">Ámbito</label>
-                      <input
-                        type="text"
-                        name="ambito"
-                        id="ambito"
-                        className="form-control"
-                        value={this.state.guia.ambito}
-                        onChange={this.handleInputChange}
-                      />
-                    </div>
-                    <div className="form-check">                   
-                        <input name="adhiereDosep" id="adhiereDosep" 
-                        className="form-check-input" 
-                        type="checkbox" 
-                        value={this.state.guia.adhiereDosep} 
-                        onChange={this.handleInputChange} />                          
-                        <label className="form-check-label" htmlFor="adhiereDosep">
-                            Adhiere Dosep?
-                        </label>
-                      </div>*/}
                   </div>
                 </div>
               </div>
@@ -672,17 +677,30 @@ class guiasdeturismo extends Component {
                  Agregar áreas de cobertura de servicio
               </h5>
               <AreasServicio id ={this.state.id} />
-            </div> 
+              <hr /> 
+            </div>
+            
             : ""
             }
-            <hr />
+
+            <div className="form-group">
+                <label htmlFor="nombreGuia">Buscar por nombre de guia</label>
+                <input style={{width: "50%"}} type="text" name="nombreGuia" id="nombreGuia" className="form-control" value={this.state.nombreGuia} onChange={this.handleBusquedaChange} autoComplete="off" />
+            </div>
+            <br />
             <h5 className="bg-dark text-white p-3 mb-3 rounded">
               Listado de Guías de Turismo
             </h5>
             <div className="row">
               <div className="col">
-                <hr />
                 {lista_guias}
+                {this.state.filtro.length == 0 ?(
+                  <div class="alert alert-danger" role="alert">
+                    No hay guias con dicho nombre 
+                  </div>
+                ): (
+                  ""
+                )}
               </div>
             </div>
           </React.Fragment>

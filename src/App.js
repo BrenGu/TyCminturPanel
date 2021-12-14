@@ -9,7 +9,7 @@ import ToTop from "./components/utiles/ToTop";
 import Zonas from "./components/paginas/Zonas";
 import Localidades from "./components/paginas/Localidades";
 import Atractivos from "./components/paginas/Atractivos";
-import nuevousuario from "./components/paginas/nuevousuario";
+import PanelAdmin from "./components/paginas/PanelAdmin";
 import Aeropuertos from "./components/paginas/Aeropuertos";
 import AlquilerAutos from "./components/paginas/AlquilerAutos";
 import CasaCambio from "./components/paginas/CasaCambio";
@@ -41,14 +41,16 @@ class App extends Component {
         super(props);
         this.state = {
 			loading: true,
-			authorized: false
+			authorized: false,
+			permiso: 1
 		};
 		this.okLogin = this.okLogin.bind(this);
 	}
 
 	okLogin() {
 		this.setState({
-			authorized: true
+			authorized: true,
+			permiso: localStorage.getItem("WebTurPermiso").valueOf()
 		});
 	}
 
@@ -59,13 +61,23 @@ class App extends Component {
 	componentDidMount() {
 		if("WebTurToken" in localStorage) {
 			if(localStorage.getItem("WebTurToken").length > 0) {
-				this.setState({authorized: true});
+				this.setState({authorized: true}, () => {
+					if("WebTurPermiso" in localStorage) {
+						if(localStorage.getItem("WebTurPermiso").length > 0) {
+							this.setState({
+								permiso: localStorage.getItem("WebTurPermiso").valueOf()
+							});
+						}
+					}
+				});
 			}
 		}
 	}
 
 	render() {
 		const authorized = this.state.authorized;
+		const permiso = this.state.permiso;
+
 		return (
 			<React.Fragment>
 				{
@@ -73,31 +85,46 @@ class App extends Component {
 					<Router history={Router.hashHistory}>
 						<React.Fragment>
 							<Navbar />
-							<Menu logout={this.handleLogAuth}/>
+							<Menu logout={this.handleLogAuth} permiso={permiso}/>
 							<div className="container">
 								<div className="row">
 									<div className="col">
-										<Switch>
-											<Route exact path="/" component={Zonas} />
-											<Route path="/localidades" component={Localidades} />
-											<Route path="/censistas" component={Censistas} />
-											<Route path="/atractivos" component={Atractivos} />
-											<Route path="/gastronomia" component={Gastronomia} />
-											<Route path="/nuevousuario" component={nuevousuario} />
-											<Route path="/oficinas" component={Oficinas} />
-											<Route path="/estadisticas" component={Estadisticas} />
-											<Route path="/novedades" component={Novedades} />
-											<Route path="/eventos" component={Eventos} />
-											<Route path="/guiasturismo"component={GuiasTurismo} />
-											<Route path="/aeropuertos"component={Aeropuertos} />
-											<Route path="/alquilerautos"component={AlquilerAutos} />
-											<Route path="/casacambio"component={CasaCambio} />
-											<Route path="/carruselhome"component={CarruselHome} />
-											<Route path="/galeriahome" component={GaleriaHome}/>
-											<Route path="/agencias-viajes"component={AgenciaViajes} />
-											<Route path="/form-agencia-viajes"component={FormAgenciasViajes} />
-											<Route component={NoFound} />
-										</Switch>
+										{
+											permiso == 1 ? (
+												<Switch>
+													<Route exact path="/" component={Zonas} />
+													<Route path="/localidades" component={Localidades} />
+													<Route path="/censistas" component={Censistas} />
+													<Route path="/atractivos" component={Atractivos} />
+													<Route path="/gastronomia" component={Gastronomia} />
+													<Route path="/paneladmin" component={PanelAdmin} />
+													<Route path="/oficinas" component={Oficinas} />
+													<Route path="/estadisticas" component={Estadisticas} />
+													<Route path="/novedades" component={Novedades} />
+													<Route path="/eventos" component={Eventos} />
+													<Route path="/guiasturismo"component={GuiasTurismo} />
+													<Route path="/aeropuertos"component={Aeropuertos} />
+													<Route path="/alquilerautos"component={AlquilerAutos} />
+													<Route path="/casacambio"component={CasaCambio} />
+													<Route path="/carruselhome"component={CarruselHome} />
+													<Route path="/galeriahome" component={GaleriaHome}/>
+													<Route path="/agencias-viajes"component={AgenciaViajes} />
+													<Route path="/form-agencia-viajes"component={FormAgenciasViajes} />
+													<Route component={NoFound} />
+												</Switch>	
+											): permiso == 2 ? (
+												<Switch>
+													<Route exact path="/" component={Eventos} />
+													<Route component={NoFound} />
+												</Switch>	
+											) : (
+												<Switch>
+													<Route exact path="/" component={GuiasTurismo} />
+													<Route component={NoFound} />
+												</Switch>	
+											)
+										}
+										
 									</div>
 								</div>
 							</div>

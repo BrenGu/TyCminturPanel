@@ -8,7 +8,8 @@ export class Provider extends Component {
         this.state = {
             auth: false,
             token: "",
-            login: this.login.bind(this)
+            login: this.login.bind(this),
+            permiso: 1
         };
         this.login = this.login.bind(this);
     }
@@ -28,9 +29,11 @@ export class Provider extends Component {
             } else {
                 this.setState({
                     auth: true,
-                    token: respuesta.data.token
+                    token: respuesta.data.token,
+                    permiso: respuesta.data.idtipo
                 });
                 localStorage.setItem("WebTurToken", respuesta.data.token);
+                localStorage.setItem("WebTurPermiso", respuesta.data.idtipo);
                 return { "err": false };
             }
         } catch(e) {

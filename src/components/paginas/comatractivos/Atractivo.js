@@ -55,6 +55,7 @@ class Atractivo extends Component {
         this.setDays = this.setDays.bind(this);
         this.msgDelAtractivo = this.msgDelAtractivo.bind(this);
         this.delAtractivo = this.delAtractivo.bind(this);
+        this.DelAudioAtractivo = this.DelAudioAtractivo.bind(this);
         this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(this);
         this.handleTipoChange = this.handleTipoChange.bind(this);
        // this.handleFile =this.handleFile.bind(this);
@@ -78,6 +79,35 @@ class Atractivo extends Component {
                 MsgBody: "Seguro de eliminar el Atractivo: " + nombre
             },
             idDelete: id
+        });
+    }
+    DelAudioAtractivo(id){
+        fetch(`${process.env.REACT_APP_API_HOST}/atractivo/DelAudio/${this.state.id}`, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": "asdssffsdff",
+                "Content-Type": "application/json"
+            }
+        })
+        .then(res => res.json())
+        .then((result) => {
+            if(!result.err) {
+                this.props.fireUpdateList();
+                /*
+                this.setState({
+                    Msg: {
+                        MsgTipo: 0,
+                        MsgVisible: false,
+                        MsgBody: ""
+                    },
+                    idDelete: 0
+                });
+                */
+            } else {
+                console.log(result.errMsg);
+            }
+        }, (error) => { //???
+            console.log(error);
         });
     }
 
@@ -478,7 +508,15 @@ class Atractivo extends Component {
                                             <div className="form-group">
                                                 <br/>
                                                 <input type="file" name={`file-${this.state.atractivo.id}`} id={`file-${this.state.atractivo.id}`} /*onChange={(e)=> this.handleFile(e)}*/ />
-                                                <br/>    
+                                                <br/><br/>
+                                                    {this.state.atractivo.audio} {" "}
+                                                        <button className="btn btn-danger"
+                                                            style= {this.state.atractivo.audio != ""? 
+                                                            { visibility:"visible"}:{visibility:"hidden"}}
+                                                            type="button" onClick={(e) => { this.DelAudioAtractivo(this.state.atractivo.id, e) }}>
+                                                            <i className="fas fa-trash"></i>
+                                                        </button>
+                                                        <br/><br/>    
                                             </div>
                                             <button className="btn btn-primary float-right" onClick={this.saveAtractivo}>Guardar</button>
                                         </div>

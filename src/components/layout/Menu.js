@@ -73,7 +73,7 @@ class Menu extends Component {
                                             <Link className="dropdown-item" to="/gastronomia">Gastronomía</Link>
                                         </div>
                                     </li>
-                                    <li><Link to="/novedades">Novedades</Link></li>
+                                    <li><Link to="/prensa">Prensa</Link></li>
                                     <li><Link to="/eventos">Eventos</Link></li>
                                     <li><Link to="/estadisticas">Estadísticas</Link></li>
                                     <li><Link to="/guiasturismo">Guías de Turismo</Link></li>

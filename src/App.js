@@ -100,7 +100,7 @@ class App extends Component {
 													<Route path="/paneladmin" component={PanelAdmin} />
 													<Route path="/oficinas" component={Oficinas} />
 													<Route path="/estadisticas" component={Estadisticas} />
-													<Route path="/novedades" component={Novedades} />
+													<Route path="/prensa" component={Novedades} />
 													<Route path="/eventos" component={Eventos} />
 													<Route path="/guiasturismo"component={GuiasTurismo} />
 													<Route path="/aeropuertos"component={Aeropuertos} />

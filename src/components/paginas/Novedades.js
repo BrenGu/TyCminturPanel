@@ -19,6 +19,9 @@ class Novedades extends Component {
         longitud: "0",
         foto_uno: "default.jpg",
         foto_dos: "default.jpg",
+        foto_tres: "default.jpg",
+        foto_cuatro: "default.jpg",
+        foto_cinco: "default.jpg",
       },
       novedades: [],
       msg: {
@@ -115,6 +118,19 @@ class Novedades extends Component {
     if (img_dos) {
       data.append("img-dos", img_dos, img_dos.name);
     }
+    var img_tres = document.getElementById("upl-nov-tres").files[0];
+    if (img_tres) {
+      data.append("img-tres", img_tres, img_tres.name);
+    }
+    var img_cuatro = document.getElementById("upl-nov-cuatro").files[0];
+    if (img_cuatro) {
+      data.append("img-cuatro", img_cuatro, img_cuatro.name);
+    }
+    var img_cinco = document.getElementById("upl-nov-cinco").files[0];
+    if (img_cinco) {
+      data.append("img-cinco", img_cinco, img_cinco.name);
+    }
+    
     fetch(`${process.env.REACT_APP_API_HOST}/novedad`, {
       method: "POST",
       headers: {
@@ -167,6 +183,9 @@ class Novedades extends Component {
         longitud: "0",
         foto_uno: "default.jpg",
         foto_dos: "default.jpg",
+        foto_tres: "default.jpg",
+        foto_cuatro: "default.jpg",
+        foto_cinco: "default.jpg"
       },
     });
     document.getElementById("frm-novedades").reset();
@@ -180,6 +199,30 @@ class Novedades extends Component {
       );
     document
       .getElementById("img-upl-nov-dos")
+      .setAttribute(
+        "src",
+        `${process.env.REACT_APP_API_HOST}/${
+          process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
+        }/default.jpg`
+      );
+      document
+      .getElementById("img-upl-nov-tres")
+      .setAttribute(
+        "src",
+        `${process.env.REACT_APP_API_HOST}/${
+          process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
+        }/default.jpg`
+      );
+      document
+      .getElementById("img-upl-nov-cuatro")
+      .setAttribute(
+        "src",
+        `${process.env.REACT_APP_API_HOST}/${
+          process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
+        }/default.jpg`
+      );
+      document
+      .getElementById("img-upl-nov-cinco")
       .setAttribute(
         "src",
         `${process.env.REACT_APP_API_HOST}/${
@@ -317,7 +360,6 @@ class Novedades extends Component {
                         />
                       </div>
                     </div>
-
                     <div className="col">
                       <div className="form-group">
                         <label htmlFor="fecha">Fecha</label>
@@ -344,6 +386,7 @@ class Novedades extends Component {
                         />
                       </div>
                     </div>
+
                     <div className="col">
                       <div className="form-group">
                         <label htmlFor="longitud">Longitud</label>
@@ -359,7 +402,7 @@ class Novedades extends Component {
                     </div>
                   </div>
                 </div>
-                <div>
+                <div>   
                   <div className="row">
                     <div className="col">
                       <div className="form-group">
@@ -377,7 +420,7 @@ class Novedades extends Component {
                     <div className="col mb-2">
                       Tamaño sugerido no menor a 800px de ancho 600px de alto
                       72ppp
-                    </div>
+                    </div>  
                     <div className="d-flex">
                       <div className="col">
                         <input
@@ -421,9 +464,78 @@ class Novedades extends Component {
                           }}
                         />
                       </div>
-                    </div>
-                  </div>
+
+
+                      <div className="col">
+                        <input
+                          type="file"
+                          className="d-none"
+                          name="upl-nov-tres"
+                          id="upl-nov-tres"
+                          accept="image/*"
+                          onChange={this.handleImgChange}
+                        />
+                        <img
+                          id="img-upl-nov-tres"
+                          className="img-fluid img-novedad"
+                          src={`${process.env.REACT_APP_API_HOST}/${
+                            process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
+                          }/${this.state.novedad.foto_tres}`}
+                          alt="Foto"
+                          onClick={(e) => {
+                            document.getElementById("upl-nov-tres").click();
+                          }}
+                        />
+                      </div>
+
+                      <div className="col">
+                        <input
+                          type="file"
+                          className="d-none"
+                          name="upl-nov-cuatro"
+                          id="upl-nov-cuatro"
+                          accept="image/*"
+                          onChange={this.handleImgChange}
+                        />
+                        <img
+                          id="img-upl-nov-cuatro"
+                          className="img-fluid img-novedad"
+                          src={`${process.env.REACT_APP_API_HOST}/${
+                            process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
+                          }/${this.state.novedad.foto_cuatro}`}
+                          alt="Foto"
+                          onClick={(e) => {
+                            document.getElementById("upl-nov-cuatro").click();
+                          }}
+                        />
+                      </div>
+
+                      <div className="col">
+                        <input
+                          type="file"
+                          className="d-none"
+                          name="upl-nov-cinco"
+                          id="upl-nov-cinco"
+                          accept="image/*"
+                          onChange={this.handleImgChange}
+                        />
+                        <img
+                          id="img-upl-nov-cinco"
+                          className="img-fluid img-novedad"
+                          src={`${process.env.REACT_APP_API_HOST}/${
+                            process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
+                          }/${this.state.novedad.foto_cinco}`}
+                          alt="Foto"
+                          onClick={(e) => {
+                            document.getElementById("upl-nov-cinco").click();
+                          }}
+                        />
+                      </div>
+                    </div>             
+                  </div>                  
                 </div>
+
+               
               </div>
               <div className="row mt-3">
                 <div className="col">

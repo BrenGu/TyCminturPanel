@@ -26,7 +26,10 @@ class FormNov extends Component {
         latitud: 0,
         longitud: 0,
         foto_uno: "default.jpg",
-        foto_dos: "default.jpg"
+        foto_dos: "default.jpg",
+        foto_tres: "default.jpg",
+        foto_cuatro: "default.jpg",
+        foto_cinco: "default.jpg"
       },
       msg: {
         visible: false,
@@ -62,9 +65,13 @@ class FormNov extends Component {
     reader.onload = function(e) {
       let imagen = document.getElementById(id);
       imagen.setAttribute("src", e.target.result);
+      
     };
     reader.readAsDataURL(event.target.files[0]);
   }
+
+
+
 
   askDelete(titulo) {
     this.setState({
@@ -108,6 +115,22 @@ class FormNov extends Component {
     if (img_dos) {
       formData.append("img-dos", img_dos, img_dos.name);
     }
+    let img_tres = document.getElementById(`file-3-${this.state.registro.id}`)
+      .files[0];
+    if (img_tres) {
+      formData.append("img-tres", img_tres, img_tres.name);
+    }
+    let img_cuatro = document.getElementById(`file-4-${this.state.registro.id}`)
+      .files[0];
+    if (img_cuatro) {
+      formData.append("img-cuatro", img_cuatro, img_cuatro.name);
+    }
+    let img_cinco = document.getElementById(`file-5-${this.state.registro.id}`)
+      .files[0];
+    if (img_cinco) {
+      formData.append("img-cinco", img_cinco, img_cinco.name);
+    }
+    
     /*
         for(var pair of formData.entries()) {
             console.log(pair[0]+ ', '+ pair[1]);
@@ -133,6 +156,42 @@ class FormNov extends Component {
             tipo: 0,
             visible: true,
             body: "El tamaño de la segunda imágen supera los 4MB.",
+          },
+        });
+        return false;
+      }
+    }
+    if (formData.has("img-tres")) {
+      if (formData.get("img-tres").size > 500000) {
+        this.setState({
+          msg: {
+            tipo: 0,
+            visible: true,
+            body: "El tamaño de la tercer imágen supera los 4MB.",
+          },
+        });
+        return false;
+      }
+    }
+    if (formData.has("img-cuatro")) {
+      if (formData.get("img-cuatro").size > 500000) {
+        this.setState({
+          msg: {
+            tipo: 0,
+            visible: true,
+            body: "El tamaño de la cuarta imágen supera los 4MB.",
+          },
+        });
+        return false;
+      }
+    }
+    if (formData.has("img-cinco")) {
+      if (formData.get("img-cinco").size > 500000) {
+        this.setState({
+          msg: {
+            tipo: 0,
+            visible: true,
+            body: "El tamaño de la quinta imágen supera los 4MB.",
           },
         });
         return false;
@@ -275,8 +334,8 @@ class FormNov extends Component {
                     id={`img-1-${this.state.registro.id}`}
                     className="img-fluid"
                     style={{
-                      width: "250px",
-                      height: "200px",
+                      width: "200px",
+                      height: "150px",
                       objectFit: "cover"
                     }}
                     src={`${process.env.REACT_APP_API_HOST}/${
@@ -303,8 +362,8 @@ class FormNov extends Component {
                     id={`img-2-${this.state.registro.id}`}
                     className="img-fluid mt-2"
                     style={{
-                      width: "250px",
-                      height: "200px",
+                      width: "200px",
+                      height: "150px",
                       objectFit: "cover"
                     }}
                     src={`${process.env.REACT_APP_API_HOST}/${
@@ -314,6 +373,90 @@ class FormNov extends Component {
                     onClick={e => {
                       document
                         .getElementById(`file-2-${this.state.registro.id}`)
+                        .click();
+                    }}
+                  />
+                </div>
+                <div>
+                  <input
+                    type="file"
+                    className="d-none"
+                    name={`file-3-${this.state.registro.id}`}
+                    id={`file-3-${this.state.registro.id}`}
+                    accept="image/*"
+                    onChange={this.handleImgChange}
+                  />
+                  <img
+                    id={`img-3-${this.state.registro.id}`}
+                    className="img-fluid mt-2"
+                    style={{
+                      width: "200px",
+                      height: "150px",
+                      objectFit: "cover"
+                    }}
+                    src={`${process.env.REACT_APP_API_HOST}/${
+                      process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
+                    }/${this.state.registro.foto_tres}`}
+                    alt="Foto"
+                    onClick={e => {
+                      document
+                        .getElementById(`file-3-${this.state.registro.id}`)
+                        .click();
+                    }}
+                  />
+                </div>
+                <div>
+                  <input
+                    type="file"
+                    className="d-none"
+                    name={`file-4-${this.state.registro.id}`}
+                    id={`file-4-${this.state.registro.id}`}
+                    accept="image/*"
+                    onChange={this.handleImgChange}
+                  />
+                  <img
+                    id={`img-4-${this.state.registro.id}`}
+                    className="img-fluid mt-2"
+                    style={{
+                      width: "200px",
+                      height: "150px",
+                      objectFit: "cover"
+                    }}
+                    src={`${process.env.REACT_APP_API_HOST}/${
+                      process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
+                    }/${this.state.registro.foto_cuatro}`}
+                    alt="Foto"
+                    onClick={e => {
+                      document
+                        .getElementById(`file-4-${this.state.registro.id}`)
+                        .click();
+                    }}
+                  />
+                </div>
+                <div>
+                  <input
+                    type="file"
+                    className="d-none"
+                    name={`file-5-${this.state.registro.id}`}
+                    id={`file-5-${this.state.registro.id}`}
+                    accept="image/*"
+                    onChange={this.handleImgChange}
+                  />
+                  <img
+                    id={`img-5-${this.state.registro.id}`}
+                    className="img-fluid mt-2"
+                    style={{
+                      width: "200px",
+                      height: "150px",
+                      objectFit: "cover"
+                    }}
+                    src={`${process.env.REACT_APP_API_HOST}/${
+                      process.env.REACT_APP_API_DIRECTORY_NOVEDADES_FOTOS
+                    }/${this.state.registro.foto_cinco}`}
+                    alt="Foto"
+                    onClick={e => {
+                      document
+                        .getElementById(`file-5-${this.state.registro.id}`)
                         .click();
                     }}
                   />

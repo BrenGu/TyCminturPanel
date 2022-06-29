@@ -33,12 +33,12 @@ class FormArboles extends Component {
     this.saveData = this.saveData.bind(this);
     this.askDelete = this.askDelete.bind(this);
     this.okDelete = this.okDelete.bind(this);
-    this.handlDescripcionHTMLChange = this.handleDescripcionHTMLChange.bind(
+    this.handlDescripcionHTMLChange = this.handlDescripcionHTMLChange.bind(
       this
     );
   }
 
-  handleDescripcionHTMLChange(desHTML, des) {
+  handlDescripcionHTMLChange(desHTML, des) {
     this.setState({
       registro: {
         ...this.state.registro,
@@ -459,7 +459,7 @@ class FormArboles extends Component {
                       <label htmlFor="descripcion">Descripcion</label>
                       <MyEditor
                         //descripcion={this.handlDescripcionChange}
-                        descripcionHTML={this.handleDescripcionHTMLChange}
+                        descripcionHTML={this.handlDescripcionHTMLChange}
                         contenido = {this.state.registro.descripcionHTML}
                       />
                     </div>

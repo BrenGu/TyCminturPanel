@@ -9,13 +9,13 @@ class FormArboles extends Component {
     this.state = {
       loading: true,
       id: 0,
-      arbol: {
+      registro: {
         id: 0,
         nombre_popular: "",
         nombre_cientifico: "",
         origen: "",
-        caracteristicas: "",
-        caracteristicasHTML: "",
+        descripcion: "",
+        descripcionHTML: "",
         foto_uno: "default.jpg",
         foto_dos: "default.jpg",
         foto_tres: "default.jpg",
@@ -33,17 +33,17 @@ class FormArboles extends Component {
     this.saveData = this.saveData.bind(this);
     this.askDelete = this.askDelete.bind(this);
     this.okDelete = this.okDelete.bind(this);
-    this.handlDescripcionHTMLChange = this.handleCaracteristicasHTMLChange.bind(
+    this.handlDescripcionHTMLChange = this.handleDescripcionHTMLChange.bind(
       this
     );
   }
 
-  handleCaracteristicasHTMLChange(carHTML, car) {
+  handleDescripcionHTMLChange(desHTML, des) {
     this.setState({
       registro: {
         ...this.state.registro,
-        caracteristicasHTML: carHTML,
-        caracteristicas: car,
+        descripcionHTML: desHTML,
+        descripcion: des,
       },
     });
   }
@@ -456,10 +456,11 @@ class FormArboles extends Component {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <label htmlFor="caracteristicas">Características</label>
+                      <label htmlFor="descripcion">Descripcion</label>
                       <MyEditor
                         //descripcion={this.handlDescripcionChange}
-                        descripcionHTML={this.handlDescripcionHTMLChange}
+                        descripcionHTML={this.handleDescripcionHTMLChange}
+                        contenido = {this.state.registro.descripcionHTML}
                       />
                     </div>
                   </div>
@@ -477,7 +478,7 @@ class FormArboles extends Component {
                         <i className="fas fa-trash" />
                       </button>
                       <button type="submit" className="btn btn-primary">
-                        <i className="fas fa-save" /> Guardar Cambios
+                        <i className="fas fa-save" /> Guardar Cambiodds
                       </button>
                     </div>
                   </div>

@@ -12,8 +12,8 @@ class Arboles extends Component {
         nombre_popular: "",
         nombre_cientifico: "",
         origen: "",
-        caracteristicas: "",
-        caracteristicasHTML: "",
+        descripcion: "",
+        descripcionHTML: "",
         foto_uno: "default.jpg",
         foto_dos: "default.jpg",
         foto_tres: "default.jpg",
@@ -31,7 +31,7 @@ class Arboles extends Component {
     this.handleImgChange = this.handleImgChange.bind(this);
     this.handleFormArbolSubmit = this.handleFormArbolSubmit.bind(this);
     this.eliminarArbol = this.eliminarArbol.bind(this);
-    this.handleCaracteristicasHTMLChange = this.handleCaracteristicasHTMLChange.bind(
+    this.handleDescripcionHTMLChange = this.handleDescripcionHTMLChange.bind(
       this
     );
   }
@@ -81,12 +81,12 @@ class Arboles extends Component {
     );
   }
 
-  handleCaracteristicasHTMLChange(carHTML, car){
+  handleDescripcionHTMLChange(desHTML, des){
     this.setState({
       arbol: {
         ...this.state.arbol,
-        caracteristicasHTML: carHTML,
-        caracteristicas: car,
+        descripcionHTML: desHTML,
+        descripcion: des,
       },
     });
   }
@@ -97,8 +97,8 @@ class Arboles extends Component {
     data.append("nombre_popular", this.state.arbol.nombre_popular);
     data.append("nombre_cientifico", this.state.arbol.nombre_cientifico);
     data.append("origen", this.state.arbol.origen);
-    data.append("caracteristicas", this.state.arbol.caracteristicas);
-    data.append("caracteristicasHTML", this.state.arbol.caracteristicasHTML);
+    data.append("descripcion", this.state.arbol.descripcion);
+    data.append("descripcionHTML", this.state.arbol.descripcionHTML);
 
     //Imágenes
     var img_uno = document.getElementById("upl-arb-uno").files[0];
@@ -277,6 +277,7 @@ class Arboles extends Component {
         />
       );
     });
+
     return (
       <div className="Arboles">
         {this.state.loading ? (
@@ -345,10 +346,10 @@ class Arboles extends Component {
                   <div className="row">
                     <div className="col">
                       <div className="form-group">
-                        <label htmlFor="Características">Características</label>
+                        <label htmlFor="Descripcion">Descripcion</label>
                         <MyEditor
                           descripcionHTML={
-                            this.handleCaracteristicasHTMLChange
+                            this.handleDescripcionHTMLChange
                           }
                         />
                       </div>

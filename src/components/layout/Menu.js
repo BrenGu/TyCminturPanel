@@ -82,6 +82,8 @@ class Menu extends Component {
                                         <div className="dropdown-menu">
                                             <Link className="dropdown-item" to="/paneladmin">Panel Admin</Link>
                                             <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/arboles">Árboles</Link>
+                                            <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/oficinas">Oficinas de Turísmo</Link>
                                             <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/agencias-viajes">Agencias de Viaje</Link>

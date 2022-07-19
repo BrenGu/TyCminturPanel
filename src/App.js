@@ -26,6 +26,7 @@ import AgenciaViajes from "./components/paginas/AgenciaViajes"
 import FormAgenciasViajes from "./components/paginas/comguiasturisticos/FormAgenciasViajes"
 import Censistas from "./components/paginas/Censistas";
 import Arboles from "./components/paginas/Arboles";
+import GaleriaLocalidad from "./components/paginas/GaleriaLocalidad"
 
 
 //<Router basename={`/${process.env.REACT_APP_BASENAME}`} history={Router.hashHistory}>
@@ -97,6 +98,7 @@ class App extends Component {
 													<Route path="/localidades" component={Localidades} />
 													<Route path="/censistas" component={Censistas} />
 													<Route path="/arboles" component={Arboles} />
+													<Route path="/galerialocalidad" component={GaleriaLocalidad} />
 													<Route path="/atractivos" component={Atractivos} />
 													<Route path="/gastronomia" component={Gastronomia} />
 													<Route path="/paneladmin" component={PanelAdmin} />

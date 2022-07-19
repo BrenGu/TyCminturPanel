@@ -96,6 +96,8 @@ class Menu extends Component {
                                             <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/censistas">Censistas</Link>
                                             <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/galerialocalidad">Galeria por Localidad</Link>
+                                            <div className="dropdown-divider"></div>
                                             <ExcelFile
                                                 element={
                                                     <button className="dropdown-item" style={{outline: "none"}} onClick={this.TodoslosMails}>

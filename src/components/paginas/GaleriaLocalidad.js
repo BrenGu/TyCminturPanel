@@ -38,12 +38,11 @@ class GaleriaLocalidad extends Component {
 
     this.getData = this.getData.bind(this);
     this.getTags = this.getTags.bind(this);
-    this.getDepartamento = this.getDepartamento.bind(this);
     this.handleFromGalLocSubmit = this.handleFromGalLocSubmit.bind(this);
     this.handleImgChange = this.handleImgChange.bind(this);
     this.handleTagClick = this.handleTagClick.bind(this);
     this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
-    this.getDepto = this.getDepto.bind(this);
+    this.handleSave = this.handleSave.bind(this);
   }
 
   getTags() {
@@ -75,83 +74,6 @@ class GaleriaLocalidad extends Component {
               },
             });
           }
-        },
-        (error) => {
-          //???
-          console.log(error);
-        }
-      );
-    this.setState({
-      loading: false,
-    });
-  }
-
-  //Obtiene el departamento a traves del id de ciudad
-  getDepto = () => {
-    const idDepto = new Promise((resolve, reject) => {
-      fetch(`${process.env.REACT_APP_API_HOST}/departamentos/ciudad/${this.state.ciudadSelected}`, {
-        method: "GET",
-        headers: {
-          Authorization: "",
-        },
-      }).then((res) => {
-        if (res.ok && res.status === 200) {
-          res.json().then((data) => {
-            let departamento = data.data.registros[0].id;
-            this.setState(
-              {
-                departamentoSelected: departamento,
-              }, () => {
-                resolve("Ok");
-              }
-            );
-          });
-        } else {
-          reject("Error")
-          // this.setState({
-          //   MsgVisible: true,
-          //   MsgBody: res.errMsg,
-          // });
-        }
-      });
-    });
-
-    Promise.all([idDepto]).then(values => {
-      
-
-    })
-    
-  };
-
-  //Obtiene el departamento a traves del id de ciudad
-  getDepartamento(id) {
-    //console.log(id + " GET DPTO");
-    fetch(`${process.env.REACT_APP_API_HOST}/departamentos/ciudad/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: "",
-      },
-    })
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          if (result.data.count > 0) {
-            //console.log("PASE");
-            //console.log(result.data.registros[0].id);
-
-            if (!result.err) {
-              this.setState({
-                departamentoSelected: result.data.registros[0].id,
-              });
-            } else {
-              this.setState({
-                msg: {
-                  visible: true,
-                  body: result.errMsg,
-                },
-              });
-            }
-          } else console.log("NO PASE");
         },
         (error) => {
           //???
@@ -207,9 +129,6 @@ class GaleriaLocalidad extends Component {
     this.setState({
       ciudadSelected: event.target.value,
     });
-    this.getDepartamento(this.state.ciudadSelected);
-
-    console.log(event.target.value);
   }
 
   handleImgChange(event) {
@@ -227,12 +146,10 @@ class GaleriaLocalidad extends Component {
     this.setState((previousState) => ({
       tagsSelected: [...previousState.tagsSelected, id],
     }));
+    console.log(this.state.tagsSelected);
   }
 
-  handleFromGalLocSubmit(event) {
-
-    this.getDepartamento(this.state.ciudadSelected);
-
+  handleSave(event) {
     event.preventDefault();
     const data = new FormData();
 
@@ -240,11 +157,11 @@ class GaleriaLocalidad extends Component {
     if (imagen) {
       data.append("imagen", imagen, imagen.name);
     }
-
-    data.append("idloc", this.state.departamentoSelected);
     data.append("idciudad", this.state.ciudadSelected);
+    console.log("Departamento: " + this.state.departamentoSelected);
+    data.append("idloc", this.state.departamentoSelected);
 
-    //data.forEach((e) => console.log(e));
+    data.forEach((e) => console.log(e));
     fetch(`${process.env.REACT_APP_API_HOST}/addfotoloc`, {
       method: "POST",
       headers: {
@@ -264,9 +181,9 @@ class GaleriaLocalidad extends Component {
                 },
               },
               () => {
-                this.resetForm();
-                this.getData();
-                this.getTags();
+                //this.resetForm();
+                //this.getData();
+                // this.getTags();
               }
             );
           } else {
@@ -283,6 +200,39 @@ class GaleriaLocalidad extends Component {
           console.log(error);
         }
       );
+  }
+
+  handleFromGalLocSubmit(event) {
+    event.preventDefault();
+
+    new Promise((resolve, reject) => {
+      fetch(
+        `${process.env.REACT_APP_API_HOST}/departamentos/ciudad/${
+          this.state.ciudadSelected
+        }`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "",
+          },
+        }
+      )
+        .then((res) => {
+          res.json().then((data) => {
+            this.setState({
+              departamentoSelected: data.data.registros[0].id,
+            });
+            console.log(data);
+            this.handleSave(event);
+          });
+        })
+        .catch((err) => {
+          this.setState({
+            MsgVisible: true,
+            MsgBody: err.errMsg,
+          });
+        });
+    });
   }
 
   resetForm() {
@@ -361,6 +311,7 @@ class GaleriaLocalidad extends Component {
                           //   value={this.state.foto.idlocalidad}
                           onChange={this.handleLocalidadChange}
                         >
+                          <option value="0">Seleccione una ciudad...</option>
                           {localidades}
                         </select>
                       </div>

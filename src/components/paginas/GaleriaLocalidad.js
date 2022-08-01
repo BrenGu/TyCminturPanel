@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Form } from "reactstrap";
 //import { Consumer } from "../../context";
 import Msg from "../utiles/Msg";
+import FormGaleriaLocalidad from "./comgalerialocalidad/FormGaleriaLocalidad";
 
 class GaleriaLocalidad extends Component {
   constructor(props) {
@@ -21,15 +22,18 @@ class GaleriaLocalidad extends Component {
       foto: {
         image: "default.jpg",
       },
+      fotos: [],
       tags: {
         data: [
           {
             id: 0,
             nombre: "Cargando...",
+            visible: true,
           },
         ],
       },
       tagsSelected: [],
+      filtro: "",
       msg: {
         visible: false,
         body: "",
@@ -39,12 +43,17 @@ class GaleriaLocalidad extends Component {
     this.getData = this.getData.bind(this);
     this.getTags = this.getTags.bind(this);
     this.handleFromGalLocSubmit = this.handleFromGalLocSubmit.bind(this);
+    this.resetForm = this.resetForm.bind(this);
     this.handleImgChange = this.handleImgChange.bind(this);
     this.handleTagClick = this.handleTagClick.bind(this);
     this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.addNewTag = this.addNewTag.bind(this);
+    this.handleBusquedaChange = this.handleBusquedaChange.bind(this);
+    //this.handleBuscadorTagChange = this.handleBuscadorTagChange.bind(this);
   }
 
+  //Trae todos los tags
   getTags() {
     fetch(`${process.env.REACT_APP_API_HOST}/tags`, {
       method: "GET",
@@ -66,6 +75,8 @@ class GaleriaLocalidad extends Component {
                 data: setX,
               },
             });
+
+            console.log(this.state.tags);
           } else {
             this.setState({
               msg: {
@@ -84,7 +95,7 @@ class GaleriaLocalidad extends Component {
       loading: false,
     });
   }
-
+  //Trae todas las ciudades
   getData() {
     //Lista de Localidades
     fetch(`${process.env.REACT_APP_API_HOST}/ciudades`, {
@@ -124,12 +135,69 @@ class GaleriaLocalidad extends Component {
         }
       );
   }
-
+  //Guarda id de localidadad selected
   handleLocalidadChange(event) {
     this.setState({
       ciudadSelected: event.target.value,
     });
   }
+  //Filtro de tags dinamico
+  handleBusquedaChange = (event) => {
+    //this.handleValue(event.target.value);
+
+    console.log("BusquedaChange");
+    let valor = "";
+    if (event) {
+      valor = event.target.value;
+    } else {
+      valor = "";
+    }
+
+    this.setState({ filtro: valor }, () => {
+      var copy = Object.assign([], this.state.tags.data);
+      copy = copy.map((d) => {
+        if (d.nombre.toLowerCase().indexOf(valor.toLowerCase()) > -1) {
+          d.visible = true;
+        } else {
+          d.visible = false;
+        }
+        return d;
+      });
+      this.setState({
+        tags: {
+          ...this.state.tags,
+          data: copy,
+        },
+      });
+    });
+  };
+
+  // handleBuscadorTagChange(event) {
+  //   this.setState({
+  //     filtro: event.target.value,
+  //   });
+
+  //   let valor = event.target.value;
+
+  //   this.setState({ filtro: valor }, () => {
+  //     var copy = Object.assign([], this.state.tags.data);
+  //     copy = copy.map((d) => {
+  //       if (d.nombre.toLowerCase().indexOf(valor.toLowerCase()) > -1) {
+  //         d.visible = true;
+  //         return d;
+  //       } else {
+  //         d.visible = false;
+  //       }
+  //       return d;
+  //     });
+  //     this.setState({
+  //       tags: {
+  //         ...this.state.tags,
+  //         data: copy
+  //       }
+  //     });
+  //   });
+  // }
 
   handleImgChange(event) {
     let id = "img-" + event.target.id;
@@ -139,29 +207,95 @@ class GaleriaLocalidad extends Component {
       imagen.setAttribute("src", e.target.result);
     };
     reader.readAsDataURL(event.target.files[0]);
-    console.log(event.target.id);
+    //console.log(event.target.id);
+  }
+
+  addNewTag(event) {
+    event.preventDefault();
+    const data = new FormData();
+    data.append("nombre", this.state.filtro);
+
+    fetch(`${process.env.REACT_APP_API_HOST}/addtag`, {
+      method: "POST",
+      headers: {
+        Authorization: "",
+      },
+      body: data,
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (!result.err) {
+            this.setState(
+              {
+                msg: {
+                  visible: true,
+                  body: "Tag agregado correctamente",
+                },
+              },
+              () => {}
+            );
+          } else {
+            this.setState({
+              msg: {
+                visible: true,
+                body: result.errMsgs,
+              },
+            });
+          }
+        },
+        (error) => {
+          //???
+          console.log(error);
+        }
+      );
+
+    this.getTags();
+    this.setState({
+      filtro: "",
+    });
   }
 
   handleTagClick(id) {
-    this.setState((previousState) => ({
-      tagsSelected: [...previousState.tagsSelected, id],
-    }));
+    if (this.state.tagsSelected.includes(id)) {
+      //let index = this.state.tagsSelected.indexOf(id);
+      //console.log("estoy en " + index);
+      //this.state.tagsSelected.splice(index);
+      // this.setState({
+      // tagsSelected: this.tagsSelected.filter(function(tag){
+      //   return tag !== id;
+      // })
+      this.setState((previousState) => ({
+        tagsSelected: previousState.tagsSelected.filter((tag) => tag !== id),
+      }));
+      // });
+    } else {
+      this.setState((previousState) => ({
+        tagsSelected: [...previousState.tagsSelected, id],
+      }));
+    }
     console.log(this.state.tagsSelected);
+
+    //console.log(this.state.tagsSelected);
   }
 
   handleSave(event) {
     event.preventDefault();
     const data = new FormData();
 
+    let concatTags = this.state.tagsSelected.toString();
+
     var imagen = document.getElementById("upl-foto").files[0];
+
     if (imagen) {
       data.append("imagen", imagen, imagen.name);
     }
     data.append("idciudad", this.state.ciudadSelected);
-    console.log("Departamento: " + this.state.departamentoSelected);
+    //console.log("Departamento: " + this.state.departamentoSelected);
     data.append("idloc", this.state.departamentoSelected);
+    data.append("tags", concatTags);
 
-    data.forEach((e) => console.log(e));
+    //data.forEach((e) => console.log(e));
     fetch(`${process.env.REACT_APP_API_HOST}/addfotoloc`, {
       method: "POST",
       headers: {
@@ -177,13 +311,13 @@ class GaleriaLocalidad extends Component {
               {
                 msg: {
                   visible: true,
-                  body: "Los datos se agregaron correctamente",
+                  body: "La foto se agregó correctamente a la galería",
                 },
               },
               () => {
                 //this.resetForm();
                 //this.getData();
-                // this.getTags();
+                //this.getTags();
               }
             );
           } else {
@@ -222,7 +356,7 @@ class GaleriaLocalidad extends Component {
             this.setState({
               departamentoSelected: data.data.registros[0].id,
             });
-            console.log(data);
+            //console.log(data);
             this.handleSave(event);
           });
         })
@@ -238,9 +372,11 @@ class GaleriaLocalidad extends Component {
   resetForm() {
     this.setState({
       foto: {
-        idlocalidad: 6, //Ciudad de San Luis por defecto
+        //id: 6, //Ciudad de San Luis por defecto
         image: "default.jpg",
       },
+      ciudadSelected: 0,
+      //tagsSelected: [],
     });
     document.getElementById("frm-foto").reset();
     document
@@ -253,14 +389,20 @@ class GaleriaLocalidad extends Component {
       );
   }
 
-  componentDidUpdate() {}
-
   componentDidMount() {
     this.getTags();
     this.getData();
   }
 
   render() {
+    const lista_galeria = this.state.fotos.map((foto) => {
+      return (<FormGaleriaLocalidad
+      key={`foto-${foto.id}`}
+      id={foto.id}
+      eliminar={this.eliminarFoto}
+      />
+      );
+    });
     const localidades = this.state.localidades.data.map((ciudades) => {
       return (
         <option key={`loc-${ciudades.id}`} value={ciudades.id}>
@@ -269,22 +411,36 @@ class GaleriaLocalidad extends Component {
       );
     });
 
-    const tags = this.state.tags.data.map((tag) => {
+    // const tags = this.state.tags.data.map((tag) => {
+    //   return (
+    //     <span
+    //       className={`spanloc ${
+    //         tag.id === this.state.tagsSelected ? "active" : ""
+    //       } `}
+    //       key={`tag-${tag.id}`}
+    //       onClick={(e) => this.handleTagClick(tag.id)}
+    //     >
+    //       #{tag.nombre}{" "}
+    //     </span>
+    //   );
+    // });
+
+    const filtro = this.state.tags.data.map((tag) => {
       return (
         <span
           className={`spanloc ${
-            tag.id === this.state.tagsSelected ? "active" : ""
-          }`}
+            this.state.tagsSelected.includes(tag.id) ? " active" : ""
+          }${tag.visible ? " d-block" : " d-none"}`}
           key={`tag-${tag.id}`}
           onClick={(e) => this.handleTagClick(tag.id)}
         >
-          {tag.nombre}{" "}
+          #{tag.nombre}
         </span>
       );
     });
 
     return (
-      <div className="Arboles">
+      <div className="Galeria">
         {this.state.loading ? (
           <div>Cargando</div>
         ) : (
@@ -298,7 +454,7 @@ class GaleriaLocalidad extends Component {
               onSubmit={this.handleFromGalLocSubmit}
               id="frm-foto"
             >
-              <div className="grid-gakerialocalidad">
+              <div className="grid-galerialocalidad">
                 <div className="noveades-span-row-2">
                   <div className="row">
                     <div className="col-md-6">
@@ -311,27 +467,40 @@ class GaleriaLocalidad extends Component {
                           //   value={this.state.foto.idlocalidad}
                           onChange={this.handleLocalidadChange}
                         >
-                          <option value="0">Seleccione una ciudad...</option>
+                          <option value="0">Seleccione una localidad...</option>
                           {localidades}
                         </select>
                       </div>
+
                       <div className="form-group">
-                        <label htmlFor="buscar">Tags</label>
-                        <input
-                          type="text"
-                          name="buscar"
-                          id="buscar"
-                          className="form-control"
-                          value={this.state.filtro}
-                          onChange={this.handleBusquedaChange}
-                          autoComplete="off"
-                        />
+                        <div className="row">
+                          <div className="col-md-10">
+                            <label htmlFor="buscar">Tags</label>
+                            <input
+                              type="text"
+                              name="buscar"
+                              id="buscar"
+                              className="form-control"
+                              value={this.state.filtro}
+                              onChange={this.handleBusquedaChange}
+                              autoComplete="off"
+                            />
+                          </div>
+                          <div className="col">
+                            <button
+                              className="btn btn-primary btntag"
+                              onClick={this.addNewTag}
+                            >
+                              <i className="fas fa-plus" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
                       <div className="row">
                         <div className="col">
                           <div className="form-group">
                             <div className="d-flex justify-content-center flex-wrap">
-                              {tags}
+                              {filtro}
                             </div>
                           </div>
                         </div>
@@ -383,12 +552,23 @@ class GaleriaLocalidad extends Component {
                       <i className="far fa-window-restore" />
                     </button>
                     <button type="submit" className="btn btn-primary">
-                      <i className="fas fa-arrow-down" /> Agregar Imagen
+                      <i className="fas fa-plus" /> Agregar Imagen
                     </button>
                   </div>
                 </div>
               </div>
             </form>
+            <hr />
+            <h5 className="bg-dark text-white p-3 mb-3 rounded">
+              Lista de Fotos
+            </h5>
+            <div className="row">
+              <div className="col">
+                <span>Últimas 12 fotos cargadas</span>
+                <hr />
+                {lista_galeria}
+              </div>
+            </div>
           </React.Fragment>
         )}
         <Msg
@@ -429,6 +609,11 @@ class GaleriaLocalidad extends Component {
           }
           .spanloc.active:hover {
             background-color: #ccc;
+          }
+          .btntag {
+            position: absolute;
+
+            bottom: 0;
           }
         `}</style>
       </div>

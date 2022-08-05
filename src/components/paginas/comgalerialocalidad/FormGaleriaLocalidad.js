@@ -9,12 +9,22 @@ class FormGaleriaLocalidad extends Component {
     this.state = {
       loading: true,
       id: 0,
-      combo_localidades: [
-        {
-          id: 0,
-          nombre: "Cargando...",
-        },
-      ],
+      registros: {
+        id: 0,
+        imagen: "default.jpg",
+        idloc: 0,
+        idciudad: 0,
+        tags: "",
+        activo: 1,
+      },
+      localidades: {
+        data: [
+          {
+            id: 0,
+            nombre: "Cargando...",
+          },
+        ],
+      },
       tags: {
         data: [
           {
@@ -23,14 +33,6 @@ class FormGaleriaLocalidad extends Component {
             visible: true,
           },
         ],
-      },
-      registro: {
-        id: 0,
-        imagen: "default.jpg",
-        idloc: 0,
-        idciudad: 0,
-        tags: "",
-        activo: 1,
       },
       tagsSelected: [],
       msg: {
@@ -41,10 +43,51 @@ class FormGaleriaLocalidad extends Component {
     };
     this.setData = this.setData.bind(this);
     this.getTags = this.getTags.bind(this);
+    this.getCiudades = this.getCiudades.bind(this);
     this.handleImgChange = this.handleImgChange.bind(this);
   }
+//Trae todas las ciudades
+  getCiudades() {
+    //Lista de Localidades
+    fetch(`${process.env.REACT_APP_API_HOST}/ciudades`, {
+      method: "GET",
+      headers: {
+        Authorization: "asdssffsdff",
+        //"Content-Type": "application/json"
+      },
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (!result.err) {
+            var setX = result.data.registros.map((v) => {
+              return {
+                ...v,
+              };
+            });
+            this.setState({
+              localidades: {
+                data: setX,
+              },
+            });
+          } else {
+            this.setState({
+              MsgVisible: true,
+              MsgBody: result.errMsg,
+            });
+          }
+        },
+        (error) => {
+          //???
+          this.setState({
+            isLoaded: true,
+            error,
+          });
+        }
+      );
+  }
 
-    //Trae todos los tags
+//Trae todos los tags
     getTags() {
         fetch(`${process.env.REACT_APP_API_HOST}/tags`, {
           method: "GET",
@@ -86,7 +129,7 @@ class FormGaleriaLocalidad extends Component {
           loading: false,
         });
       }
-
+//Trae todas las fotos 
   setData() {
     let token = this.context.token;
     this.setState(
@@ -111,12 +154,13 @@ class FormGaleriaLocalidad extends Component {
               if (!result.err) {
                 if (parseInt(result.data.count, 10) > 0) {
                   this.setState({
-                    registro: result.data.registros[0],
+                    registros: result.data.registros[0],
                     loading: false,
                   });
                 } else {
                   console.log("No hay registro: " + this.state.id);
                 }
+                console.log(this.state.registros);
               } else {
                 this.setState({
                   msg: {
@@ -155,13 +199,13 @@ class FormGaleriaLocalidad extends Component {
 
   componentDidMount() {
     this.setData();
-    //this.getTags();
+    this.getCiudades();
+    this.getTags();
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.id !== prevProps.id) {
       this.setData();
-      //this.getTags();
     }
   }
 
@@ -179,8 +223,8 @@ class FormGaleriaLocalidad extends Component {
           #{tag.nombre}
         </span>
         );
-    })
-    const localidades = this.state.combo_localidades.map((d) => {
+    });
+    const localidades = this.state.localidades.data.map((d) => {
       return (
         <option key={`loc-opt-${d.id}`} value={d.id}>
           {" "}
@@ -205,13 +249,13 @@ class FormGaleriaLocalidad extends Component {
                   <input
                     type="file"
                     className="d-none"
-                    name={`file-1-${this.state.registro.id}`}
-                    id={`file-1-${this.state.registro.id}`}
+                    name={`file-1-${this.state.registros.id}`}
+                    id={`file-1-${this.state.registros.id}`}
                     accept="image/*"
                     onChange={this.handleImgChange}
                   />
                   <img
-                    id={`img-1-${this.state.registro.id}`}
+                    id={`img-1-${this.state.registros.id}`}
                     className="img-fluid"
                     style={{
                       width: "200px",
@@ -220,11 +264,11 @@ class FormGaleriaLocalidad extends Component {
                     }}
                     src={`${process.env.REACT_APP_API_HOST}/${
                       process.env.REACT_APP_API_DIRECTORY_GALERIA_LOCALIDADES
-                    }/${this.state.registro.imagen}`}
+                    }/${this.state.registros.imagen}`}
                     alt="Foto"
                     onClick={(e) => {
                       document
-                        .getElementById(`file-1-${this.state.registro.id}`)
+                        .getElementById(`file-1-${this.state.registros.id}`)
                         .click();
                     }}
                   />
@@ -239,11 +283,11 @@ class FormGaleriaLocalidad extends Component {
                         name="idloc"
                         id="idloc"
                         className="form-control"
-                        value={this.state.registro.id}
+                        value={this.state.registros.id}
                         onChange={(e) =>
                           this.setState({
-                            registro: {
-                              ...this.state.registro,
+                            registros: {
+                              ...this.state.registros,
                               idloc: e.target.value,
                             },
                           })
@@ -258,7 +302,9 @@ class FormGaleriaLocalidad extends Component {
                     <div className="col">
                         <div className="form-group">
                             <label htmlFor="tags">Tags</label>
-
+                            <div className="d-flex justify-content-center flex-wrap">
+                              {tags}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -267,8 +313,6 @@ class FormGaleriaLocalidad extends Component {
           </form>
         )}
       </React.Fragment>
-
-      
     );
   }
 }

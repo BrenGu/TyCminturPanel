@@ -8,7 +8,7 @@ class GaleriaLocalidad extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loadig: true,
+      loading: true,
       localidades: {
         data: [
           {
@@ -42,6 +42,7 @@ class GaleriaLocalidad extends Component {
 
     this.getData = this.getData.bind(this);
     this.getTags = this.getTags.bind(this);
+    this.getFotos = this.getFotos.bind(this);
     this.handleFromGalLocSubmit = this.handleFromGalLocSubmit.bind(this);
     this.resetForm = this.resetForm.bind(this);
     this.handleImgChange = this.handleImgChange.bind(this);
@@ -50,9 +51,88 @@ class GaleriaLocalidad extends Component {
     this.handleSave = this.handleSave.bind(this);
     this.addNewTag = this.addNewTag.bind(this);
     this.handleBusquedaChange = this.handleBusquedaChange.bind(this);
+    this.eliminarFoto = this.eliminarFoto.bind(this);
     //this.handleBuscadorTagChange = this.handleBuscadorTagChange.bind(this);
   }
 
+  eliminarFoto(id) {
+    this.setState(
+      {
+        loading: true,
+      },
+      () => {
+        fetch(`${process.env.REACT_APP_API_HOST}/delfotoloc/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: "",
+          },
+        })
+          .then((res) => res.json())
+          .then(
+            (result) => {
+              if (!result.err) {
+                this.setState(
+                  {
+                    msg: {
+                      visible: true,
+                      body: "Los datos se eliminaron correctamente.",
+                    },
+                  },
+                  () => {
+                    this.getData();
+                  }
+                );
+              } else {
+                this.setState({
+                  msg: {
+                    visible: true,
+                    body: result.errMsgs,
+                  },
+                });
+              }
+            },
+            (error) => {
+              //???
+              console.log(error);
+            }
+          );
+      }
+    );
+  }
+
+  getFotos() {
+    fetch(`${process.env.REACT_APP_API_HOST}/listfotos/12`, {
+      method: "GET",
+      headers: {
+        Authorization: "",
+      },
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (!result.err) {
+            this.setState({
+              fotos: result.data.registros,
+            });
+            console.log(this.state.fotos);
+          } else {
+            this.setState({
+              msg: {
+                visible: true,
+                body: result.errMsg,
+              },
+            });
+          }
+        },
+        (error) => {
+          //???
+          console.log(error);
+        }
+      );
+    this.setState({
+      loading: false,
+    });
+  }
   //Trae todos los tags
   getTags() {
     fetch(`${process.env.REACT_APP_API_HOST}/tags`, {
@@ -76,7 +156,7 @@ class GaleriaLocalidad extends Component {
               },
             });
 
-            console.log(this.state.tags);
+            //console.log(this.state.tags);
           } else {
             this.setState({
               msg: {
@@ -291,7 +371,6 @@ class GaleriaLocalidad extends Component {
       data.append("imagen", imagen, imagen.name);
     }
     data.append("idciudad", this.state.ciudadSelected);
-    //console.log("Departamento: " + this.state.departamentoSelected);
     data.append("idloc", this.state.departamentoSelected);
     data.append("tags", concatTags);
 
@@ -392,17 +471,20 @@ class GaleriaLocalidad extends Component {
   componentDidMount() {
     this.getTags();
     this.getData();
+    this.getFotos();
   }
 
   render() {
     const lista_galeria = this.state.fotos.map((foto) => {
-      return (<FormGaleriaLocalidad
+      return (
+      <FormGaleriaLocalidad
       key={`foto-${foto.id}`}
       id={foto.id}
       eliminar={this.eliminarFoto}
       />
       );
     });
+
     const localidades = this.state.localidades.data.map((ciudades) => {
       return (
         <option key={`loc-${ciudades.id}`} value={ciudades.id}>

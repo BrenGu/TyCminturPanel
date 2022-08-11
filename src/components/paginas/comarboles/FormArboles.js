@@ -19,7 +19,7 @@ class FormArboles extends Component {
         foto_uno: "default.jpg",
         foto_dos: "default.jpg",
         foto_tres: "default.jpg",
-        foto_cuatro: "dafault.jpg",
+        foto_cuatro: "default.jpg",
       },
       msg: {
         visible: false,
@@ -478,7 +478,7 @@ class FormArboles extends Component {
                         <i className="fas fa-trash" />
                       </button>
                       <button type="submit" className="btn btn-primary">
-                        <i className="fas fa-save" /> Guardar Cambiodds
+                        <i className="fas fa-save" /> Guardar Cambios
                       </button>
                     </div>
                   </div>

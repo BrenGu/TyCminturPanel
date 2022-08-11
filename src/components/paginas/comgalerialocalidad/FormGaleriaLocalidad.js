@@ -89,9 +89,9 @@ class FormGaleriaLocalidad extends Component {
   saveData(event) {
     event.preventDefault();
     const formData = new FormData();
-    Object.keys(this.state.registros).forEach((key) =>
-      formData.append(key, this.state.registros[key])
-    );
+    // Object.keys(this.state.registros).forEach((key) =>
+    //   formData.append(key, this.state.registros[key])
+    // );
     //Imágenes
     let imagen = document.getElementById(`file-1-${this.state.registros.id}`)
       .files[0];
@@ -100,10 +100,11 @@ class FormGaleriaLocalidad extends Component {
     }
     let concatTags = this.state.tagsSelected.toString();
 
-    formData.append("idcuidad", this.state.ciudadSelected);
     formData.append("idloc", this.state.departamentoSelected);
+    formData.append("idcuidad", this.state.ciudadSelected);
     formData.append("tags", concatTags);
-
+    formData.append("activo", 1);
+    formData.forEach((e) => console.log(e));
     //Verificar tamaño de las imágenes no mas de 4MB
     if (formData.has("imagen")) {
       if (formData.get("imagen").size > 500000) {
@@ -117,6 +118,7 @@ class FormGaleriaLocalidad extends Component {
         return false;
       }
     }
+    
     //Guardar los cambios
     let token = this.context.token;
     fetch(
@@ -227,10 +229,10 @@ class FormGaleriaLocalidad extends Component {
       this.setState({
         tagsSelected: splitedtags,
       });
-      console.log("tengo " + splitedtags.length + " tags.");
-      console.log(splitedtags.indexOf(0));
+      //console.log("tengo " + splitedtags.length + " tags.");
+      //console.log(splitedtags.indexOf(0));
     } else {
-      console.log("estoy vacio");
+      //console.log("estoy vacio");
     }
   }
   //Trae todos los tags

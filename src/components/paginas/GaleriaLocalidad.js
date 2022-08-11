@@ -370,11 +370,13 @@ class GaleriaLocalidad extends Component {
     if (imagen) {
       data.append("imagen", imagen, imagen.name);
     }
-    data.append("idciudad", this.state.ciudadSelected);
+    
     data.append("idloc", this.state.departamentoSelected);
+    data.append("idciudad", this.state.ciudadSelected);
     data.append("tags", concatTags);
+    data.append("activo", 1);
 
-    //data.forEach((e) => console.log(e));
+    data.forEach((e) => console.log(e));
     fetch(`${process.env.REACT_APP_API_HOST}/addfotoloc`, {
       method: "POST",
       headers: {
@@ -385,6 +387,7 @@ class GaleriaLocalidad extends Component {
       .then((res) => res.json())
       .then(
         (result) => {
+          console.log(result);
           if (!result.err) {
             this.setState(
               {
@@ -394,7 +397,7 @@ class GaleriaLocalidad extends Component {
                 },
               },
               () => {
-                //this.resetForm();
+                this.resetForm();
                 //this.getData();
                 //this.getTags();
               }

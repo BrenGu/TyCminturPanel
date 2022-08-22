@@ -114,7 +114,7 @@ class GaleriaLocalidad extends Component {
             this.setState({
               fotos: result.data.registros,
             });
-            console.log(this.state.fotos);
+            //console.log(this.state.fotos);
           } else {
             this.setState({
               msg: {
@@ -224,8 +224,8 @@ class GaleriaLocalidad extends Component {
   //Filtro de tags dinamico
   handleBusquedaChange = (event) => {
     //this.handleValue(event.target.value);
-
-    console.log("BusquedaChange");
+    let cont = 0;
+    //console.log("BusquedaChange");
     let valor = "";
     if (event) {
       valor = event.target.value;
@@ -240,9 +240,18 @@ class GaleriaLocalidad extends Component {
           d.visible = true;
         } else {
           d.visible = false;
+          cont++;
         }
         return d;
       });
+      //Si todos los tags estan ocultos
+      // if(cont == this.state.tags.data.length){
+      //   document.getElementById("addtag").disabled = false;
+      // }
+      // else{
+      //   document.getElementById("addtag").disabled = true;
+      // }
+
       this.setState({
         tags: {
           ...this.state.tags,
@@ -313,7 +322,9 @@ class GaleriaLocalidad extends Component {
                   body: "Tag agregado correctamente",
                 },
               },
-              () => {}
+              () => {
+                this.getTags();
+              }
             );
           } else {
             this.setState({
@@ -370,6 +381,9 @@ class GaleriaLocalidad extends Component {
     if (imagen) {
       data.append("imagen", imagen, imagen.name);
     }
+    else {
+      data.append("imagen", "default.jpg")
+    }
     
     data.append("idloc", this.state.departamentoSelected);
     data.append("idciudad", this.state.ciudadSelected);
@@ -399,7 +413,8 @@ class GaleriaLocalidad extends Component {
               () => {
                 this.resetForm();
                 //this.getData();
-                //this.getTags();
+                this.getTags();
+                this.getFotos();
               }
             );
           } else {
@@ -421,44 +436,54 @@ class GaleriaLocalidad extends Component {
   handleFromGalLocSubmit(event) {
     event.preventDefault();
 
-    new Promise((resolve, reject) => {
-      fetch(
-        `${process.env.REACT_APP_API_HOST}/departamentos/ciudad/${
-          this.state.ciudadSelected
-        }`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: "",
-          },
-        }
-      )
-        .then((res) => {
-          res.json().then((data) => {
-            this.setState({
-              departamentoSelected: data.data.registros[0].id,
+    if(this.state.ciudadSelected){
+      new Promise((resolve, reject) => {
+        fetch(
+          `${process.env.REACT_APP_API_HOST}/departamentos/ciudad/${
+            this.state.ciudadSelected
+          }`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "",
+            },
+          }
+        )
+          .then((res) => {
+            res.json().then((data) => {
+              this.setState({
+                departamentoSelected: data.data.registros[0].id,
+              });
+              //console.log(data);
+              this.handleSave(event);
             });
-            //console.log(data);
-            this.handleSave(event);
+          })
+          .catch((err) => {
+            this.setState({
+              MsgVisible: true,
+              MsgBody: err.errMsg,
+            });
           });
-        })
-        .catch((err) => {
-          this.setState({
-            MsgVisible: true,
-            MsgBody: err.errMsg,
-          });
-        });
-    });
+      });
+    }
+    else{
+      this.setState({
+       msg: {
+        visible: true,
+        body: "Primero debe seleccionar la localidad a la que pertenece la foto",
+       },
+      });
+    }
   }
 
   resetForm() {
     this.setState({
       foto: {
-        //id: 6, //Ciudad de San Luis por defecto
         image: "default.jpg",
       },
       ciudadSelected: 0,
-      //tagsSelected: [],
+      tagsSelected: [],
+      filtro: ""
     });
     document.getElementById("frm-foto").reset();
     document
@@ -469,6 +494,7 @@ class GaleriaLocalidad extends Component {
           process.env.REACT_APP_API_DIRECTORY_GALERIA_LOCALIDADES
         }/default.jpg`
       );
+      this.getTags();
   }
 
   componentDidMount() {
@@ -573,7 +599,9 @@ class GaleriaLocalidad extends Component {
                           </div>
                           <div className="col">
                             <button
+                              id="addtag"
                               className="btn btn-primary btntag"
+                              //disabled
                               onClick={this.addNewTag}
                             >
                               <i className="fas fa-plus" />

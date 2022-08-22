@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Consumer } from "../../../context";
 import Msg from "../../utiles/Msg";
-import MyEditor from "../../paginas/subcomponentes/MyEditor";
 
 class FormGaleriaLocalidad extends Component {
   constructor(props) {
@@ -9,7 +8,7 @@ class FormGaleriaLocalidad extends Component {
     this.state = {
       loading: true,
       id: 0,
-      registros: {
+      registro: {
         id: 0,
         imagen: "default.jpg",
         idloc: 0,
@@ -35,8 +34,9 @@ class FormGaleriaLocalidad extends Component {
         ],
       },
       tagsSelected: [],
+      localidadSelected: 0,
       ciudadSelected: 0,
-      departamentoSelected: 0,
+      filtro: "",
       msg: {
         visible: false,
         body: "",
@@ -44,13 +44,118 @@ class FormGaleriaLocalidad extends Component {
       },
     };
     this.setData = this.setData.bind(this);
-    this.setTags = this.setTags.bind(this);
+    //this.setTags = this.setTags.bind(this);
     this.getTags = this.getTags.bind(this);
     this.getCiudades = this.getCiudades.bind(this);
     this.handleImgChange = this.handleImgChange.bind(this);
     this.handleTagClick = this.handleTagClick.bind(this);
     this.saveData = this.saveData.bind(this);
     this.handleSaveData = this.handleSaveData.bind(this);
+    this.askDelete = this.askDelete.bind(this);
+    this.okDelete = this.okDelete.bind(this);
+    this.handleCiudadChange = this.handleCiudadChange.bind(this);
+    this.handleBusquedaChange = this.handleBusquedaChange.bind(this);
+    this.handleActivoChange = this.handleActivoChange.bind(this);
+  }
+
+  handleActivoChange = (e) =>{
+
+    //const checked = e.target.checked;
+
+    if(this.state.registro.activo){
+      this.setState({
+        registro: {
+          ...this.state.registro,
+          activo: 0
+        }
+      });
+    }
+    else{
+      this.setState({
+        registro: {
+          ...this.state.registro,
+          activo: 1
+        }
+      });
+    }
+   //console.log("Activo: " + this.state.registro.activo);
+  }
+
+  handleBusquedaChange = (event) => {
+    //this.handleValue(event.target.value);
+    //let cont = 0;
+    //console.log("BusquedaChange");
+    let valor = "";
+    if (event) {
+      valor = event.target.value;
+    } else {
+      valor = "";
+    }
+
+    this.setState({ filtro: valor }, () => {
+      var copy = Object.assign([], this.state.tags.data);
+      copy = copy.map((d) => {
+        if (d.nombre.toLowerCase().indexOf(valor.toLowerCase()) > -1) {
+          d.visible = true;
+        } else {
+          d.visible = false;
+          //cont++;
+        }
+        return d;
+      });
+      //Si todos los tags estan ocultos
+      // if(cont == this.state.tags.data.length){
+      //   document.getElementById("addtag").disabled = false;
+      // }
+      // else{
+      //   document.getElementById("addtag").disabled = true;
+      // }
+
+      this.setState({
+        tags: {
+          ...this.state.tags,
+          data: copy,
+        },
+      });
+    });
+  };
+
+  handleCiudadChange(event) {
+    const target = event.target;
+    this.setState({
+      registro: {
+        ...this.state.registro,
+        idciudad: target.value,
+      },
+      ciudadSelected: target.value,
+    });
+    //console.log("HandleCiudadChange registro: " + this.state.registro.idciudad);
+    //console.log("HandleCiudadChange selected: " + this.state.ciudadSelected);
+  }
+
+  askDelete(titulo) {
+    this.setState({
+      msg: {
+        visible: true,
+        body: `Seguro de eliminar "${titulo}"`,
+        tipo: 1,
+      },
+    });
+  }
+
+  okDelete() {
+    this.setState(
+      {
+        msg: {
+          visible: false,
+          body: "",
+          tipo: 0,
+        },
+      },
+      () => {
+        this.props.eliminar(this.state.registro.id);
+      }
+    );
   }
 
   handleSaveData(event) {
@@ -59,7 +164,7 @@ class FormGaleriaLocalidad extends Component {
     new Promise((resolve, reject) => {
       fetch(
         `${process.env.REACT_APP_API_HOST}/departamentos/ciudad/${
-          this.state.ciudadSelected
+          this.state.registro.idciudad
         }`,
         {
           method: "GET",
@@ -71,9 +176,14 @@ class FormGaleriaLocalidad extends Component {
         .then((res) => {
           res.json().then((data) => {
             this.setState({
-              departamentoSelected: data.data.registros[0].id,
+              registro: {
+                ...this.state.registro,
+                idloc: data.data.registros[0].id,
+              },
+              localidadSelected: data.data.registros[0].id,
             });
-            //console.log(data);
+            //console.log("Localidad obtenida idLoc: " + this.state.registro.idloc);
+            //console.log("Localidad obtenida selected: " + this.state.localidadSelected);
             this.saveData(event);
           });
         })
@@ -88,23 +198,23 @@ class FormGaleriaLocalidad extends Component {
 
   saveData(event) {
     event.preventDefault();
+
     const formData = new FormData();
-    // Object.keys(this.state.registros).forEach((key) =>
-    //   formData.append(key, this.state.registros[key])
-    // );
-    //Imágenes
-    let imagen = document.getElementById(`file-1-${this.state.registros.id}`)
+    //console.log(this.state.registro);
+
+    Object.keys(this.state.registro).forEach((key) =>
+      formData.append(key, this.state.registro[key])
+    );
+
+    let concatTags = this.state.tagsSelected.toString();
+    formData.set("tags", concatTags);
+    //Imágen
+    let imagen = document.getElementById(`file-1-${this.state.registro.id}`)
       .files[0];
-    if (imagen) {
+    if (imagen) {//Si la imagen fue modificada
       formData.append("imagen", imagen, imagen.name);
     }
-    let concatTags = this.state.tagsSelected.toString();
 
-    formData.append("idloc", this.state.departamentoSelected);
-    formData.append("idcuidad", this.state.ciudadSelected);
-    formData.append("tags", concatTags);
-    formData.append("activo", 1);
-    formData.forEach((e) => console.log(e));
     //Verificar tamaño de las imágenes no mas de 4MB
     if (formData.has("imagen")) {
       if (formData.get("imagen").size > 500000) {
@@ -118,20 +228,20 @@ class FormGaleriaLocalidad extends Component {
         return false;
       }
     }
-    
+    // for (let [name, value] of formData) {
+    //   console.log(`${name} = ${value}`); // key1 = value1, luego key2 = value2
+    // }
+
     //Guardar los cambios
     let token = this.context.token;
-    fetch(
-      //console.log(this.)
-      `${process.env.REACT_APP_API_HOST}/altfotoloc/${this.state.id}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: token,
-        },
-        body: formData,
-      }
-    )
+    
+    fetch(`${process.env.REACT_APP_API_HOST}/altfotoloc/${this.state.id}`, {
+      method: "POST",
+      headers: {
+        Authorization: token,
+      },
+      body: formData,
+    })
       .then((res) => res.json())
       .then(
         (result) => {
@@ -143,14 +253,20 @@ class FormGaleriaLocalidad extends Component {
                 body: "Los datos se guardaron correctamente",
               },
             });
+            //this.setData();
           } else {
-            this.setState({
+            this.setState(
+              {
               msg: {
                 tipo: 0,
                 visible: true,
                 body: result.errMsgs,
               },
-            });
+            },
+            () => {
+              this.setData();
+            }
+            );
           }
         },
         (error) => {
@@ -178,10 +294,9 @@ class FormGaleriaLocalidad extends Component {
         tagsSelected: [...previousState.tagsSelected, id],
       }));
     }
-    console.log(this.state.tagsSelected);
-
     //console.log(this.state.tagsSelected);
   }
+
   //Trae todas las ciudades
   getCiudades() {
     //Lista de Localidades
@@ -222,19 +337,19 @@ class FormGaleriaLocalidad extends Component {
         }
       );
   }
-  setTags() {
-    let splitedtags = this.state.registros.tags.split(",");
-    //console.log(splitedtags[1]);
-    if (splitedtags) {
-      this.setState({
-        tagsSelected: splitedtags,
-      });
-      //console.log("tengo " + splitedtags.length + " tags.");
-      //console.log(splitedtags.indexOf(0));
-    } else {
-      //console.log("estoy vacio");
-    }
-  }
+
+  //Formatea el campo tags para que se guarden en forma de array en tagsSelected.
+  // setTags() {
+  //   let splitedtags = this.state.registro.tags.split(",");
+  //   if (splitedtags) {
+  //     this.setState({
+  //       tagsSelected: splitedtags,
+  //     });
+  //   } else {
+  //     console.log("No hay tags.");
+  //   }
+  // }
+
   //Trae todos los tags
   getTags() {
     fetch(`${process.env.REACT_APP_API_HOST}/tags`, {
@@ -302,15 +417,13 @@ class FormGaleriaLocalidad extends Component {
               if (!result.err) {
                 if (parseInt(result.data.count, 10) > 0) {
                   this.setState({
-                    registros: result.data.registros[0],
+                    registro: result.data.registros[0],
                     loading: false,
                     tagsSelected: result.data.registros[0].tags.split(","),
                   });
-                  console.log(this.state.tagsSelected);
                 } else {
                   console.log("No hay registro: " + this.state.id);
                 }
-                //console.log(this.state.registros);
               } else {
                 this.setState({
                   msg: {
@@ -335,8 +448,6 @@ class FormGaleriaLocalidad extends Component {
   }
 
   handleImgChange(event) {
-    //disparador ej: file-1-${this.state.registro.id
-    //imagen ej: img-1-${this.state.registro.id
     let disparador = event.target.id.split("-");
     let id = `img-${disparador[1]}-${disparador[2]}`;
     var reader = new FileReader();
@@ -351,16 +462,18 @@ class FormGaleriaLocalidad extends Component {
     this.setData();
     this.getCiudades();
     this.getTags();
-    this.setTags();
+    //this.setTags();
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.id !== prevProps.id) {
-      this.setData();
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (this.props.id !== prevProps.id) {
+  //     this.setData();
+  //     //Falta actulizar el estado al hacer cambios
+  //   }
+  // }
 
   render() {
+
     const tags = this.state.tags.data.map((tag) => {
       return (
         <span
@@ -390,7 +503,7 @@ class FormGaleriaLocalidad extends Component {
         ) : (
           <form
             method="post"
-            onSubmit={this.saveData}
+            onSubmit={this.handleSaveData}
             id="frm-galerialocalidad"
           >
             <div className="row border p-2 mb-3">
@@ -399,13 +512,13 @@ class FormGaleriaLocalidad extends Component {
                   <input
                     type="file"
                     className="d-none"
-                    name={`file-1-${this.state.registros.id}`}
-                    id={`file-1-${this.state.registros.id}`}
+                    name={`file-1-${this.state.registro.id}`}
+                    id={`file-1-${this.state.registro.id}`}
                     accept="image/*"
                     onChange={this.handleImgChange}
                   />
                   <img
-                    id={`img-1-${this.state.registros.id}`}
+                    id={`img-1-${this.state.registro.id}`}
                     className="img-fluid"
                     style={{
                       width: "200px",
@@ -414,11 +527,11 @@ class FormGaleriaLocalidad extends Component {
                     }}
                     src={`${process.env.REACT_APP_API_HOST}/${
                       process.env.REACT_APP_API_DIRECTORY_GALERIA_LOCALIDADES
-                    }/${this.state.registros.imagen}`}
+                    }/${this.state.registro.imagen}`}
                     alt="Foto"
                     onClick={(e) => {
                       document
-                        .getElementById(`file-1-${this.state.registros.id}`)
+                        .getElementById(`file-1-${this.state.registro.id}`)
                         .click();
                     }}
                   />
@@ -433,15 +546,8 @@ class FormGaleriaLocalidad extends Component {
                         name="idloc"
                         id="idloc"
                         className="form-control"
-                        value={this.state.registros.idciudad}
-                        onChange={(e) =>
-                          this.setState({
-                            registros: {
-                              ...this.state.registros,
-                              idciudad: e.target.value,
-                            },
-                          })
-                        }
+                        value={this.state.registro.idciudad}
+                        onChange={this.handleCiudadChange}
                       >
                         {localidades}
                       </select>
@@ -451,7 +557,17 @@ class FormGaleriaLocalidad extends Component {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <label htmlFor="tags">Tags</label>
+                      <label htmlFor="buscar">Tags</label>
+                      <input
+                              type="text"
+                              name="buscar"
+                              id="buscar"
+                              className="form-control"
+                              value={this.state.filtro}
+                              onChange={this.handleBusquedaChange}
+                              autoComplete="off"
+                              placeholder="Buscar tag..."
+                            />
                       <div className="d-flex justify-content-center flex-wrap">
                         {tags}
                       </div>
@@ -465,11 +581,21 @@ class FormGaleriaLocalidad extends Component {
                         type="button"
                         className="btn btn-danger"
                         onClick={(e) =>
-                          this.props.eliminar(this.state.registros.id)
+                          this.props.eliminar(this.state.registro.id)
                         }
                       >
-                        <i className="fas fa-trash" />
+                        <i className="fas fa-trash" /> Eliminar
                       </button>
+                      <div>
+                      <label class="switch">
+                        <input type="checkbox"
+                        value={this.state.registro.activo}
+                        onChange={this.handleActivoChange}
+                        />
+                        <span class="slider round"></span>
+                       
+                      </label>   Activo
+                      </div>
                       <button type="submit" className="btn btn-primary">
                         <i className="fas fa-save" /> Guardar Cambios
                       </button>
@@ -480,6 +606,79 @@ class FormGaleriaLocalidad extends Component {
             </div>
           </form>
         )}
+        <Msg
+          visible={this.state.msg.visible}
+          okAceptar={this.okDelete}
+          okClose={() =>
+            this.setState({
+              msg: { ...this.state.msg, visible: false, tipo: 0 },
+            })
+          }
+          tipo={this.state.msg.tipo}
+        >
+          {this.state.msg.body}
+        </Msg>
+
+        <style jsx="true">{`
+          .switch {
+            position: relative;
+            display: inline-block;
+            width: 30px;
+            height: 17px;
+          }
+          
+          .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+          }
+          
+          .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+          }
+          
+          .slider:before {
+            position: absolute;
+            content: "";
+            height: 13px;
+            width: 13px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+          }
+          
+          input:checked + .slider {
+            background-color: #2196F3;
+          }
+          
+          input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+          }
+          
+          input:checked + .slider:before {
+            -webkit-transform: translateX(13px);
+            -ms-transform: translateX(13px);
+            transform: translateX(13px);
+          }
+          
+          .slider.round {
+            border-radius: 17px;
+          }
+          
+          .slider.round:before {
+            border-radius: 50%;
+          }
+        `}</style>
       </React.Fragment>
     );
   }

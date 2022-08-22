@@ -14,7 +14,7 @@ class MyEditor extends React.Component {
     super(props);
     //Esta seccion me convierte el html de la BD en contenido del Rich Text
     if (this.props.contenido != undefined) {
-      console.log(this.props.contenido)
+      //console.log(this.props.contenido)
       const contentState = stateFromHTML(this.props.contenido);
 
       this.state = {

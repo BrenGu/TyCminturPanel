@@ -264,7 +264,7 @@ class FormGaleriaLocalidad extends Component {
               },
             },
             () => {
-              this.setData();
+              //this.setData();
             }
             );
           }
@@ -421,6 +421,22 @@ class FormGaleriaLocalidad extends Component {
                     loading: false,
                     tagsSelected: result.data.registros[0].tags.split(","),
                   });
+                  if(this.state.registro.activo == 1){
+                    this.setState({
+                      registro: {
+                        ...this.state.registro,
+                        activo: true,
+                      }
+                    });
+                  }
+                  else{
+                    this.setState({
+                      registro: {
+                        ...this.state.registro,
+                        activo: false,
+                      }
+                    });
+                  }                  
                 } else {
                   console.log("No hay registro: " + this.state.id);
                 }
@@ -590,6 +606,7 @@ class FormGaleriaLocalidad extends Component {
                       <label class="switch">
                         <input type="checkbox"
                         value={this.state.registro.activo}
+                        checked={this.state.registro.activo}
                         onChange={this.handleActivoChange}
                         />
                         <span class="slider round"></span>

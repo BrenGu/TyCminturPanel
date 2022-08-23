@@ -38,6 +38,7 @@ class GaleriaLocalidad extends Component {
         visible: false,
         body: "",
       },
+      noresult: "",
     };
 
     this.getData = this.getData.bind(this);
@@ -224,7 +225,7 @@ class GaleriaLocalidad extends Component {
   //Filtro de tags dinamico
   handleBusquedaChange = (event) => {
     //this.handleValue(event.target.value);
-    let cont = 0;
+    //let cont = 0;
     //console.log("BusquedaChange");
     let valor = "";
     if (event) {
@@ -235,6 +236,7 @@ class GaleriaLocalidad extends Component {
 
     this.setState({ filtro: valor }, () => {
       var copy = Object.assign([], this.state.tags.data);
+      let cont = 0;
       copy = copy.map((d) => {
         if (d.nombre.toLowerCase().indexOf(valor.toLowerCase()) > -1) {
           d.visible = true;
@@ -245,12 +247,18 @@ class GaleriaLocalidad extends Component {
         return d;
       });
       //Si todos los tags estan ocultos
-      // if(cont == this.state.tags.data.length){
-      //   document.getElementById("addtag").disabled = false;
-      // }
-      // else{
-      //   document.getElementById("addtag").disabled = true;
-      // }
+      if(cont == this.state.tags.data.length){
+        document.getElementById("addtag").disabled = false;
+        this.setState({
+          noresult: "Sin resultados... Agreguelo a la lista a través el botón \"Crear Tag\".",
+        });
+      }
+      else{
+        document.getElementById("addtag").disabled = true;
+        this.setState({
+          noresult: "",
+        });
+      }
 
       this.setState({
         tags: {
@@ -585,7 +593,7 @@ class GaleriaLocalidad extends Component {
 
                       <div className="form-group">
                         <div className="row">
-                          <div className="col-md-10">
+                          <div className="col-md-9">
                             <label htmlFor="buscar">Tags</label>
                             <input
                               type="text"
@@ -601,10 +609,10 @@ class GaleriaLocalidad extends Component {
                             <button
                               id="addtag"
                               className="btn btn-primary btntag"
-                              //disabled
+                              disabled
                               onClick={this.addNewTag}
                             >
-                              <i className="fas fa-plus" />
+                              <i className="fas fa-plus" /> Crear tag
                             </button>
                           </div>
                         </div>
@@ -614,6 +622,7 @@ class GaleriaLocalidad extends Component {
                           <div className="form-group">
                             <div className="d-flex justify-content-center flex-wrap">
                               {filtro}
+                              {this.state.noresult}
                             </div>
                           </div>
                         </div>
@@ -722,6 +731,7 @@ class GaleriaLocalidad extends Component {
           }
           .spanloc.active:hover {
             background-color: #ccc;
+            color: #000;
           }
           .btntag {
             position: absolute;

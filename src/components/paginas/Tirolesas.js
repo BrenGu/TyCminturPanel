@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import FormCasaCambio from "./comcasasdecambio/FormCasaCambio";
+import FormTirolesas from "./comtirolesas/FormTirolesas";
 import Msg from "../utiles/Msg";
 
-class casacambio extends Component {
+class Tirolesas extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -244,7 +244,7 @@ class casacambio extends Component {
   render() {
     const lista_guias = this.state.casas.map(novedad => {
       return (
-        <FormCasaCambio
+        <FormTirolesas
           key={`novedad-${novedad.id}`}
           id={novedad.id}
           localidades={this.state.localidades}
@@ -267,7 +267,7 @@ class casacambio extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nueva casa de cambio
+              <i className="fas fa-user" /> Nueva Tirolesa
             </h4>
             <form
               method="post"
@@ -319,27 +319,41 @@ class casacambio extends Component {
                         />
                       </div>
                     </div>
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <label htmlFor="direccion">Telefono</label>
+                        <input
+                          type="text"
+                          name="direccion"
+                          id="direccion"
+                          className="form-control"
+                          value={this.state.data.direccion}
+                          onChange={this.handleInputChange}
+                         
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <label htmlFor="direccion">Web</label>
+                        <input
+                          type="text"
+                          name="direccion"
+                          id="direccion"
+                          className="form-control"
+                          value={this.state.data.direccion}
+                          onChange={this.handleInputChange}
+                          maxLength="99"
+                        />
+                      </div>
+                    </div>
                          
                   </div>
                 </div>
                 <div>                       
-                  <div className="col">
+                  <div className="col-md-12">
                     <div className="form-group">
-                    <label htmlFor="telefono">Telefono</label>
-                        <input
-                          type="text"
-                          name="telefono"
-                          id="telefono"
-                          className="form-control"
-                          value={this.state.data.telefono}
-                          onChange={this.handleInputChange}
-                          maxLength="99"
-                        />
-                    </div>
-                  </div>   
-                  <div className="col">
-                    <div className="form-group">
-                    <label htmlFor="web">Web</label>
+                    <label htmlFor="web">Url</label>
                       <input
                         type="text"
                         name="web"
@@ -350,21 +364,35 @@ class casacambio extends Component {
                       />
                     </div>
                   </div> 
-                  <div className="col">
+                  <div className="col-md-12">
                         <div className="form-group">
-                        <label htmlFor="horarioCierre">Horario</label>
+                        <label htmlFor="horarioCierre">Titular</label>
                         <textarea
-                            type="textarea"
+                            type="text"
                             name="horarioCierre"
                             id="horarioCierre"
                             className="form-control"
                             value={this.state.data.horarioCierre}
-                            onChange={this.handleInputChange}
-                            maxLength="149"
+                            onChange={this.handleInputChange}                          
                         />
                         </div>
-                    </div>             
+                    </div>   
+                    <div className="col-md-12">
+                        <div className="form-group">
+                        <label htmlFor="horarioCierre">Vencimiento </label>
+                        <textarea
+                            type="text"
+                            name="horarioCierre"
+                            id="horarioCierre"
+                            className="form-control"
+                            value={this.state.data.horarioCierre}
+                            onChange={this.handleInputChange}                           
+                        />
+                        </div>
+                    </div>   
+                             
                 </div>
+                
             </div>
               <div className="row mt-3">
                 <div className="col">
@@ -373,7 +401,7 @@ class casacambio extends Component {
                       <i className="far fa-window-restore" />
                     </button>
                     <button type="submit" className="btn btn-primary">
-                      <i className="fas fa-arrow-down" /> Agregar Casa
+                      <i className="fas fa-arrow-down" /> Agregar Tirolesa
                     </button>
                   </div>
                 </div>
@@ -381,7 +409,7 @@ class casacambio extends Component {
             </form>
             <hr />
             <h5 className="bg-dark text-white p-3 mb-3 rounded">
-              Listado de Casas de cambio
+              Listado de Tirolesas
             </h5>
             <div className="row">
               <div className="col">
@@ -414,4 +442,4 @@ class casacambio extends Component {
     );
   }
 }
-export default casacambio;
+export default Tirolesas;

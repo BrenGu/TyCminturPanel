@@ -92,7 +92,7 @@ class Menu extends Component {
                                             <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/alquilerautos">Alquiler de autos</Link>
                                             <div className="dropdown-divider"></div>
-                                            <Link className="dropdown-item" to="/casacambio">Casas de cambio</Link>
+                                            <Link className="dropdown-item" to="/tirolesas">Tirolesas</Link>
                                             <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/censistas">Censistas</Link>
                                             <div className="dropdown-divider"></div>

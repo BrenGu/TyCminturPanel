@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Consumer } from "../../../context";
 import Msg from "../../utiles/Msg";
 
-class FormCasaCambio extends Component {
+class FormTirolesas extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -312,7 +312,7 @@ class FormCasaCambio extends Component {
                     <div className="form-group">
                      <label htmlFor="horarioCierre">Horario</label>
                       <textarea
-                        type="textarea"
+                        type="text"
                         name="horarioCierre"
                         id="horarioCierre"
                         className="form-control"
@@ -364,6 +364,6 @@ class FormCasaCambio extends Component {
   }
 }
 
-FormCasaCambio.contextType = Consumer;
+FormTirolesas.contextType = Consumer;
 
-export default FormCasaCambio;
+export default FormTirolesas;

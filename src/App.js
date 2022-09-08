@@ -12,7 +12,7 @@ import Atractivos from "./components/paginas/Atractivos";
 import PanelAdmin from "./components/paginas/PanelAdmin";
 import Aeropuertos from "./components/paginas/Aeropuertos";
 import AlquilerAutos from "./components/paginas/AlquilerAutos";
-import CasaCambio from "./components/paginas/CasaCambio";
+import Tirolesas from "./components/paginas/Tirolesas";
 import Oficinas from "./components/paginas/Oficinas";
 import Novedades from "./components/paginas/Novedades";
 import Eventos from "./components/paginas/Eventos";
@@ -109,7 +109,7 @@ class App extends Component {
 													<Route path="/guiasturismo"component={GuiasTurismo} />
 													<Route path="/aeropuertos"component={Aeropuertos} />
 													<Route path="/alquilerautos"component={AlquilerAutos} />
-													<Route path="/casacambio"component={CasaCambio} />
+													<Route path="/tirolesas"component={Tirolesas} />
 													<Route path="/carruselhome"component={CarruselHome} />
 													<Route path="/galeriahome" component={GaleriaHome}/>
 													<Route path="/agencias-viajes"component={AgenciaViajes} />

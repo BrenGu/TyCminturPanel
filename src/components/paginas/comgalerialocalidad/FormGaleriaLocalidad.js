@@ -42,6 +42,7 @@ class FormGaleriaLocalidad extends Component {
         body: "",
         tipo: 0,
       },
+      noresult: ""
     };
     this.setData = this.setData.bind(this);
     //this.setTags = this.setTags.bind(this);
@@ -83,7 +84,6 @@ class FormGaleriaLocalidad extends Component {
 
   handleBusquedaChange = (event) => {
     //this.handleValue(event.target.value);
-    //let cont = 0;
     //console.log("BusquedaChange");
     let valor = "";
     if (event) {
@@ -93,23 +93,28 @@ class FormGaleriaLocalidad extends Component {
     }
 
     this.setState({ filtro: valor }, () => {
+      let cont = 0;
       var copy = Object.assign([], this.state.tags.data);
       copy = copy.map((d) => {
         if (d.nombre.toLowerCase().indexOf(valor.toLowerCase()) > -1) {
           d.visible = true;
         } else {
           d.visible = false;
-          //cont++;
+          cont++;
         }
         return d;
       });
       //Si todos los tags estan ocultos
-      // if(cont == this.state.tags.data.length){
-      //   document.getElementById("addtag").disabled = false;
-      // }
-      // else{
-      //   document.getElementById("addtag").disabled = true;
-      // }
+      if(cont == this.state.tags.data.length){
+        this.setState({
+          noresult: "Sin resultados...",
+        });
+      }
+      else{
+        this.setState({
+          noresult: "",
+        });
+      }
 
       this.setState({
         tags: {
@@ -497,6 +502,7 @@ class FormGaleriaLocalidad extends Component {
             this.state.tagsSelected.includes(tag.id) ? " active" : ""
           }${tag.visible ? " d-block" : " d-none"}`}
           key={`tag-${tag.id}`}
+          disable={!this.state.registro.activo}
           onClick={(e) => this.handleTagClick(tag.id)}
         >
           #{tag.nombre}
@@ -524,7 +530,7 @@ class FormGaleriaLocalidad extends Component {
           >
             <div className="row border p-2 mb-3">
               <div className="col-sm-12 col-md-3">
-                <div>
+                <div className="contenedor">
                   <input
                     type="file"
                     className="d-none"
@@ -532,6 +538,7 @@ class FormGaleriaLocalidad extends Component {
                     id={`file-1-${this.state.registro.id}`}
                     accept="image/*"
                     onChange={this.handleImgChange}
+                    disabled={!this.state.registro.activo}
                   />
                   <img
                     id={`img-1-${this.state.registro.id}`}
@@ -552,6 +559,19 @@ class FormGaleriaLocalidad extends Component {
                     }}
                   />
                 </div>
+                <div className="contenedor">
+                <div className="toggle-checkbox">
+                      <label class="switch">
+                        <input type="checkbox"
+                        value={this.state.registro.activo}
+                        checked={this.state.registro.activo}
+                        onChange={this.handleActivoChange}
+                        />
+                        <span class="slider round"></span>
+                       
+                      </label>   Activo
+                      </div>
+                      </div>
               </div>
               <div className="col">
                 <div className="row">
@@ -564,6 +584,7 @@ class FormGaleriaLocalidad extends Component {
                         className="form-control"
                         value={this.state.registro.idciudad}
                         onChange={this.handleCiudadChange}
+                        disabled={!this.state.registro.activo}
                       >
                         {localidades}
                       </select>
@@ -577,15 +598,17 @@ class FormGaleriaLocalidad extends Component {
                       <input
                               type="text"
                               name="buscar"
-                              id="buscar"
+                              id="buscarTag"
                               className="form-control"
                               value={this.state.filtro}
                               onChange={this.handleBusquedaChange}
                               autoComplete="off"
                               placeholder="Buscar tag..."
+                              disabled={!this.state.registro.activo}
                             />
-                      <div className="d-flex justify-content-center flex-wrap">
+                      <div className={`d-flex justify-content-center flex-wrap ${!this.state.registro.activo ? " disabled" : ""}`}>
                         {tags}
+                        {this.state.noresult}
                       </div>
                     </div>
                   </div>
@@ -602,18 +625,8 @@ class FormGaleriaLocalidad extends Component {
                       >
                         <i className="fas fa-trash" /> Eliminar
                       </button>
-                      <div>
-                      <label class="switch">
-                        <input type="checkbox"
-                        value={this.state.registro.activo}
-                        checked={this.state.registro.activo}
-                        onChange={this.handleActivoChange}
-                        />
-                        <span class="slider round"></span>
-                       
-                      </label>   Activo
-                      </div>
-                      <button type="submit" className="btn btn-primary">
+                      <button type="submit" className="btn btn-primary"
+                      >
                         <i className="fas fa-save" /> Guardar Cambios
                       </button>
                     </div>
@@ -694,6 +707,19 @@ class FormGaleriaLocalidad extends Component {
           
           .slider.round:before {
             border-radius: 50%;
+          }
+          .contenedor {
+            display: flex;
+            justify-content: center;
+          }
+          .toggle-checkbox {
+            margin-top:10%;
+          }
+          .disabled {
+            pointer-events: none;
+          }
+          #buscarTag {
+            margin-bottom: 5%;
           }
         `}</style>
       </React.Fragment>

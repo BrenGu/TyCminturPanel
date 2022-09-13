@@ -13,9 +13,12 @@ class Tirolesas extends Component {
         direccion:"",
         telefono: "",
         web:"",
-        horarioCierre: ""
+        icon: "", 
+        url:"",
+        titular:"",
+        vencimiento: "",
       },
-      casas: [],
+      
       localidades: [],
       msg: {
         visible: false,
@@ -87,10 +90,13 @@ class Tirolesas extends Component {
       "direccion": this.state.data.direccion,
       "telefono": this.state.data.telefono,
       "web": this.state.data.web,
-      "horarioCierre": this.state.data.horarioCierre
+      "icon":this.state.data.icon,
+      "url": this.state.data.url,
+      "titular": this.state.data.titular,
+      "vencimiento": this.state.data.vencimiento
     };
     
-    fetch(`${process.env.REACT_APP_API_HOST}/addcasacambio`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/addtirolesas`, {
       method: "POST",
       headers: {
         Authorization: "asdssffsdff",
@@ -138,7 +144,10 @@ class Tirolesas extends Component {
         direccion:"",
         telefono: "",
         web:"",
-        horarioCierre: ""
+        icon:"",
+        url: "",
+        titular:"",
+        vencimiento:""
       },
       loading: true
     });
@@ -158,7 +167,7 @@ class Tirolesas extends Component {
   }
 
   getData() {
-    fetch(`${process.env.REACT_APP_API_HOST}/casascambio`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/gettirolesas`, {
       method: "GET",
       headers: {
         Authorization: ""
@@ -169,7 +178,7 @@ class Tirolesas extends Component {
         result => {
           if (!result.err) {
             this.setState({
-              casas: result.data.registros
+              Tirolesa: result.data.registros
             });
           } else {
             this.setState({
@@ -242,16 +251,7 @@ class Tirolesas extends Component {
   }
 
   render() {
-    const lista_guias = this.state.casas.map(novedad => {
-      return (
-        <FormTirolesas
-          key={`novedad-${novedad.id}`}
-          id={novedad.id}
-          localidades={this.state.localidades}
-          eliminar={this.eliminarElemento}
-        />
-      );
-    });
+   ;
     const localidades = this.state.localidades.map(localidad => {
         
       return (
@@ -321,13 +321,13 @@ class Tirolesas extends Component {
                     </div>
                     <div className="col-md-12">
                       <div className="form-group">
-                        <label htmlFor="direccion">Telefono</label>
+                        <label htmlFor="telefono">Telefono</label>
                         <input
                           type="text"
-                          name="direccion"
-                          id="direccion"
+                          name="telefono"
+                          id="telefono"
                           className="form-control"
-                          value={this.state.data.direccion}
+                          value={this.state.data.telefono}
                           onChange={this.handleInputChange}
                          
                         />
@@ -335,13 +335,13 @@ class Tirolesas extends Component {
                     </div>
                     <div className="col-md-12">
                       <div className="form-group">
-                        <label htmlFor="direccion">Web</label>
+                        <label htmlFor="web">Web</label>
                         <input
                           type="text"
-                          name="direccion"
-                          id="direccion"
+                          name="web"
+                          id="web"
                           className="form-control"
-                          value={this.state.data.direccion}
+                          value={this.state.data.web}
                           onChange={this.handleInputChange}
                           maxLength="99"
                         />
@@ -353,39 +353,39 @@ class Tirolesas extends Component {
                 <div>                       
                   <div className="col-md-12">
                     <div className="form-group">
-                    <label htmlFor="web">Url</label>
+                    <label htmlFor="url">Url</label>
                       <input
                         type="text"
-                        name="web"
-                        id="web"
+                        name="url"
+                        id="url"
                         className="form-control"
-                        value={this.state.data.web}
+                        value={this.state.data.url}
                         onChange={this.handleInputChange}
                       />
                     </div>
                   </div> 
                   <div className="col-md-12">
                         <div className="form-group">
-                        <label htmlFor="horarioCierre">Titular</label>
-                        <textarea
+                        <label htmlFor="titular">Titular</label>
+                        <input
                             type="text"
-                            name="horarioCierre"
-                            id="horarioCierre"
+                            name="titular"
+                            id="titular"
                             className="form-control"
-                            value={this.state.data.horarioCierre}
+                            value={this.state.data.titular}
                             onChange={this.handleInputChange}                          
                         />
                         </div>
                     </div>   
                     <div className="col-md-12">
                         <div className="form-group">
-                        <label htmlFor="horarioCierre">Vencimiento </label>
-                        <textarea
+                        <label htmlFor="vencimiento">Vencimiento </label>
+                        <input
                             type="text"
-                            name="horarioCierre"
-                            id="horarioCierre"
+                            name="vencimiento"
+                            id="vencimiento"
                             className="form-control"
-                            value={this.state.data.horarioCierre}
+                            value={this.state.data.vencimiento}
                             onChange={this.handleInputChange}                           
                         />
                         </div>
@@ -414,7 +414,7 @@ class Tirolesas extends Component {
             <div className="row">
               <div className="col">
                 <hr />
-                {lista_guias}
+                {""}
               </div>
             </div>
           </React.Fragment>

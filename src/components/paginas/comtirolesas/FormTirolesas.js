@@ -14,7 +14,10 @@ class FormTirolesas extends Component {
         direccion:"",
         telefono: "",
         web:"",
-        horarioCierre: ""
+        icon: "", 
+        url: "",
+        titular:"",
+        vencimiento:""
       },
       localidades: [],
       msg: {
@@ -310,13 +313,13 @@ class FormTirolesas extends Component {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                     <label htmlFor="horarioCierre">Horario</label>
+                     <label htmlFor="horario">Horario</label>
                       <textarea
                         type="text"
-                        name="horarioCierre"
-                        id="horarioCierre"
+                        name="horario"
+                        id="horario"
                         className="form-control"
-                        value={this.state.registro.horarioCierre}
+                        value={this.state.registro.horario}
                         onChange={this.handleInputChange}
                       />
                     </div>

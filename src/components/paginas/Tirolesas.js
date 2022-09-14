@@ -18,7 +18,7 @@ class Tirolesas extends Component {
         titular:"",
         vencimiento: "",
       },
-      
+      tirolesas:[],
       localidades: [],
       msg: {
         visible: false,
@@ -43,7 +43,7 @@ class Tirolesas extends Component {
   }
 
   eliminarElemento(id) {
-    fetch(`${process.env.REACT_APP_API_HOST}/casacambio/${id}`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/deltirolesa/${id}`, {
       method: "DELETE",
       headers: {
         "Authorization": "asdssffsdff",
@@ -178,7 +178,7 @@ class Tirolesas extends Component {
         result => {
           if (!result.err) {
             this.setState({
-              Tirolesa: result.data.registros
+              tirolesas: result.data.registros
             });
           } else {
             this.setState({
@@ -251,7 +251,17 @@ class Tirolesas extends Component {
   }
 
   render() {
-   ;
+    const lista_tirolesas= this.state.tirolesas.map(tiro => {
+      return (
+        <FormTirolesas
+          key={`tiro-${tiro.id}`}
+          id={tiro.id}
+          localidades={this.state.localidades}
+          eliminar={this.eliminarElemento}
+        />
+      );
+    });
+   
     const localidades = this.state.localidades.map(localidad => {
         
       return (
@@ -414,7 +424,7 @@ class Tirolesas extends Component {
             <div className="row">
               <div className="col">
                 <hr />
-                {""}
+                {lista_tirolesas}
               </div>
             </div>
           </React.Fragment>

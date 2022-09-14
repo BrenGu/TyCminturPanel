@@ -70,7 +70,7 @@ class FormTirolesas extends Component {
 
   saveData(event) {
     event.preventDefault();
-    fetch(`${process.env.REACT_APP_API_HOST}/updatecasacambio/${this.state.id}`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/updatetirolesa/${this.state.id}`, {
       method: "POST",
       headers: {
         "Authorization": "asdssffsdff",
@@ -126,7 +126,7 @@ class FormTirolesas extends Component {
       },
       () => {
         fetch(
-          `${process.env.REACT_APP_API_HOST}/casacambio/${this.state.id}`,
+          `${process.env.REACT_APP_API_HOST}/tirolesa/${this.state.id}`,
           {
             method: "GET",
             headers: {
@@ -313,13 +313,41 @@ class FormTirolesas extends Component {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                     <label htmlFor="horario">Horario</label>
-                      <textarea
+                     <label htmlFor="url">URL</label>
+                      <input
                         type="text"
-                        name="horario"
-                        id="horario"
+                        name="url"
+                        id="url"
                         className="form-control"
-                        value={this.state.registro.horario}
+                        value={this.state.registro.url}
+                        onChange={this.handleInputChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col">
+                    <div className="form-group">
+                     <label htmlFor="titular">Titular</label>
+                      <input
+                        type="text"
+                        name="titular"
+                        id="titular"
+                        className="form-control"
+                        value={this.state.registro.titular}
+                        onChange={this.handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-group">
+                     <label htmlFor="vencimiento">Vencimiento</label>
+                      <input
+                        type="text"
+                        name="vencimiento"
+                        id="vencimiento"
+                        className="form-control"
+                        value={this.state.registro.vencimiento}
                         onChange={this.handleInputChange}
                       />
                     </div>

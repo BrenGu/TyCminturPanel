@@ -13,6 +13,7 @@ import PanelAdmin from "./components/paginas/PanelAdmin";
 import Aeropuertos from "./components/paginas/Aeropuertos";
 import AlquilerAutos from "./components/paginas/AlquilerAutos";
 import Tirolesas from "./components/paginas/Tirolesas";
+import Cajeros from "./components/paginas/Cajeros";
 import Oficinas from "./components/paginas/Oficinas";
 import Novedades from "./components/paginas/Novedades";
 import Eventos from "./components/paginas/Eventos";
@@ -110,6 +111,7 @@ class App extends Component {
 													<Route path="/aeropuertos"component={Aeropuertos} />
 													<Route path="/alquilerautos"component={AlquilerAutos} />
 													<Route path="/tirolesas"component={Tirolesas} />
+													<Route path="/cajeros" component={Cajeros}/>
 													<Route path="/carruselhome"component={CarruselHome} />
 													<Route path="/galeriahome" component={GaleriaHome}/>
 													<Route path="/agencias-viajes"component={AgenciaViajes} />

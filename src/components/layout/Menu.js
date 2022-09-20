@@ -94,6 +94,8 @@ class Menu extends Component {
                                             <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/tirolesas">Tirolesas</Link>
                                             <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/cajeros">Cajeros</Link>
+                                            <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/censistas">Censistas</Link>
                                             <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/galerialocalidad">Galeria por Localidad</Link>

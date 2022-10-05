@@ -7,12 +7,12 @@ import Msg from "../../utiles/Msg";
     idlocalidad: Id de la Ciudad (Localidad)
 */
 
-class FormOfi extends Component {
+class FormCajeros extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoaded: true,
-            localidadNombre: "",
+            loading: true,
+            id: 0,
             registro: {
                 id: 0,
                 idlocalidad: 0,
@@ -22,6 +22,7 @@ class FormOfi extends Component {
                 longitud: 0,
         
             },
+            localidades: [],
             msg: {
                 visible: false,
                 body: ""
@@ -33,12 +34,23 @@ class FormOfi extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.saveData = this.saveData.bind(this);
         this.deleteData = this.deleteData.bind(this);
+        this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
+
         /*
         this.handleSave = this.handleSave.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         */
         
     }
+
+    handleLocalidadChange(event) {
+        this.setState({
+          data: {
+            ...this.state.data,
+            idlocalidad: event.target.value
+          }
+        });
+      }
 
     deleteData(id) {
         fetch(`${process.env.REACT_APP_API_HOST}/oficina/${id}`, {
@@ -182,7 +194,7 @@ class FormOfi extends Component {
                     idlocalidad: idlocalidad
                 }
             }, () => {
-                fetch(`${process.env.REACT_APP_API_HOST}/oficinas/localidad/${idlocalidad}`, {
+                fetch(`${process.env.REACT_APP_API_HOST}/cajeros/localidad/${idlocalidad}`, {
                     method: "GET",
                     headers: {
                         "Authorization": "asdssffsdff",
@@ -248,7 +260,12 @@ class FormOfi extends Component {
                             <div className="col-sm-12 col-md-6 m-auto">
                                 <div className="form-group">
                                     <label htmlFor="domicilio">Tipo de Banco </label>
-                                    <input type="text" name="tpo_bco" id="tpo_bco" className="form-control" value={this.state.registro.domicilio} onChange={this.handleInputChange} />
+                                    <input type="text" 
+                                          name="tpo_bco" 
+                                          id="tpo_bco" 
+                                          className="form-control" 
+                                          value={this.state.registro.domicilio} 
+                                          onChange={this.handleInputChange} />
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="telefono">Domicilio</label>
@@ -294,4 +311,4 @@ class FormOfi extends Component {
     }
 }
 
-export default FormOfi;
+export default FormCajeros;

@@ -151,8 +151,9 @@ class Cajeros extends Component {
           // Tipo de Bancos 
 
         let tpo_bco = new Promise((resolve, reject)=>{
-            fetch(`${process.env.REACT_APP_API_HOST}/cajeros/localidad/${tpo_bco}`,{
-            method: "GET",
+          //  fetch(`${process.env.REACT_APP_API_HOST}/cajeros/localidad/${this.state.tipo_bco}`,{
+            fetch(`${process.env.REACT_APP_API_HOST}/getcajeros`,{ 
+          method: "GET",
             headers: {
               Authorization: ""
             }
@@ -168,6 +169,7 @@ class Cajeros extends Component {
                     },
                     () => {
                       resolve("Ok Ciudades");
+                     
                     }
                   );
                 } else {

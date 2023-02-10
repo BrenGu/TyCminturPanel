@@ -28,7 +28,9 @@ import FormAgenciasViajes from "./components/paginas/comguiasturisticos/FormAgen
 import Censistas from "./components/paginas/Censistas";
 import Arboles from "./components/paginas/Arboles";
 import GaleriaLocalidad from "./components/paginas/GaleriaLocalidad"
-
+import Terminales from "./components/paginas/Terminales";
+import Estacionamiento from "./components/paginas/Estacionamiento";
+import Vehiculos from "./components/paginas/Vehiculos";
 
 //<Router basename={`/${process.env.REACT_APP_BASENAME}`} history={Router.hashHistory}>
 
@@ -104,6 +106,7 @@ class App extends Component {
 													<Route path="/gastronomia" component={Gastronomia} />
 													<Route path="/paneladmin" component={PanelAdmin} />
 													<Route path="/oficinas" component={Oficinas} />
+													<Route path="/terminales" component={Terminales} />
 													<Route path="/estadisticas" component={Estadisticas} />
 													<Route path="/prensa" component={Novedades} />
 													<Route path="/eventos" component={Eventos} />
@@ -112,6 +115,8 @@ class App extends Component {
 													<Route path="/alquilerautos"component={AlquilerAutos} />
 													<Route path="/tirolesas"component={Tirolesas} />
 													<Route path="/cajeros" component={Cajeros}/>
+													<Route path="/estacionamiento" component={Estacionamiento}/>
+													<Route path="/vehiculos" component={Vehiculos}/>
 													<Route path="/carruselhome"component={CarruselHome} />
 													<Route path="/galeriahome" component={GaleriaHome}/>
 													<Route path="/agencias-viajes"component={AgenciaViajes} />

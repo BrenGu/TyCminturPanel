@@ -90,17 +90,19 @@ class Menu extends Component {
                                             <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/oficinas">Oficinas de Turísmo</Link>
                                             <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/estacionamiento">Estacionamientos</Link>
+                                            <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/agencias-viajes">Agencias de Viaje</Link>
                                             <div className="dropdown-divider"></div>                                            
                                             <Link className="dropdown-item" to="/alquilerautos">Alquiler de autos</Link>
                                             <div className="dropdown-divider"></div>                                            
-                                            <Link className="dropdown-item" to="/estacionamiento">Estacionamientos</Link>
-                                            <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/aeropuertos">Aeropuertos</Link>
                                             <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/terminales">Terminales</Link>
                                             <div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/cajeros">Cajeros</Link>
+                                            <div className="dropdown-divider"></div>
+                                            <Link className="dropdown-item" to="/vehiculos">Vehiculos</Link>
                                             <div className="dropdown-divider"></div>                                           
                                             <Link className="dropdown-item" to="/galerialocalidad">Galeria por Localidad</Link>
                                             <div className="dropdown-divider"></div>

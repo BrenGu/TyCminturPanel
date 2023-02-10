@@ -33,7 +33,7 @@ class Oficinas extends Component {
                 <LocSelect handleFiltroClick={this.handleFClick} />
                 {
                     localidadSelect === 0 ?
-                    <div>Espertando Selección</div>
+                    <div>Esperando Selección</div>
                     :
                     <FormOfi localidad={localidadSelect} />
                 }

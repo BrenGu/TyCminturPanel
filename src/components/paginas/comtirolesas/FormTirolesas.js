@@ -11,20 +11,20 @@ class FormTirolesas extends Component {
       registro: {
         idlocalidad: 6, //Ciudad de San Luis por defecto
         nombre: "",
-        direccion:"",
+        direccion: "",
         telefono: "",
-        web:"",
-        icon: "", 
+        web: "",
+        icon: "",
         url: "",
-        titular:"",
-        vencimiento:""
+        titular: "",
+        vencimiento: "",
       },
       localidades: [],
       msg: {
         visible: false,
         body: "",
-        tipo: 0
-      }
+        tipo: 0,
+      },
     };
     this.setData = this.setData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -38,8 +38,8 @@ class FormTirolesas extends Component {
     this.setState({
       registro: {
         ...this.state.registro,
-        idlocalidad: event.target.value
-      }
+        idlocalidad: event.target.value,
+      },
     });
   }
 
@@ -48,8 +48,8 @@ class FormTirolesas extends Component {
       msg: {
         visible: true,
         body: `Seguro de eliminar "${nombre}"`,
-        tipo: 1
-      }
+        tipo: 1,
+      },
     });
   }
 
@@ -59,8 +59,8 @@ class FormTirolesas extends Component {
         msg: {
           visible: false,
           body: "",
-          tipo: 0
-        }
+          tipo: 0,
+        },
       },
       () => {
         this.props.eliminar(this.state.registro.id);
@@ -73,33 +73,33 @@ class FormTirolesas extends Component {
     fetch(`${process.env.REACT_APP_API_HOST}/updatetirolesa/${this.state.id}`, {
       method: "POST",
       headers: {
-        "Authorization": "asdssffsdff",
-        "Content-Type": "application/json"
+        Authorization: "asdssffsdff",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(this.state.registro)
+      body: JSON.stringify(this.state.registro),
     })
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(
-        result => {
+        (result) => {
           if (!result.err) {
             this.setState({
               msg: {
                 tipo: 0,
                 visible: true,
-                body: "Los datos se guardaron correctamente"
-              }
+                body: "Los datos se guardaron correctamente",
+              },
             });
           } else {
             this.setState({
               msg: {
                 tipo: 0,
                 visible: true,
-                body: result.errMsgs
-              }
+                body: result.errMsgs,
+              },
             });
           }
         },
-        error => {
+        (error) => {
           //???
           console.log(error);
         }
@@ -108,12 +108,15 @@ class FormTirolesas extends Component {
 
   handleInputChange(event) {
     const target = event.target.name;
-    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    const value =
+      event.target.type === "checkbox"
+        ? event.target.checked
+        : event.target.value;
     this.setState({
-        registro: {
-            ...this.state.registro,
-            [target]: value
-        }
+      registro: {
+        ...this.state.registro,
+        [target]: value,
+      },
     });
   }
 
@@ -122,29 +125,26 @@ class FormTirolesas extends Component {
     this.setState(
       {
         id: this.props.id,
-        localidades: this.props.localidades
+        localidades: this.props.localidades,
       },
       () => {
-        fetch(
-          `${process.env.REACT_APP_API_HOST}/tirolesa/${this.state.id}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: token
-              //"Content-Type": "application/json"
-            }
-          }
-        )
-          .then(res => res.json())
+        fetch(`${process.env.REACT_APP_API_HOST}/tirolesa/${this.state.id}`, {
+          method: "GET",
+          headers: {
+            Authorization: token,
+            //"Content-Type": "application/json"
+          },
+        })
+          .then((res) => res.json())
           .then(
-            result => {
+            (result) => {
               if (!result.err) {
                 if (parseInt(result.data.count, 10) > 0) {
                   this.setState({
+                  
                     registro: result.data.registros[0],
-                    loading: false
+                    loading: false,
                   });
-                 
                 } else {
                   console.log("No hay registro: " + this.state.id);
                 }
@@ -152,61 +152,58 @@ class FormTirolesas extends Component {
                 this.setState({
                   msg: {
                     visible: true,
-                    body: result.errMsg
-                  }
+                    body: result.errMsg,
+                  },
                 });
               }
             },
-            error => {
+            (error) => {
               //???
               this.setState({
                 msg: {
                   visible: true,
-                  body: error
-                }
+                  body: error,
+                },
               });
             }
           );
-          fetch(
-            `${process.env.REACT_APP_API_HOST}/ciudades`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: token
-                //"Content-Type": "application/json"
-              }
-            }
-          )
-            .then(res => res.json())
-            .then(
-              result => {
-                if (!result.err) {
-                  if (parseInt(result.data.count, 10) > 0) {
-                    this.setState({
-                      localidades: result.data.registros
-                    });
-                  } else {
-                    console.log("No hay registro: " + this.state.id);
-                  }
-                } else {
+        fetch(`${process.env.REACT_APP_API_HOST}/ciudades`, {
+          method: "GET",
+          headers: {
+            Authorization: token,
+            //"Content-Type": "application/json"
+          },
+        })
+          .then((res) => res.json())
+          .then(
+            (result) => {
+              if (!result.err) {
+                if (parseInt(result.data.count, 10) > 0) {
                   this.setState({
-                    msg: {
-                      visible: true,
-                      body: result.errMsg
-                    }
+                    localidades: result.data.registros,
                   });
+                } else {
+                  console.log("No hay registro: " + this.state.id);
                 }
-              },
-              error => {
-                //???
+              } else {
                 this.setState({
                   msg: {
                     visible: true,
-                    body: error
-                  }
+                    body: result.errMsg,
+                  },
                 });
               }
-            );
+            },
+            (error) => {
+              //???
+              this.setState({
+                msg: {
+                  visible: true,
+                  body: error,
+                },
+              });
+            }
+          );
       }
     );
   }
@@ -222,7 +219,7 @@ class FormTirolesas extends Component {
   }
 
   render() {
-    const localidades = this.state.localidades.map(localidad => {
+    const localidades = this.state.localidades.map((localidad) => {
       return (
         <option key={`loc-${localidad.id}`} value={localidad.id}>
           {localidad.nombre}
@@ -254,51 +251,51 @@ class FormTirolesas extends Component {
                   </div>
                   <div className="col">
                     <div className="form-group">
-                        <label htmlFor="direccion">Direccion</label>
-                        <input
-                          type="text"
-                          name="direccion"
-                          id="direccion"
-                          className="form-control"
-                          value={this.state.registro.direccion}
-                          onChange={this.handleInputChange}
-                          maxLength="99"
-                        />
+                      <label htmlFor="direccion">Direccion</label>
+                      <input
+                        type="text"
+                        name="direccion"
+                        id="direccion"
+                        className="form-control"
+                        value={this.state.registro.direccion}
+                        onChange={this.handleInputChange}
+                        maxLength="99"
+                      />
                     </div>
                   </div>
                   <div className="col">
-                      <div className="form-group">
-                        <label htmlFor="idlocalidad">Localidad</label>
-                        <select
-                            name="idlocalidad"
-                            id="idlocalidad"
-                            className="form-control"
-                            value={this.state.registro.idlocalidad}
-                            onChange={this.handleLocalidadChange}
-                        >
-                            {localidades}
-                        </select>
-                      </div>
+                    <div className="form-group">
+                      <label htmlFor="idlocalidad">Localidad</label>
+                      <select
+                        name="idlocalidad"
+                        id="idlocalidad"
+                        className="form-control"
+                        value={this.state.registro.idlocalidad}
+                        onChange={this.handleLocalidadChange}
+                      >
+                        {localidades}
+                      </select>
+                    </div>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                        <label htmlFor="telefono">Telefono</label>
-                        <input
-                          type="text"
-                          name="telefono"
-                          id="telefono"
-                          className="form-control"
-                          value={this.state.registro.telefono}
-                          onChange={this.handleInputChange}
-                          maxLength="99"
-                        />
+                      <label htmlFor="telefono">Telefono</label>
+                      <input
+                        type="text"
+                        name="telefono"
+                        id="telefono"
+                        className="form-control"
+                        value={this.state.registro.telefono}
+                        onChange={this.handleInputChange}
+                        maxLength="99"
+                      />
                     </div>
                   </div>
-                   <div className="col">
+                  <div className="col">
                     <div className="form-group">
-                     <label htmlFor="web">Web</label>
+                      <label htmlFor="web">Web</label>
                       <input
                         type="text"
                         name="web"
@@ -313,7 +310,7 @@ class FormTirolesas extends Component {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                     <label htmlFor="url">URL</label>
+                      <label htmlFor="url">URL</label>
                       <input
                         type="text"
                         name="url"
@@ -328,7 +325,7 @@ class FormTirolesas extends Component {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                     <label htmlFor="titular">Titular</label>
+                      <label htmlFor="titular">Titular</label>
                       <input
                         type="text"
                         name="titular"
@@ -341,7 +338,7 @@ class FormTirolesas extends Component {
                   </div>
                   <div className="col">
                     <div className="form-group">
-                     <label htmlFor="vencimiento">Vencimiento</label>
+                      <label htmlFor="vencimiento">Vencimiento</label>
                       <input
                         type="text"
                         name="vencimiento"
@@ -353,18 +350,22 @@ class FormTirolesas extends Component {
                     </div>
                   </div>
                 </div>
-                <br></br>
+                <br />
                 <div className="row">
                   <div className="col">
                     <div className="d-flex justify-content-between">
                       <button
                         type="button"
                         className="btn btn-danger"
-                        onClick={/*e =>
-                          this.props.eliminar(this.state.registro.id)*/(e) => { this.askDelete(this.state.registro.nombre, e) }
+                        onClick={
+                          /*e =>
+                          this.props.eliminar(this.state.registro.id)*/ (
+                            e
+                          ) => {
+                            this.askDelete(this.state.registro.nombre, e);
+                          }
                         }
                       >
-                        
                         <i className="fas fa-trash" />
                       </button>
                       <button type="submit" className="btn btn-primary">
@@ -383,7 +384,7 @@ class FormTirolesas extends Component {
           okAceptar={this.okDelete}
           okClose={() =>
             this.setState({
-              msg: { ...this.state.msg, visible: false, tipo: 0 }
+              msg: { ...this.state.msg, visible: false, tipo: 0 },
             })
           }
           tipo={this.state.msg.tipo}

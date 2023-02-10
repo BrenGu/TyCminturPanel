@@ -3,22 +3,20 @@ import React, { Component } from "react";
 import FormCajeros from "./comcajeros/FormCajeros";
 import Msg from "../utiles/Msg";
 
-class Cajeros extends Component {
+class Vehiculos extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      id: 0,
-      data: {       
-        idlocalidad: 6,
-        tpo_bco: 0,
-        domicilio: "",
+      data: {
+        idlocalidad: 0,
+        idvehiculo:0,
+        direccion: "",
         latitud: 0,
         longitud: 0,
       },
-      cajeros: [],
       localidades: [],
-      tipo_bco: [],
+      tipo_vehiculo: [],
       msg: {
         visible: false,
         body: "",
@@ -26,17 +24,18 @@ class Cajeros extends Component {
     };
     this.getData = this.getData.bind(this);
     this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
-    this.handleTpo_bco_loca_Change = this.handleTpo_bco_loca_Change.bind(this);
+    this.handleTpo_vehiculo_Change = this.handleTpo_vehiculo_Change.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleFromCajerosSubmit = this.handleFromCajerosSubmit.bind(this);
-    this.eliminarElemento = this.eliminarElemento.bind(this); 
+    this.handleFromVehiculosSubmit = this.handleFromVehiculosSubmit.bind(this);
+    this.eliminarElemento = this.eliminarElemento.bind(this);
     this.resetForm = this.resetForm.bind(this);
   }
-  handleTpo_bco_loca_Change(event) {
+
+  handleTpo_vehiculo_Change(event) {
     this.setState({
       data: {
         ...this.state.data,
-        tpo_bco: event.target.value,
+        tipovehiculo: event.target.value,
       },
     });
   }
@@ -51,7 +50,7 @@ class Cajeros extends Component {
   }
 
   eliminarElemento(id) {
-    fetch(`${process.env.REACT_APP_API_HOST}/delcajero/${id}`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/delvehiculo/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: "asdssffsdff",
@@ -89,16 +88,30 @@ class Cajeros extends Component {
         }
       );
   }
-  handleFromCajerosSubmit(event) {
+  resetForm() {
+    this.setState({
+      data: {
+        idlocalidad: 0,
+        idvehiculo: 0,
+        direccion: "",
+        latitud: 0,
+        longitud: 0,
+      },
+      loading: true,
+    });
+    document.getElementById("frm-cajeros").reset();
+  }
+
+  handleFromVehiculosSubmit(event) {
     event.preventDefault();
     let data = {
       "idlocalidad": this.state.data.idlocalidad,
-      "tpo_bco": this.state.data.tpo_bco,
-      "domicilio": this.state.data.domicilio,
+      "idvehiculo": this.state.data.idvehiculo,
+      "direccion": this.state.data.direccion,
       "latitud": this.state.data.latitud,
       "longitud": this.state.data.longitud,
     };
-    fetch(`${process.env.REACT_APP_API_HOST}/addcajero`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/addvehiculo`, {
       method: "POST",
       headers: {
         Authorization: "asdssffsdff",
@@ -144,14 +157,14 @@ class Cajeros extends Component {
     const name = target.name;
     this.setState({
       data: {
-        ...this.state.data,
+        ...this.state.registro,
         [name]: value,
       },
     });
   }
 
   getData() {
-    fetch(`${process.env.REACT_APP_API_HOST}/getcajeros`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/getvehiculos`, {
       method: "GET",
       headers: {
         Authorization: "",
@@ -162,7 +175,7 @@ class Cajeros extends Component {
         (result) => {
           if (!result.err) {
             this.setState({
-              cajeros: result.data.registros,
+              vehiculos: result.data.data,
             });
           } else {
             this.setState({
@@ -186,8 +199,8 @@ class Cajeros extends Component {
       fetch(`${process.env.REACT_APP_API_HOST}/ciudades`, {
         method: "GET",
         headers: {
-          Authorization: ""
-        }
+          Authorization: "",
+        },
       })
         .then((res) => res.json())
         .then(
@@ -222,10 +235,12 @@ class Cajeros extends Component {
           }
         );
     });
+
     // Tipo de Bancos
-    let tpo_bco = new Promise((resolve, reject) => {
+
+    let tipo_vehiculo = new Promise((resolve, reject) => {
       //  fetch(`${process.env.REACT_APP_API_HOST}/cajeros/localidad/${this.state.tipo_bco}`,{
-      fetch(`${process.env.REACT_APP_API_HOST}/getbancos`, {
+      fetch(`${process.env.REACT_APP_API_HOST}/gettipovehiculos`, {
         method: "GET",
         headers: {
           Authorization: "",
@@ -265,25 +280,13 @@ class Cajeros extends Component {
         );
     });
 
-    Promise.all([ciudades, tpo_bco]).then((values) => {
+    Promise.all([ciudades, tipo_vehiculo]).then((values) => {
       this.setState({
         loading: false,
       });
     });
   }
-  resetForm() {
-    this.setState({
-      data: {
-        idlocalidad: 0,
-        tpo_bco: 0,
-        domicilio: "",
-        latitud: 0,
-        longitud: 0,
-      },
-      loading: true,
-    });
-    document.getElementById("frm-cajeros").reset();
-  }
+
   componentDidMount() {
     this.getData();
   }
@@ -296,23 +299,23 @@ class Cajeros extends Component {
         </option>
       );
     });
-    const tipo_bco = this.state.tipo_bco.map((tipo_banco) => {
+    const tipo_vehiculo = this.state.tipo_vehiculo.map((tip_vehiculo) => {
       return (
-        <option key={`tp-${tipo_banco.id}`} value={tipo_banco.id}>
-          {tipo_banco.nombre}
+        <option key={`tp-${tip_vehiculo.id}`} value={tip_vehiculo.id}>
+          {tip_vehiculo.nombre}
         </option>
       );
     });
-    const lista_cajeros = this.state.cajeros.map((caja) => {
-      return (
-        <FormCajeros
-          key={`caja-${caja.id}`}
-          id={caja.id}
-          localidad={this.state.localidades}
-          eliminar={this.eliminarElemento}
-        />
-      );
-    });
+    // const lista_cajeros = this.state.cajeros.map((caja) => {
+    //   return (
+    //     <FormCajeros
+    //       key={`caja-${caja.id}`}
+    //       id={caja.id}
+    //       localidad={this.state.localidades}
+    //       eliminar={this.eliminarElemento}
+    //     />
+    //   );
+    // });
 
     return (
       <div className="Cajeros">
@@ -321,11 +324,11 @@ class Cajeros extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nuevo Cajero
+              <i className="fas fa-user" /> Nuevo Vehiculo
             </h4>
             <form
               method="post"
-              onSubmit={this.handleFromCajerosSubmit}
+              onSubmit={this.handleFromVehiculosSubmit}
               id="frm-cajeros"
             >
               <div className="row">
@@ -345,18 +348,44 @@ class Cajeros extends Component {
                 </div>
                 <div className="col-sm-12 col-md-6 m-auto">
                   <div className="form-group">
-                    <label htmlFor="tpo_bco">Bancos </label>
+                    <label htmlFor="tipo_vehiculo">Tipo de Vehiculo </label>
                     <select
-                      name="tpo_bco"
-                      id="tpo_bco"
+                      name="tipo_vehiculo"
+                      id="tipo_vehiculo"
                       className="form-control"
-                      value={this.state.data.tpo_bco}
-                      onChange={this.handleTpo_bco_loca_Change}
+                      value={this.state.data.tipo_vehiculo}
+                      onChange={this.handleTpo_vehiculo_Change}
                     >
-                      {tipo_bco}
+                      {"-"}
                     </select>
                   </div>
                 </div>
+                <div className="col-sm-12 col-md-6 m-auto">
+                  <div className="form-group">
+                    <label htmlFor="nombre">Nombre</label>
+                    <input
+                      type="text"
+                      name="nombre"
+                      id="nombre"
+                      className="form-control"
+                      value={this.state.data.nombre}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col-sm-12 col-md-6 m-auto">
+                  <div className="form-group">
+                    <label htmlFor="telefono">Telefono</label>
+                    <input
+                      type="text"
+                      name="telefono"
+                      id="telefono"
+                      className="form-control"
+                      value={this.state.data.telefono}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>                
                 <div className="col-sm-12 col-md-6 m-auto">
                   <div className="form-group">
                     <label htmlFor="domicilio">Domicilio</label>
@@ -383,7 +412,7 @@ class Cajeros extends Component {
                     />
                   </div>
                 </div>
-                <div className="col-sm-12 col-md-3 m-auto">
+                <div className="ccol-sm-12 col-md-3 m-auto">
                   <div className="form-group">
                     <label htmlFor="longitud">Longitud</label>
                     <input
@@ -392,6 +421,32 @@ class Cajeros extends Component {
                       id="longitud"
                       className="form-control"
                       value={this.state.data.longitud}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col-sm-12 col-md-6 m-auto">
+                  <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="text"
+                      name="email"
+                      id="email"
+                      className="form-control"
+                      value={this.state.data.email}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col-sm-12 col-md-6 m-auto">
+                  <div className="form-group">
+                    <label htmlFor="web">Web</label>
+                    <input
+                      type="text"
+                      name="web"
+                      id="web"
+                      className="form-control"
+                      value={this.state.data.web}
                       onChange={this.handleInputChange}
                     />
                   </div>
@@ -425,12 +480,10 @@ class Cajeros extends Component {
             </form>
             <hr />
             <h5 className="bg-dark text-white p-3 mb-3 rounded">
-              Listado de Cajeros
+              Listado de Vehiculos
             </h5>
             <div className="row">
-               <div className="col">
-                {lista_cajeros}
-                </div> 
+              {/* <div className="col">{lista_cajeros}</div> */}
             </div>
           </React.Fragment>
         )}
@@ -458,4 +511,4 @@ class Cajeros extends Component {
   }
 }
 
-export default Cajeros;
+export default Vehiculos;

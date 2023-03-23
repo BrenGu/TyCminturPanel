@@ -35,8 +35,8 @@ class FormEstacionamiento extends Component {
   }
   handleLocalidadChange(event) {
     this.setState({
-      data: {
-        ...this.state.data,
+      registro: {
+        ...this.state.registro,
         idlocalidad: event.target.value,
       },
     });
@@ -66,6 +66,47 @@ class FormEstacionamiento extends Component {
       }
     );
   }
+  saveData(event) {
+    event.preventDefault();
+    fetch(
+      `${process.env.REACT_APP_API_HOST}/updaestacionamiento/${this.state.id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "asdssffsdff",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(this.state.registro),
+      }
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (!result.err) {
+            this.setState({
+              msg: {
+                tipo: 0,
+                visible: true,
+                body: "Los datos se guardaron correctamente",
+              },
+            });
+          } else {
+            this.setState({
+              msg: {
+                tipo: 0,
+                visible: true,
+                body: result.errMsgs,
+              },
+            });
+          }
+        },
+        (error) => {
+          //???
+          console.log(error);
+        }
+      );
+  }
+
   handleInputChange(event) {
     const target = event.target.name;
     const value =
@@ -88,13 +129,16 @@ class FormEstacionamiento extends Component {
         localidades: this.props.localidades,
       },
       () => {
-        fetch(`${process.env.REACT_APP_API_HOST}/estacionamiento/${this.state.id}`, {
-          method: "GET",
-          headers: {
-            Authorization: token,
-            //"Content-Type": "application/json"
-          },
-        })
+        fetch(
+          `${process.env.REACT_APP_API_HOST}/estacionamiento/${this.state.id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: token,
+              //"Content-Type": "application/json"
+            },
+          }
+        )
           .then((res) => res.json())
           .then(
             (result) => {
@@ -209,13 +253,13 @@ class FormEstacionamiento extends Component {
                   </div>
                   <div className="col">
                     <div className="form-group">
-                      <label htmlFor="direccion">Direccion</label>
+                      <label htmlFor="domicilio">Direccion</label>
                       <input
                         type="text"
-                        name="direccion"
-                        id="direccion"
+                        name="domicilio"
+                        id="domicilio"
                         className="form-control"
-                        value={this.state.registro.direccion}
+                        value={this.state.registro.domicilio}
                         onChange={this.handleInputChange}
                         maxLength="99"
                       />
@@ -253,6 +297,19 @@ class FormEstacionamiento extends Component {
                   </div>
                   <div className="col">
                     <div className="form-group">
+                      <label htmlFor="email">Email</label>
+                      <input
+                        type="text"
+                        name="email"
+                        id="email"
+                        className="form-control"
+                        value={this.state.registro.email}
+                        onChange={this.handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-group">
                       <label htmlFor="web">Web</label>
                       <input
                         type="text"
@@ -268,41 +325,39 @@ class FormEstacionamiento extends Component {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <label htmlFor="url">URL</label>
+                      <label htmlFor="horario">Horario</label>
                       <input
                         type="text"
-                        name="url"
-                        id="url"
+                        name="horario"
+                        id="horario"
                         className="form-control"
-                        value={this.state.registro.url}
-                        onChange={this.handleInputChange}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col">
-                    <div className="form-group">
-                      <label htmlFor="titular">Titular</label>
-                      <input
-                        type="text"
-                        name="titular"
-                        id="titular"
-                        className="form-control"
-                        value={this.state.registro.titular}
+                        value={this.state.registro.horario}
                         onChange={this.handleInputChange}
                       />
                     </div>
                   </div>
                   <div className="col">
                     <div className="form-group">
-                      <label htmlFor="vencimiento">Vencimiento</label>
+                      <label htmlFor="titular">Latitud</label>
                       <input
                         type="text"
-                        name="vencimiento"
-                        id="vencimiento"
+                        name="latitud"
+                        id="latitud"
                         className="form-control"
-                        value={this.state.registro.vencimiento}
+                        value={this.state.registro.latitud}
+                        onChange={this.handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-group">
+                      <label htmlFor="vencimiento">Longitud</label>
+                      <input
+                        type="text"
+                        name="longitud"
+                        id="longitud"
+                        className="form-control"
+                        value={this.state.registro.longitud}
                         onChange={this.handleInputChange}
                       />
                     </div>

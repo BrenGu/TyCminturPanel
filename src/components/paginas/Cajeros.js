@@ -9,7 +9,7 @@ class Cajeros extends Component {
     this.state = {
       loading: true,
       id: 0,
-      data: {       
+      data: {
         idlocalidad: 6,
         tpo_bco: 0,
         domicilio: "",
@@ -29,7 +29,7 @@ class Cajeros extends Component {
     this.handleTpo_bco_loca_Change = this.handleTpo_bco_loca_Change.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleFromCajerosSubmit = this.handleFromCajerosSubmit.bind(this);
-    this.eliminarElemento = this.eliminarElemento.bind(this); 
+    this.eliminarElemento = this.eliminarElemento.bind(this);
     this.resetForm = this.resetForm.bind(this);
   }
   handleTpo_bco_loca_Change(event) {
@@ -92,11 +92,11 @@ class Cajeros extends Component {
   handleFromCajerosSubmit(event) {
     event.preventDefault();
     let data = {
-      "idlocalidad": this.state.data.idlocalidad,
-      "tpo_bco": this.state.data.tpo_bco,
-      "domicilio": this.state.data.domicilio,
-      "latitud": this.state.data.latitud,
-      "longitud": this.state.data.longitud,
+      idlocalidad: this.state.data.idlocalidad,
+      tpo_bco: this.state.data.tpo_bco,
+      domicilio: this.state.data.domicilio,
+      latitud: this.state.data.latitud,
+      longitud: this.state.data.longitud,
     };
     fetch(`${process.env.REACT_APP_API_HOST}/addcajero`, {
       method: "POST",
@@ -107,6 +107,7 @@ class Cajeros extends Component {
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
+      //console.log(data)
       .then(
         (result) => {
           if (!result.err) {
@@ -117,6 +118,7 @@ class Cajeros extends Component {
                   body: "Los datos se agregaron correctamente",
                 },
               },
+
               () => {
                 this.resetForm();
                 this.getData();
@@ -186,8 +188,8 @@ class Cajeros extends Component {
       fetch(`${process.env.REACT_APP_API_HOST}/ciudades`, {
         method: "GET",
         headers: {
-          Authorization: ""
-        }
+          Authorization: "",
+        },
       })
         .then((res) => res.json())
         .then(
@@ -224,7 +226,6 @@ class Cajeros extends Component {
     });
     // Tipo de Bancos
     let tpo_bco = new Promise((resolve, reject) => {
-      //  fetch(`${process.env.REACT_APP_API_HOST}/cajeros/localidad/${this.state.tipo_bco}`,{
       fetch(`${process.env.REACT_APP_API_HOST}/getbancos`, {
         method: "GET",
         headers: {
@@ -308,7 +309,8 @@ class Cajeros extends Component {
         <FormCajeros
           key={`caja-${caja.id}`}
           id={caja.id}
-          localidad={this.state.localidades}
+          localidades={this.state.localidades}
+          tipo_bco={this.state.tipo_bco}
           eliminar={this.eliminarElemento}
         />
       );
@@ -321,7 +323,7 @@ class Cajeros extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nuevo Cajero
+              <i className="fas fa-money-check-alt" /> Nuevo Cajero
             </h4>
             <form
               method="post"
@@ -402,9 +404,9 @@ class Cajeros extends Component {
                   {"<" ? (
                     <div className="d-flex justify-content-between">
                       <button
-                        type="button"
+                        type="submit"
                         className="btn btn-primary"
-                        onClick={this.saveData}
+                        //onClick={this.saveData}
                       >
                         Guardar
                       </button>
@@ -414,7 +416,7 @@ class Cajeros extends Component {
                       <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={this.saveData}
+                        //  onClick={this.saveData}
                       >
                         Guardar
                       </button>
@@ -428,9 +430,7 @@ class Cajeros extends Component {
               Listado de Cajeros
             </h5>
             <div className="row">
-               <div className="col">
-                {lista_cajeros}
-                </div> 
+              <div className="col">{lista_cajeros}</div>
             </div>
           </React.Fragment>
         )}

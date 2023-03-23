@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Msg from "../utiles/Msg";
-import FormTerminales from "./comterminales/FormTerminales";
+import FormEstacionamiento from "./comestacionamiento/FormEstacionamiento";
 class Estacionamieto extends Component {
   constructor(props) {
     super(props);
@@ -9,15 +9,15 @@ class Estacionamieto extends Component {
       data: {
         idlocalidad: 6,
         nombre: "",
-        direccion: "",
+        domicilio: "",
         telefono: "",
         email: "",
-        wed: "",
-        horario:"",
+        web: "",
+        horario: "",
         latitud: 0,
         longitud: 0,
       },
-      estacionamieto: [],
+      estacionamiento: [],
       localidades: [],
       msg: {
         visible: false,
@@ -26,6 +26,7 @@ class Estacionamieto extends Component {
     };
     this.getData = this.getData.bind(this);
     this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
+    this.resetForm = this.resetForm.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleFromEstacionSubmit = this.handleFromEstacionSubmit.bind(this);
     this.eliminarElemento = this.eliminarElemento.bind(this);
@@ -82,16 +83,15 @@ class Estacionamieto extends Component {
   handleFromEstacionSubmit(event) {
     event.preventDefault();
     let data = {
-      "idlocalidad": this.state.data.idlocalidad,
-      "nombre": this.state.data.nombre,
-      "direccion": this.state.data.direccion,
-      "telefono": this.state.data.telefono,
-      "email": this.state.data.email,
-      "wed": this.state.data.wed,
-      "horario": this.state.data.horario,
-      "latitud": this.state.data.latitud,
-      "longitud": this.state.data.longitud,
-      
+      idlocalidad: this.state.data.idlocalidad,
+      nombre: this.state.data.nombre,
+      domicilio: this.state.data.domicilio,
+      telefono: this.state.data.telefono,
+      email: this.state.data.email,
+      web: this.state.data.web,
+      horario: this.state.data.horario,
+      latitud: this.state.data.latitud,
+      longitud: this.state.data.longitud,
     };
     fetch(`${process.env.REACT_APP_API_HOST}/addestacionamiento`, {
       method: "POST",
@@ -157,7 +157,7 @@ class Estacionamieto extends Component {
         (result) => {
           if (!result.err) {
             this.setState({
-              estacionamieto: result.data.data,
+              estacionamiento: result.data.registros,
             });
           } else {
             this.setState({
@@ -176,20 +176,65 @@ class Estacionamieto extends Component {
     this.setState({
       loading: false,
     });
+    //Localidades
+    let ciudades = new Promise((resolve, reject) => {
+      fetch(`${process.env.REACT_APP_API_HOST}/ciudades`, {
+        method: "GET",
+        headers: {
+          Authorization: "",
+        },
+      })
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            if (!result.err) {
+              this.setState(
+                {
+                  localidades: result.data.registros,
+                },
+                () => {
+                  resolve("Ok Ciudades");
+                }
+              );
+            } else {
+              this.setState(
+                {
+                  msg: {
+                    visible: true,
+                    body: result.errMsg,
+                  },
+                },
+                () => {
+                  reject("Error");
+                }
+              );
+            }
+          },
+          (error) => {
+            //???
+            console.log(error);
+            reject("Error");
+          }
+        );
+    });
+    Promise.all([ciudades]).then((values) => {
+      this.setState({
+        loading: false,
+      });
+    });
   }
   resetForm() {
     this.setState({
       data: {
         idlocalidad: 6,
         nombre: "",
-        direccion: "",
+        domicilio: "",
         telefono: 0,
-        mail: "",
+        email: "",
         web: "",
         horario: "",
         latitud: 0,
         longitud: 0,
-
       },
       loading: true,
     });
@@ -201,18 +246,20 @@ class Estacionamieto extends Component {
   }
 
   render() {
-    // const lista_estacionamientos = this.state.estacionamiento.map((ter) => {
-    //   return (
-    //     <FormTerminales
-    //       key={`ter-${ter.id}`}
-    //       id={ter.id}
-    //       localidad={this.state.localidades}
-    //       eliminar={this.eliminarElemento}
-    //     />
-    //   );
-    // });
+    const lista_estacionamientos = this.state.estacionamiento.map(
+      (estacion) => {
+        return (
+          <FormEstacionamiento
+            key={`estacion-${estacion.id}`}
+            id={estacion.id}
+            localidades={this.state.localidades}
+            eliminar={this.eliminarElemento}
+          />
+        );
+      }
+    );
 
-    const lista_localidades = this.state.localidades.map((localidad) => {
+    const localidades = this.state.localidades.map((localidad) => {
       return (
         <option key={`loc-${localidad.id}`} value={localidad.id}>
           {localidad.nombre.toUpperCase()}
@@ -227,7 +274,7 @@ class Estacionamieto extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nuevo Estacionamiento
+              <i className="fas fa-parking" /> Nuevo Estacionamiento
             </h4>
             <form
               method="post"
@@ -235,21 +282,7 @@ class Estacionamieto extends Component {
               id="frm-estacionamiento"
             >
               <div className="row">
-                <div className="col-sm-12 col-md-6 m-auto">
-                  <div className="form-group">
-                    <label htmlFor="idlocalidad">Localidad</label>
-                    <select
-                      name="idlocalidad"
-                      id="idlocalidad"
-                      className="form-control"
-                      value={this.state.data.idlocalidad}
-                      onChange={this.handleLocalidadChange}
-                    >
-                      {lista_localidades}
-                    </select>
-                  </div>
-                </div>
-                <div className="col-sm-12 col-md-6 m-auto">
+                <div className="col">
                   <div className="form-group">
                     <label htmlFor="nombre">Nombre </label>
                     <input
@@ -257,11 +290,11 @@ class Estacionamieto extends Component {
                       id="nombre"
                       className="form-control"
                       value={this.state.data.nombre}
-                      onChange={""}
+                      onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="col-sm-12 col-md-6 m-auto">
+                <div className="col">
                   <div className="form-group">
                     <label htmlFor="domicilio">Direccion</label>
                     <input
@@ -274,7 +307,78 @@ class Estacionamieto extends Component {
                     />
                   </div>
                 </div>
-                <div className="col-sm-12 col-md-3 m-auto">
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="idlocalidad">Localidad</label>
+                    <select
+                      name="idlocalidad"
+                      id="idlocalidad"
+                      className="form-control"
+                      value={this.state.data.idlocalidad}
+                      onChange={this.handleLocalidadChange}
+                    >
+                      {localidades}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="telefono">Telefono</label>
+                    <input
+                      type="text"
+                      name="telefono"
+                      id="telefono"
+                      className="form-control"
+                      value={this.state.data.telefono}
+                      onChange={this.handleInputChange}
+                      maxLength="99"
+                    />
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="text"
+                      name="email"
+                      id="email"
+                      className="form-control"
+                      value={this.state.data.email}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="web">Web</label>
+                    <input
+                      type="text"
+                      name="web"
+                      id="web"
+                      className="form-control"
+                      value={this.state.data.web}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="horario">Horario</label>
+                    <input
+                      type="text"
+                      name="horario"
+                      id="horario"
+                      className="form-control"
+                      value={this.state.data.horario}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col">
                   <div className="form-group">
                     <label htmlFor="latitud">Latitud</label>
                     <input
@@ -287,7 +391,7 @@ class Estacionamieto extends Component {
                     />
                   </div>
                 </div>
-                <div className="ccol-sm-12 col-md-3 m-auto">
+                <div className="col">
                   <div className="form-group">
                     <label htmlFor="longitud">Longitud</label>
                     <input
@@ -306,7 +410,7 @@ class Estacionamieto extends Component {
                   {"<" ? (
                     <div className="d-flex justify-content-between">
                       <button
-                        type="button"
+                        type="submit"
                         className="btn btn-primary"
                         // onClick={this.saveData}
                       >
@@ -315,11 +419,7 @@ class Estacionamieto extends Component {
                     </div>
                   ) : (
                     <div className="d-flex justify-content-end">
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        // onClick={this.saveData}
-                      >
+                      <button type="submit" className="btn btn-primary">
                         Guardar
                       </button>
                     </div>
@@ -329,12 +429,10 @@ class Estacionamieto extends Component {
             </form>
             <hr />
             <h5 className="bg-dark text-white p-3 mb-3 rounded">
-              Listado de Terminales
+              Listado de Estacionamientos
             </h5>
             <div className="row">
-              <div className="col">
-                {/* {lista_estacionamientos} */}
-              </div>
+              <div className="col">{lista_estacionamientos}</div>
             </div>
           </React.Fragment>
         )}

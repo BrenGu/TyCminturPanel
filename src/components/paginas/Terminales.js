@@ -31,7 +31,6 @@ class Terminales extends Component {
     this.handleFromTerminalSubmit = this.handleFromTerminalSubmit.bind(this);
     this.eliminarElemento = this.eliminarElemento.bind(this);
     this.resetForm = this.resetForm.bind(this);
-
   }
 
   handleLocalidadChange(event) {
@@ -85,18 +84,18 @@ class Terminales extends Component {
   handleFromTerminalSubmit(event) {
     event.preventDefault();
     let data = {
-      "idlocalidad": this.state.data.idlocalidad,
-      "nombre": this.state.data.nombre,
-      "direccion": this.state.data.direccion,
-      "telefono": this.state.data.telefono,
-      "interno": this.state.data.interno,
-      "mail": this.state.data.mail,
-      "web": this.state.data.web,
-      "responsable": this.state.data.responsable,
-      "latitud": this.state.data.latitud,
-      "longitud": this.state.data.longitud,
+      idlocalidad: this.state.data.idlocalidad,
+      nombre: this.state.data.nombre,
+      domicilio: this.state.data.domicilio,
+      telefono: this.state.data.telefono,
+      interno: this.state.data.interno,
+      email: this.state.data.email,
+      web: this.state.data.web,
+      responsable: this.state.data.responsable,
+      latitud: this.state.data.latitud,
+      longitud: this.state.data.longitud,
     };
-    fetch(`${process.env.REACT_APP_API_HOST}/addteminal`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/addterminal`, {
       method: "POST",
       headers: {
         Authorization: "asdssffsdff",
@@ -135,6 +134,24 @@ class Terminales extends Component {
         }
       );
   }
+  resetForm() {
+    this.setState({
+      data: {
+        idlocalidad: 6,
+        nombre: "",
+        domicilio: "",
+        telefono: 0,
+        interno: 0,
+        email: "",
+        web: "",
+        responsable: "",
+        latitud: 0,
+        longitud: 0,
+      },
+      loading: true,
+    });
+    document.getElementById("frm-terminales").reset();
+  }
 
   handleInputChange(event) {
     const target = event.target;
@@ -160,7 +177,7 @@ class Terminales extends Component {
         (result) => {
           if (!result.err) {
             this.setState({
-              terminales: result.data.data,
+              terminales: result.data.registros,
             });
           } else {
             this.setState({
@@ -179,24 +196,52 @@ class Terminales extends Component {
     this.setState({
       loading: false,
     });
-  }
-  resetForm() {
-    this.setState({
-      data: {
-        idlocalidad: 6,
-        nombre: "",
-        domicilio: "",
-        telefono: 0,
-        interno: 0,
-        email: "",
-        web: "",
-        responsable: "",
-        latitud: 0,
-        longitud: 0,
-      },
-      loading: true,
+    //Localidades
+    let ciudades = new Promise((resolve, reject) => {
+      fetch(`${process.env.REACT_APP_API_HOST}/ciudades`, {
+        method: "GET",
+        headers: {
+          Authorization: "",
+        },
+      })
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            if (!result.err) {
+              this.setState(
+                {
+                  localidades: result.data.registros,
+                },
+                () => {
+                  resolve("Ok Ciudades");
+                }
+              );
+            } else {
+              this.setState(
+                {
+                  msg: {
+                    visible: true,
+                    body: result.errMsg,
+                  },
+                },
+                () => {
+                  reject("Error");
+                }
+              );
+            }
+          },
+          (error) => {
+            //???
+            console.log(error);
+            reject("Error");
+          }
+        );
     });
-    document.getElementById("frm-terminales").reset();
+    Promise.all([ciudades]).then((values) => {
+      this.setState({
+        loading: false,
+      });
+    });
   }
 
   componentDidMount() {
@@ -204,16 +249,16 @@ class Terminales extends Component {
   }
 
   render() {
-    // const lista_terminales = this.state.terminales.map((ter) => {
-    //   return (
-    //     <FormTerminales
-    //       key={`ter-${ter.id}`}
-    //       id={ter.id}
-    //       localidad={this.state.localidades}
-    //       eliminar={this.eliminarElemento}
-    //     />
-    //   );
-    // });
+    const lista_terminales = this.state.terminales.map((ter) => {
+      return (
+        <FormTerminales
+          key={`ter-${ter.id}`}
+          id={ter.id}
+          localidades={this.state.localidades}
+          eliminar={this.eliminarElemento}
+        />
+      );
+    });
 
     const lista_localidades = this.state.localidades.map((localidad) => {
       return (
@@ -230,7 +275,7 @@ class Terminales extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nuevo Terminal
+              <i className="fas fa-bus" /> Nuevo Terminal
             </h4>
             <form
               method="post"
@@ -238,7 +283,32 @@ class Terminales extends Component {
               id="frm-terminales"
             >
               <div className="row">
-                <div className="col-sm-12 col-md-6 m-auto">
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="nombre">Nombre </label>
+                    <input
+                      name="nombre"
+                      id="nombre"
+                      className="form-control"
+                      value={this.state.data.nombre}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="domicilio">Direccion</label>
+                    <input
+                      type="text"
+                      name="domicilio"
+                      id="domicilio"
+                      className="form-control"
+                      value={this.state.data.domicilio}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col">
                   <div className="form-group">
                     <label htmlFor="idlocalidad">Localidad</label>
                     <select
@@ -252,32 +322,80 @@ class Terminales extends Component {
                     </select>
                   </div>
                 </div>
-                <div className="col-sm-12 col-md-6 m-auto">
+              </div>
+              <div className="row">
+                <div className="col">
                   <div className="form-group">
-                    <label htmlFor="nombre">Nombre </label>
+                    <label htmlFor="telefono">Telefono</label>
                     <input
-                      name="nombre"
-                      id="nombre"
+                      type="text"
+                      name="telefono"
+                      id="telefono"
                       className="form-control"
-                      value={this.state.data.nombre}
-                      onChange={""}
+                      value={this.state.data.telefono}
+                      onChange={this.handleInputChange}
+                      maxLength="99"
                     />
                   </div>
                 </div>
-                <div className="col-sm-12 col-md-6 m-auto">
+                <div className="col">
                   <div className="form-group">
-                    <label htmlFor="domicilio">Direccion</label>
+                    <label htmlFor="interno">Interno</label>
                     <input
                       type="text"
-                      name="domicilio"
-                      id="domicilio"
+                      name="interno"
+                      id="interno"
                       className="form-control"
-                      value={this.state.data.domicilio}
+                      value={this.state.data.interno}
+                      onChange={this.handleInputChange}
+                      maxLength="99"
+                    />
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="text"
+                      name="email"
+                      id="email"
+                      className="form-control"
+                      value={this.state.data.email}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="col-sm-12 col-md-3 m-auto">
+              </div>
+              <div className="row">
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="web">Web</label>
+                    <input
+                      type="text"
+                      name="web"
+                      id="web"
+                      className="form-control"
+                      value={this.state.data.web}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="responsable">Responsable</label>
+                    <input
+                      type="text"
+                      name="responsable"
+                      id="responsable"
+                      className="form-control"
+                      value={this.state.data.responsable}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col">
                   <div className="form-group">
                     <label htmlFor="latitud">Latitud</label>
                     <input
@@ -290,7 +408,7 @@ class Terminales extends Component {
                     />
                   </div>
                 </div>
-                <div className="ccol-sm-12 col-md-3 m-auto">
+                <div className="col">
                   <div className="form-group">
                     <label htmlFor="longitud">Longitud</label>
                     <input
@@ -308,18 +426,14 @@ class Terminales extends Component {
                 <div className="col">
                   {"<" ? (
                     <div className="d-flex justify-content-between">
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        // onClick={this.saveData}
-                      >
+                      <button type="submit" className="btn btn-primary">
                         Guardar
                       </button>
                     </div>
                   ) : (
                     <div className="d-flex justify-content-end">
                       <button
-                        type="button"
+                        type="submit"
                         className="btn btn-primary"
                         // onClick={this.saveData}
                       >
@@ -335,9 +449,7 @@ class Terminales extends Component {
               Listado de Terminales
             </h5>
             <div className="row">
-              <div className="col">
-                {/* {lista_terminales} */}
-              </div>
+              <div className="col">{lista_terminales}</div>
             </div>
           </React.Fragment>
         )}

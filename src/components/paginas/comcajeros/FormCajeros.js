@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import ddToDms from "../../../gm";
 import { Consumer } from "../../../context";
-
 import Msg from "../../utiles/Msg";
 
 class FormCajeros extends Component {
@@ -11,7 +10,6 @@ class FormCajeros extends Component {
       loading: true,
       id: 0,
       registro: {
-        id: 0,
         idlocalidad: 6,
         tpo_bco: 0,
         direccion: "",
@@ -19,13 +17,14 @@ class FormCajeros extends Component {
         longitud: 0,
       },
       localidades: [],
+      tipo_bco: [],
       msg: {
         visible: false,
         body: "",
         tipo: 0,
       },
     };
-
+    this.setLatLng = this.setLatLng.bind(this);
     this.setData = this.setData.bind(this);
     this.saveData = this.saveData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -94,6 +93,7 @@ class FormCajeros extends Component {
               },
             });
           } else {
+            console.log("aaa", result);
             this.setState({
               msg: {
                 tipo: 0,
@@ -110,6 +110,20 @@ class FormCajeros extends Component {
       );
   }
 
+  setLatLng() {
+    let LatLng = ddToDms(
+      this.state.registro.latitud,
+      this.state.registro.longitud
+    );
+    this.setState({
+      registro: {
+        ...this.state.registro,
+        latitudg: LatLng.lat,
+        longitudg: LatLng.lng,
+      },
+    });
+  }
+
   handleInputChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -117,7 +131,7 @@ class FormCajeros extends Component {
     this.setState(
       {
         registro: {
-          ...this.state.registros,
+          ...this.state.registro,
           [name]: value,
         },
       },
@@ -145,6 +159,7 @@ class FormCajeros extends Component {
       {
         id: this.props.id,
         localidades: this.props.localidades,
+        tipo_bco: this.props.tipo_bco,
       },
       () => {
         fetch(`${process.env.REACT_APP_API_HOST}/cajero/${this.state.id}`, {
@@ -163,6 +178,7 @@ class FormCajeros extends Component {
                     registro: result.data.registros[0],
                     loading: false,
                   });
+                  console.log("CC", result.data.registros);
                 } else {
                   console.log("No hay registro: " + this.state.id);
                 }
@@ -199,7 +215,43 @@ class FormCajeros extends Component {
                 if (parseInt(result.data.count, 10) > 0) {
                   this.setState({
                     localidades: result.data.registros,
-
+                  });
+                } else {
+                  console.log("No hay registros: " + this.state.id);
+                }
+              } else {
+                this.setState({
+                  msg: {
+                    visible: true,
+                    body: result.errMsg,
+                  },
+                });
+              }
+            },
+            (error) => {
+              //???
+              this.setState({
+                msg: {
+                  visible: true,
+                  body: error,
+                },
+              });
+            }
+          );
+        fetch(`${process.env.REACT_APP_API_HOST}/getbancos`, {
+          method: "GET",
+          headers: {
+            Authorization: token,
+            //"Content-Type": "application/json"
+          },
+        })
+          .then((res) => res.json())
+          .then(
+            (result) => {
+              if (!result.err) {
+                if (parseInt(result.data.count, 10) > 0) {
+                  this.setState({
+                    tipo_bco: result.data.registros,
                   });
                 } else {
                   console.log("No hay registros: " + this.state.id);
@@ -238,15 +290,20 @@ class FormCajeros extends Component {
   }
 
   render() {
-    console.log('AA')
-    // const localidades = this.state.localidades.map((localidad) => {
-    //   console.log('AA', localidades)
-    //   return (
-    //     <option key={`loc-${localidad.id}`} value={localidad.id}>
-    //       {localidad.nombre}
-    //     </option>
-    //   );
-    // });
+    const tipo_bco = this.state.tipo_bco.map((tipo_banco) => {
+      return (
+        <option key={`tp-${tipo_banco.id}`} value={tipo_banco.id}>
+          {tipo_banco.nombre}
+        </option>
+      );
+    });
+    const localidades = this.state.localidades.map((localidad) => {
+      return (
+        <option key={`loc-${localidad.id}`} value={localidad.id}>
+          {localidad.nombre.toUpperCase()}
+        </option>
+      );
+    });
     return (
       <React.Fragment>
         {this.state.isLoaded ? (
@@ -256,31 +313,32 @@ class FormCajeros extends Component {
             <div className="row border p-2 mb-3">
               <div className="col">
                 <div className="row">
-                <div className="col-sm-12 col-md-6 m-auto">
-                  <div className="form-group">
-                    <label htmlFor="idlocalidad">Localidad</label>
-                    <select
-                      name="idlocalidad"
-                      id="idlocalidad"
-                      className="form-control"
-                      value={this.state.registro.idlocalidad}
-                      onChange={this.handleLocalidadChange}
-                    >
-                      {/* {localidades} */}
-                    </select>
-                  </div>
-                </div>
                   <div className="col-sm-12 col-md-6 m-auto">
                     <div className="form-group">
-                      <label htmlFor="domicilio">Tipo de Banco </label>
-                      <input
-                        type="text"
+                      <label htmlFor="idlocalidad">Localidad</label>
+                      <select
+                        name="idlocalidad"
+                        id="idlocalidad"
+                        className="form-control"
+                        value={this.state.registro.idlocalidad}
+                        onChange={this.handleLocalidadChange}
+                      >
+                        {localidades}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="col-sm-12 col-md-6 m-auto">
+                    <div className="form-group">
+                      <label htmlFor="tpo_bco">Bancos </label>
+                      <select
                         name="tpo_bco"
                         id="tpo_bco"
                         className="form-control"
-                        value={this.state.registro.nombre}
-                        onChange={this.handleInputChange}
-                      />
+                        value={this.state.registro.tpo_bco}
+                        onChange={this.handleTpo_bco_loca_Change}
+                      >
+                        {tipo_bco}
+                      </select>
                     </div>
                   </div>
                   <div className="col-sm-12 col-md-6 m-auto">
@@ -291,7 +349,7 @@ class FormCajeros extends Component {
                         name="domicilio"
                         id="domicilio"
                         className="form-control"
-                        value={this.state.registro.telefono}
+                        value={this.state.registro.domicilio}
                         onChange={this.handleInputChange}
                       />
                     </div>

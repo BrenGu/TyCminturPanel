@@ -3,6 +3,7 @@ import { Form } from "reactstrap";
 //import { Consumer } from "../../context";
 import Msg from "../utiles/Msg";
 import FormGaleriaLocalidad from "./comgalerialocalidad/FormGaleriaLocalidad";
+//import { Helmet } from "react-helmet";
 
 class GaleriaLocalidad extends Component {
   constructor(props) {
@@ -102,7 +103,7 @@ class GaleriaLocalidad extends Component {
   }
 
   getFotos() {
-    fetch(`${process.env.REACT_APP_API_HOST}/listfotos/12`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/listfotos/30`, {
       method: "GET",
       headers: {
         Authorization: "",
@@ -564,6 +565,9 @@ class GaleriaLocalidad extends Component {
           <div>Cargando</div>
         ) : (
           <React.Fragment>
+            {/* <Helmet>
+            <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+            </Helmet> */}
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
               <i className="fas fa-newspaper" /> Galeria de Imagenes por
               Localidad

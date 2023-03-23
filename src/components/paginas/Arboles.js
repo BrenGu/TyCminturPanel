@@ -288,7 +288,7 @@ class Arboles extends Component {
               <i className="fas fa-newspaper" /> Carga de Árboles
             </h4>
             <form
-              method="&quot;post"
+              method="post"
               onSubmit={this.handleFormArbolSubmit}
               id="frm-arbol"
             >

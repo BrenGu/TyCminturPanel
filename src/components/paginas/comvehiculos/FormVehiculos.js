@@ -1,15 +1,16 @@
 import React, { Component } from "react";
-import Msg from "../utiles/Msg";
-import FormTerminales from "./comterminales/FormTerminales";
+import { Consumer } from "../../../context";
+import Msg from "../../utiles/Msg";
 
 class FormVehiculos extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
+      id: 0,
       data: {
         idvehiculo: 0,
-        idlocalidad: 6,      
+        idlocalidad: 0,
         nombre: "",
         domicilio: "",
         telefono: 0,
@@ -18,19 +19,31 @@ class FormVehiculos extends Component {
         latitud: 0,
         longitud: 0,
       },
-      vehiculos: [],
       localidades: [],
-      tipovehiculos:[],
+      tipo_vehiculo: [],
       msg: {
         visible: false,
         body: "",
       },
     };
-    this.getData = this.getData.bind(this);
+    this.setData = this.setData.bind(this);
+    this.getLocalidades = this.getLocalidades.bind(this);
+    this.getTipoVehiculo = this.getTipoVehiculo.bind(this);
     this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
+    this.handleTpo_vehiculo_Change = this.handleTpo_vehiculo_Change.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleFromVehiculosSubmit = this.handleFromVehiculosSubmit.bind(this);
     this.eliminarElemento = this.eliminarElemento.bind(this);
+  }
+
+  handleTpo_vehiculo_Change(event) {
+    console.log("Handle tip_vehiculo: :", event.target.value);
+    this.setState({
+      data: {
+        ...this.state.data,
+        idvehiculo: event.target.value,
+      },
+    });
   }
 
   handleLocalidadChange(event) {
@@ -81,18 +94,19 @@ class FormVehiculos extends Component {
         }
       );
   }
+
   handleFromVehiculosSubmit(event) {
     event.preventDefault();
     let data = {
-      "idvehiculo": this.setState.data.tipovehiculos,
-      "idlocalidad": this.state.data.idlocalidad,
-      "nombre": this.state.data.nombre,
-      "docimilio": this.state.data.docimilio,
-      "telefono": this.state.data.telefono,
-      "email": this.state.data.mail,
-      "web": this.state.data.web,
-      "latitud": this.state.data.latitud,
-      "longitud": this.state.data.longitud,
+      idvehiculo: this.setState.data.tipovehiculos,
+      idlocalidad: this.state.data.idlocalidad,
+      nombre: this.state.data.nombre,
+      docimilio: this.state.data.docimilio,
+      telefono: this.state.data.telefono,
+      email: this.state.data.mail,
+      web: this.state.data.web,
+      latitud: this.state.data.latitud,
+      longitud: this.state.data.longitud,
     };
     fetch(`${process.env.REACT_APP_API_HOST}/addvehiculo`, {
       method: "POST",
@@ -146,8 +160,89 @@ class FormVehiculos extends Component {
     });
   }
 
-  getData() {
-    fetch(`${process.env.REACT_APP_API_HOST}/getvehiculos`, {
+  setData() {
+    let token = this.context.token;
+
+    this.setState(
+      {
+        id: this.props.id,
+      },
+      () => {
+        fetch(`${process.env.REACT_APP_API_HOST}/vehiculo/${this.state.id}`, {
+          method: "GET",
+          headers: {
+            Authorization: token,
+            //"Content-Type": "application/json"
+          },
+        })
+          .then((res) => res.json())
+          .then(
+            (result) => {
+              if (!result.err) {
+                if (parseInt(result.data.count, 10) > 0) {
+                  this.setState({
+                    data: result.data.registros[0],
+                    loading: false,
+                  });
+                } else {
+                  console.log("No hay registro: " + this.state.id);
+                }
+              } else {
+                this.setState({
+                  msg: {
+                    visible: true,
+                    body: result.errMsg,
+                  },
+                });
+              }
+            },
+            (error) => {
+              //???
+              this.setState({
+                msg: {
+                  visible: true,
+                  body: error,
+                },
+              });
+            }
+          );
+      }
+    );
+
+    // fetch(`${process.env.REACT_APP_API_HOST}/vehiculos/${this.state.id}`, {
+    //   method: "GET",
+    //   headers: {
+    //     Authorization: "",
+    //   },
+    // })
+    //   .then((res) => res.json())
+    //   .then(
+    //     (result) => {
+    //       if (!result.err) {
+    //         this.setState({
+    //           terminales: result.data.data,
+    //         });
+    //       } else {
+    //         this.setState({
+    //           msg: {
+    //             visible: true,
+    //             body: result.errMsg,
+    //           },
+    //         });
+    //       }
+    //     },
+    //     (error) => {
+    //       //???
+    //       console.log(error);
+    //     }
+    //   );
+    // this.setState({
+    //   loading: false,
+    // });
+  }
+
+  getTipoVehiculo() {
+    fetch(`${process.env.REACT_APP_API_HOST}/getTipoVehiculos`, {
       method: "GET",
       headers: {
         Authorization: "",
@@ -157,31 +252,82 @@ class FormVehiculos extends Component {
       .then(
         (result) => {
           if (!result.err) {
-            this.setState({
-              terminales: result.data.data,
-            });
-          } else {
-            this.setState({
-              msg: {
-                visible: true,
-                body: result.errMsg,
+            this.setState(
+              {
+                tipo_vehiculo: result.data.registros,
               },
-            });
+              () => {
+                //console.log('TipoVehiculoOK')
+                //console.log(this.state.tipo_vehiculo)
+              }
+            );
+          } else {
+            this.setState(
+              {
+                msg: {
+                  visible: true,
+                  body: result.errMsg,
+                },
+              },
+              () => {
+                //console.log('TipoVehiculoError')
+              }
+            );
           }
         },
         (error) => {
           //???
           console.log(error);
+          //reject("Error");
         }
       );
-    this.setState({
-      loading: false,
-    });
   }
+
+  getLocalidades() {
+    fetch(`${process.env.REACT_APP_API_HOST}/ciudades`, {
+      method: "GET",
+      headers: {
+        Authorization: "",
+      },
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (!result.err) {
+            this.setState(
+              {
+                localidades: result.data.registros,
+              },
+              () => {
+                //resolve("Ok Ciudades");
+              }
+            );
+          } else {
+            this.setState(
+              {
+                msg: {
+                  visible: true,
+                  body: result.errMsg,
+                },
+              },
+              () => {
+                //reject("Error");
+              }
+            );
+          }
+        },
+        (error) => {
+          //???
+          console.log(error);
+          //reject("Error");
+        }
+      );
+  }
+
   resetForm() {
     this.setState({
       data: {
-        idvehiculo:0,
+        idvehiculo: 0,
         idlocalidad: 6,
         nombre: "",
         direccion: "",
@@ -197,25 +343,31 @@ class FormVehiculos extends Component {
   }
 
   componentDidMount() {
-    this.getData();
+    this.getLocalidades();
+    this.getTipoVehiculo();
+    this.setData();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.id !== prevProps.id) {
+      this.setData();
+    }
   }
 
   render() {
-    const lista_vehiculos = this.state.vehiculos.map((vehi) => {
-      return (
-        <FormVehiculos
-          key={`vehi-${ter.id}`}
-          id={vehi.id}
-          localidad={this.state.localidades}
-          eliminar={this.eliminarElemento}
-        />
-      );
-    });
-
     const lista_localidades = this.state.localidades.map((localidad) => {
       return (
         <option key={`loc-${localidad.id}`} value={localidad.id}>
           {localidad.nombre.toUpperCase()}
+        </option>
+      );
+    });
+
+    const tipo_vehiculo = this.state.tipo_vehiculo.map((tip_vehiculo) => {
+      //console.log("tipo_vehiculo item: ", tip_vehiculo)
+      return (
+        <option key={`tp-${tip_vehiculo.id}`} value={tip_vehiculo.id}>
+          {tip_vehiculo.nombre}
         </option>
       );
     });
@@ -226,14 +378,8 @@ class FormVehiculos extends Component {
           <div>Cargando ..</div>
         ) : (
           <React.Fragment>
-            <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nuevo Vehiculos
-            </h4>
-            <form
-              method="post"
-              onSubmit={this.handleFromVehiculosSubmit}
-              id="frm-vehiculos"
-            >
+            <form method="post" onSubmit={this.saveData} id="frm-vehiculo">
+              <div className="row border p-2 mb-3">
               <div className="row">
                 <div className="col-sm-12 col-md-6 m-auto">
                   <div className="form-group">
@@ -251,34 +397,47 @@ class FormVehiculos extends Component {
                 </div>
                 <div className="col-sm-12 col-md-6 m-auto">
                   <div className="form-group">
-                    <label htmlFor="idvehiculo">Tipo Vehiculo</label>
+                    <label htmlFor="tipo_vehiculo">Tipo de Vehiculo </label>
                     <select
-                      name="idvehiculo"
-                      id="idvehiculo"
+                      name="tipo_vehiculo"
+                      id="tipo_vehiculo"
                       className="form-control"
                       value={this.state.data.idvehiculo}
-                      onChange={this.handleLocalidadChange}
+                      onChange={this.handleTpo_vehiculo_Change}
                     >
-                      {"-"}
+                      {tipo_vehiculo}
                     </select>
                   </div>
                 </div>
                 <div className="col-sm-12 col-md-6 m-auto">
                   <div className="form-group">
-                    <label htmlFor="nombre">Nombre </label>
+                    <label htmlFor="nombre">Nombre</label>
                     <input
+                      type="text"
                       name="nombre"
                       id="nombre"
                       className="form-control"
                       value={this.state.data.nombre}
-                      onChange={""}
+                      onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                
                 <div className="col-sm-12 col-md-6 m-auto">
                   <div className="form-group">
-                    <label htmlFor="domicilio">Direccion</label>
+                    <label htmlFor="telefono">Telefono</label>
+                    <input
+                      type="text"
+                      name="telefono"
+                      id="telefono"
+                      className="form-control"
+                      value={this.state.data.telefono}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col-sm-12 col-md-6 m-auto">
+                  <div className="form-group">
+                    <label htmlFor="domicilio">Domicilio</label>
                     <input
                       type="text"
                       name="domicilio"
@@ -302,7 +461,7 @@ class FormVehiculos extends Component {
                     />
                   </div>
                 </div>
-                <div className="ccol-sm-12 col-md-3 m-auto">
+                <div className="col-sm-12 col-md-3 m-auto">
                   <div className="form-group">
                     <label htmlFor="longitud">Longitud</label>
                     <input
@@ -315,42 +474,51 @@ class FormVehiculos extends Component {
                     />
                   </div>
                 </div>
-              </div>
-              <div className="row ">
-                <div className="col">
-                  {"<" ? (
-                    <div className="d-flex justify-content-between">
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        // onClick={this.saveData}
-                      >
-                        Guardar
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="d-flex justify-content-end">
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        // onClick={this.saveData}
-                      >
-                        Guardar
-                      </button>
-                    </div>
-                  )}
+                <div className="col-sm-12 col-md-6 m-auto">
+                  <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="text"
+                      name="email"
+                      id="email"
+                      className="form-control"
+                      value={this.state.data.email}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col-sm-12 col-md-6 m-auto">
+                  <div className="form-group">
+                    <label htmlFor="web">Web</label>
+                    <input
+                      type="text"
+                      name="web"
+                      id="web"
+                      className="form-control"
+                      value={this.state.data.web}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
                 </div>
               </div>
-            </form>
-            <hr />
-            <h5 className="bg-dark text-white p-3 mb-3 rounded">
-              Listado de Vehiculos
-            </h5>
-            <div className="row">
+
               <div className="col">
-                {lista_terminales}
+                <div className="d-flex justify-content-between">
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={(e) => this.props.eliminar(this.state.registro.id)}
+                  >
+                    <i className="fas fa-trash" />
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    <i className="fas fa-save" /> Guardar Cambios
+                  </button>
+                </div>
               </div>
-            </div>
+              </div>
+            </form>
+            <hr className="mt-5 mb-5" />
           </React.Fragment>
         )}
         <Msg

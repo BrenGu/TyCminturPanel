@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 //import LocSelect from "../utiles/LocSelect";
 import FormCajeros from "./comcajeros/FormCajeros";
-import Msg from "../utiles/Msg";
+import Msg from "../utiles/Msg"
+import FormVehiculos from "./comvehiculos/FormVehiculos";
 
 class Vehiculos extends Component {
   constructor(props) {
@@ -9,12 +10,17 @@ class Vehiculos extends Component {
     this.state = {
       loading: true,
       data: {
-        idlocalidad: 0,
         idvehiculo:0,
-        direccion: "",
+        idlocalidad: 0,
+        nombre: "",
+        domicilio: "",
+        telefono: "",
+        email: "",
+        web: "",
         latitud: 0,
         longitud: 0,
       },
+      vehiculos: [],
       localidades: [],
       tipo_vehiculo: [],
       msg: {
@@ -22,25 +28,29 @@ class Vehiculos extends Component {
         body: "",
       },
     };
-    this.getData = this.getData.bind(this);
+    this.getVehiculos = this.getVehiculos.bind(this);
+    this.getTipoVehiculo = this.getTipoVehiculo.bind(this);
+    this.getLocalidades = this.getLocalidades.bind(this);
     this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
     this.handleTpo_vehiculo_Change = this.handleTpo_vehiculo_Change.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleFromVehiculosSubmit = this.handleFromVehiculosSubmit.bind(this);
+    this.handleFormVehiculosSubmit = this.handleFormVehiculosSubmit.bind(this);
     this.eliminarElemento = this.eliminarElemento.bind(this);
     this.resetForm = this.resetForm.bind(this);
   }
 
   handleTpo_vehiculo_Change(event) {
+    console.log("tipo vehiculo handle: ", this.state.data.idvehiculo)
     this.setState({
       data: {
         ...this.state.data,
-        tipovehiculo: event.target.value,
+        idvehiculo: event.target.value,
       },
     });
   }
 
   handleLocalidadChange(event) {
+    console.log("Localidad handle: ", this.state.data.idlocalidad)
     this.setState({
       data: {
         ...this.state.data,
@@ -70,7 +80,7 @@ class Vehiculos extends Component {
                 },
               },
               () => {
-                this.getData();
+                this.getVehiculos();
               }
             );
           } else {
@@ -88,12 +98,13 @@ class Vehiculos extends Component {
         }
       );
   }
+
   resetForm() {
     this.setState({
       data: {
         idlocalidad: 0,
         idvehiculo: 0,
-        direccion: "",
+        domicilio: "",
         latitud: 0,
         longitud: 0,
       },
@@ -102,16 +113,20 @@ class Vehiculos extends Component {
     document.getElementById("frm-cajeros").reset();
   }
 
-  handleFromVehiculosSubmit(event) {
+  handleFormVehiculosSubmit(event) {
     event.preventDefault();
     let data = {
-      "idlocalidad": this.state.data.idlocalidad,
-      "idvehiculo": this.state.data.idvehiculo,
-      "direccion": this.state.data.direccion,
-      "latitud": this.state.data.latitud,
-      "longitud": this.state.data.longitud,
+      idvehiculo: this.state.data.idvehiculo,
+      idlocalidad: this.state.data.idlocalidad,
+      nombre: this.state.data.nombre,
+      domicilio: this.state.data.domicilio,
+      telefono: this.state.data.telefono,
+      email: this.state.data.email,
+      web: this.state.data.web,
+      latitud: this.state.data.latitud,
+      longitud: this.state.data.longitud,
     };
-    fetch(`${process.env.REACT_APP_API_HOST}/addvehiculo`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/addVehiculo`, {
       method: "POST",
       headers: {
         Authorization: "asdssffsdff",
@@ -132,7 +147,7 @@ class Vehiculos extends Component {
               },
               () => {
                 this.resetForm();
-                this.getData();
+                this.getVehiculos();
               }
             );
           } else {
@@ -152,19 +167,22 @@ class Vehiculos extends Component {
   }
 
   handleInputChange(event) {
+    console.log("handleInput ", name, " : ", value)
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
+    console.log("handleInput ", name, " : ", value)
     this.setState({
       data: {
-        ...this.state.registro,
+        ...this.state.data,
         [name]: value,
       },
     });
   }
 
-  getData() {
-    fetch(`${process.env.REACT_APP_API_HOST}/getvehiculos`, {
+  getVehiculos() {
+
+    fetch(`${process.env.REACT_APP_API_HOST}/getVehiculos`, {
       method: "GET",
       headers: {
         Authorization: "",
@@ -175,7 +193,7 @@ class Vehiculos extends Component {
         (result) => {
           if (!result.err) {
             this.setState({
-              vehiculos: result.data.data,
+              vehiculos: result.data.registros,
             });
           } else {
             this.setState({
@@ -194,8 +212,53 @@ class Vehiculos extends Component {
     this.setState({
       loading: false,
     });
-    //Localidades
-    let ciudades = new Promise((resolve, reject) => {
+
+  }
+
+  getTipoVehiculo() {
+ 
+      fetch(`${process.env.REACT_APP_API_HOST}/getTipoVehiculos`, {
+        method: "GET",
+        headers: {
+          Authorization: "",
+        },
+      })
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            if (!result.err) {
+              this.setState(
+                {
+                  tipo_vehiculo: result.data.registros,
+                },
+                () => {
+                  // console.log('TipoVehiculoOK')
+                  // console.log(this.state.tipo_vehiculo)
+                }
+              );
+            } else {
+              this.setState(
+                {
+                  msg: {
+                    visible: true,
+                    body: result.errMsg,
+                  },
+                },
+                () => {
+                  //console.log('TipoVehiculoError')
+                }
+              );
+            }
+          },
+          (error) => {
+            //???
+            console.log(error);
+            //reject("Error");
+          }
+        );
+  }
+
+  getLocalidades() {
       fetch(`${process.env.REACT_APP_API_HOST}/ciudades`, {
         method: "GET",
         headers: {
@@ -211,7 +274,7 @@ class Vehiculos extends Component {
                   localidades: result.data.registros,
                 },
                 () => {
-                  resolve("Ok Ciudades");
+                  //resolve("Ok Ciudades");
                 }
               );
             } else {
@@ -223,7 +286,7 @@ class Vehiculos extends Component {
                   },
                 },
                 () => {
-                  reject("Error");
+                  //reject("Error");
                 }
               );
             }
@@ -231,64 +294,15 @@ class Vehiculos extends Component {
           (error) => {
             //???
             console.log(error);
-            reject("Error");
+            //reject("Error");
           }
         );
-    });
-
-    // Tipo de Bancos
-
-    let tipo_vehiculo = new Promise((resolve, reject) => {
-      //  fetch(`${process.env.REACT_APP_API_HOST}/cajeros/localidad/${this.state.tipo_bco}`,{
-      fetch(`${process.env.REACT_APP_API_HOST}/gettipovehiculos`, {
-        method: "GET",
-        headers: {
-          Authorization: "",
-        },
-      })
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            if (!result.err) {
-              this.setState(
-                {
-                  tipo_bco: result.data.registros,
-                },
-                () => {
-                  resolve("Ok Ciudades");
-                }
-              );
-            } else {
-              this.setState(
-                {
-                  msg: {
-                    visible: true,
-                    body: result.errMsg,
-                  },
-                },
-                () => {
-                  reject("Error");
-                }
-              );
-            }
-          },
-          (error) => {
-            //???
-            console.log(error);
-            reject("Error");
-          }
-        );
-    });
-
-    Promise.all([ciudades, tipo_vehiculo]).then((values) => {
-      this.setState({
-        loading: false,
-      });
-    });
   }
 
   componentDidMount() {
-    this.getData();
+    this.getVehiculos();
+    this.getTipoVehiculo();
+    this.getLocalidades();
   }
 
   render() {
@@ -306,16 +320,17 @@ class Vehiculos extends Component {
         </option>
       );
     });
-    // const lista_cajeros = this.state.cajeros.map((caja) => {
-    //   return (
-    //     <FormCajeros
-    //       key={`caja-${caja.id}`}
-    //       id={caja.id}
-    //       localidad={this.state.localidades}
-    //       eliminar={this.eliminarElemento}
-    //     />
-    //   );
-    // });
+
+    const lista_vehiculos = this.state.vehiculos.map((vehiculo) => {
+      return (
+        <FormVehiculos
+          key={`vehiculo-${vehiculo.id}`}
+          id={vehiculo.id}
+          localidad={this.state.localidades}
+          eliminar={this.eliminarElemento}
+        />
+      );
+    });
 
     return (
       <div className="Cajeros">
@@ -328,7 +343,7 @@ class Vehiculos extends Component {
             </h4>
             <form
               method="post"
-              onSubmit={this.handleFromVehiculosSubmit}
+              onSubmit={this.handleFormVehiculosSubmit}
               id="frm-cajeros"
             >
               <div className="row">
@@ -353,10 +368,10 @@ class Vehiculos extends Component {
                       name="tipo_vehiculo"
                       id="tipo_vehiculo"
                       className="form-control"
-                      value={this.state.data.tipo_vehiculo}
+                      value={this.state.data.idvehiculo}
                       onChange={this.handleTpo_vehiculo_Change}
                     >
-                      {"-"}
+                      {tipo_vehiculo}
                     </select>
                   </div>
                 </div>
@@ -457,19 +472,19 @@ class Vehiculos extends Component {
                   {"<" ? (
                     <div className="d-flex justify-content-between">
                       <button
-                        type="button"
+                        type="submit"
                         className="btn btn-primary"
-                        onClick={this.saveData}
+                        //onClick={this.saveData}
                       >
-                        Guardar
+                        Agregar Vehiculo
                       </button>
                     </div>
                   ) : (
                     <div className="d-flex justify-content-end">
                       <button
-                        type="button"
+                        type="submit"
                         className="btn btn-primary"
-                        onClick={this.saveData}
+                        //onClick={this.saveData}
                       >
                         Guardar
                       </button>
@@ -483,7 +498,7 @@ class Vehiculos extends Component {
               Listado de Vehiculos
             </h5>
             <div className="row">
-              {/* <div className="col">{lista_cajeros}</div> */}
+              <div className="col">{lista_vehiculos}</div>
             </div>
           </React.Fragment>
         )}

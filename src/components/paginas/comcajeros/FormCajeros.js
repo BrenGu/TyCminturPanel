@@ -29,12 +29,22 @@ class FormCajeros extends Component {
     this.saveData = this.saveData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
+    this.handleTpo_bco_loca_Change = this.handleTpo_bco_loca_Change.bind(this);
+
     this.askDelete = this.askDelete.bind(this);
     this.okDelete = this.okDelete.bind(this);
     /*
         this.handleSave = this.handleSave.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         */
+  }
+  handleTpo_bco_loca_Change(event) {
+    this.setState({
+      registro: {
+        ...this.state.registro,
+        tpo_bco: event.target.value,
+      },
+    });
   }
 
   handleLocalidadChange(event) {
@@ -70,16 +80,27 @@ class FormCajeros extends Component {
       }
     );
   }
-
   saveData(event) {
-    event.preventDefoult();
-    fetch(`${process.env.REACT_APP_API_HOST}/updatecajero/${this.state.id}`, {
+    event.preventDefault();
+
+    const data = new FormData();
+
+    data.append("idlocalidad", this.state.registro.idlocalidad);
+    data.append("tpo_bco", this.state.registro.tpo_bco);
+    data.append("domicilio", this.state.registro.domicilio);
+    data.append("latitud", this.state.registro.latitud);
+    data.append("longitud", this.state.registro.longitud);
+
+    data.forEach((e) => {
+      console.log(e);
+    });
+
+    fetch(`${process.env.REACT_APP_API_HOST}/upcajero/${this.state.id}`, {
       method: "POST",
       headers: {
-        Authorization: "asdssffsdff",
-        "Content-Type": "application/json",
+        Authorization: "",
       },
-      body: JSON.stringify(this.state.registro),
+      body: data,
     })
       .then((res) => res.json())
       .then(
@@ -93,7 +114,6 @@ class FormCajeros extends Component {
               },
             });
           } else {
-            console.log("aaa", result);
             this.setState({
               msg: {
                 tipo: 0,
@@ -109,7 +129,7 @@ class FormCajeros extends Component {
         }
       );
   }
-
+ 
   setLatLng() {
     let LatLng = ddToDms(
       this.state.registro.latitud,
@@ -178,7 +198,6 @@ class FormCajeros extends Component {
                     registro: result.data.registros[0],
                     loading: false,
                   });
-                  console.log("CC", result.data.registros);
                 } else {
                   console.log("No hay registro: " + this.state.id);
                 }

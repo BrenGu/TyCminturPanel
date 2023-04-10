@@ -66,6 +66,7 @@ class FormEstacionamiento extends Component {
       }
     );
   }
+
   saveData(event) {
     event.preventDefault();
     fetch(
@@ -210,6 +211,7 @@ class FormEstacionamiento extends Component {
       }
     );
   }
+  
   componentDidMount() {
     this.setData();
   }

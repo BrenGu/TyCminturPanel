@@ -170,12 +170,14 @@ class Atractivo extends Component {
         this.setState({
             idDelete: id
         }, () => {
+            
             let msgshow = "";
             if(Array.isArray(msg)) {
                 msgshow = msg.join(", ");
             } else {
                 msgshow = msg;
             }
+            //console.log(msgshow);
             this.setState({
                 Msg: {
                     MsgTipo: tipo,
@@ -506,6 +508,7 @@ class Atractivo extends Component {
                                                 <input type="text" name="domingo" id="domingo" className="form-control" value={this.state.atractivo.domingo} onChange={this.handleChange} autoComplete="off" />
                                             </div>
                                             <div className="form-group">
+                                            <label htmlFor={`file-${this.state.atractivo.id}`}>Audio para Turismo Dark</label>
                                                 <br/>
                                                 <input type="file" name={`file-${this.state.atractivo.id}`} id={`file-${this.state.atractivo.id}`} /*onChange={(e)=> this.handleFile(e)}*/ />
                                                 <br/><br/>

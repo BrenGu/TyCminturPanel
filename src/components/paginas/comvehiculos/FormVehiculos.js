@@ -24,6 +24,7 @@ class FormVehiculos extends Component {
       msg: {
         visible: false,
         body: "",
+        tipo: 0,
       },
     };
     this.setData = this.setData.bind(this);
@@ -33,11 +34,54 @@ class FormVehiculos extends Component {
     this.handleTpo_vehiculo_Change = this.handleTpo_vehiculo_Change.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleFromVehiculosSubmit = this.handleFromVehiculosSubmit.bind(this);
-    this.eliminarElemento = this.eliminarElemento.bind(this);
+    this.saveData = this.saveData.bind(this);
+    this.askDelete = this.askDelete.bind(this);
+    this.okDelete = this.okDelete.bind(this);
+  }
+
+  saveData(event) {
+    event.preventDefault();
+    fetch(
+      `${process.env.REACT_APP_API_HOST}/updateVehiculo/${this.state.id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "asdssffsdff",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(this.state.data),
+      }
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (!result.err) {
+            this.setState({
+              msg: {
+                tipo: 0,
+                visible: true,
+                body: "Los datos se guardaron correctamente",
+              },
+            });
+          } else {
+            this.setState({
+              msg: {
+                tipo: 0,
+                visible: true,
+                body: result.errMsgs,
+              },
+            });
+          }
+        },
+        (error) => {
+          //???
+          console.log(error);
+        }
+      );
   }
 
   handleTpo_vehiculo_Change(event) {
-    console.log("Handle tip_vehiculo: :", event.target.value);
+    //console.log("Handle tip_vehiculo: :", event.target.value);
     this.setState({
       data: {
         ...this.state.data,
@@ -55,44 +99,29 @@ class FormVehiculos extends Component {
     });
   }
 
-  eliminarElemento(id) {
-    fetch(`${process.env.REACT_APP_API_HOST}/delvehiculo/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: "asdssffsdff",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          if (!result.err) {
-            this.setState(
-              {
-                loading: false,
-                msg: {
-                  visible: true,
-                  body: "El elemento se elimino correctamente.",
-                },
-              },
-              () => {
-                this.getData();
-              }
-            );
-          } else {
-            this.setState({
-              loading: false,
-              msg: {
-                visible: true,
-                body: result.errMsgs,
-              },
-            });
-          }
+  okDelete() {
+    this.setState(
+      {
+        msg: {
+          visible: false,
+          body: "",
+          tipo: 0,
         },
-        (error) => {
-          console.log(error);
-        }
-      );
+      },
+      () => {
+        this.props.eliminar(this.state.data.id);
+      }
+    );
+  }
+
+  askDelete(nombre) {
+    this.setState({
+      msg: {
+        visible: true,
+        body: `Seguro de eliminar "${nombre}"`,
+        tipo: 1,
+      },
+    });
   }
 
   handleFromVehiculosSubmit(event) {
@@ -504,13 +533,20 @@ class FormVehiculos extends Component {
 
               <div className="col">
                 <div className="d-flex justify-content-between">
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    onClick={(e) => this.props.eliminar(this.state.registro.id)}
-                  >
-                    <i className="fas fa-trash" />
-                  </button>
+                <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={
+                          /*e =>
+                            this.props.eliminar(this.state.registro.id)*/ (
+                            e
+                          ) => {
+                            this.askDelete(this.state.data.nombre, e);
+                          }
+                        }
+                      >
+                        <i className="fas fa-trash" />
+                      </button>
                   <button type="submit" className="btn btn-primary">
                     <i className="fas fa-save" /> Guardar Cambios
                   </button>
@@ -523,23 +559,14 @@ class FormVehiculos extends Component {
         )}
         <Msg
           visible={this.state.msg.visible}
+          okAceptar={this.okDelete}
           okClose={() =>
             this.setState({ msg: { ...this.state.msg, visible: false } })
           }
-          tipo="0"
+          tipo={this.state.msg.tipo}
         >
           {this.state.msg.body}
         </Msg>
-        <style jsx="true">{`
-          .grid-noveades {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-gap: 10px;
-          }
-          .noveades-span-row-2 {
-            grid-row: span 2 / auto;
-          }
-        `}</style>
       </div>
     );
   }

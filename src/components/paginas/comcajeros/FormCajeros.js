@@ -1,38 +1,52 @@
 import React, { Component } from "react";
+import ddToDms from "../../../gm";
 import { Consumer } from "../../../context";
 import Msg from "../../utiles/Msg";
 
-class FormEstacionamiento extends Component {
+class FormCajeros extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
       id: 0,
       registro: {
-        idlocalidad: 6, //Ciudad de San Luis por defecto
-        nombre: "",
-        domicilio: "",
-        telefono: "",
-        email: "",
-        wed: "",
-        horario: "",
+        idlocalidad: 6,
+        tpo_bco: 0,
+        direccion: "",
         latitud: 0,
         longitud: 0,
       },
       localidades: [],
-      estacionamiento: [],
+      tipo_bco: [],
       msg: {
         visible: false,
         body: "",
         tipo: 0,
       },
     };
-    this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
+    this.setLatLng = this.setLatLng.bind(this);
+    this.setData = this.setData.bind(this);
     this.saveData = this.saveData.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
+    this.handleTpo_bco_loca_Change = this.handleTpo_bco_loca_Change.bind(this);
+
     this.askDelete = this.askDelete.bind(this);
     this.okDelete = this.okDelete.bind(this);
+    /*
+        this.handleSave = this.handleSave.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+        */
   }
+  handleTpo_bco_loca_Change(event) {
+    this.setState({
+      registro: {
+        ...this.state.registro,
+        tpo_bco: event.target.value,
+      },
+    });
+  }
+
   handleLocalidadChange(event) {
     this.setState({
       registro: {
@@ -68,17 +82,26 @@ class FormEstacionamiento extends Component {
   }
   saveData(event) {
     event.preventDefault();
-    fetch(
-      `${process.env.REACT_APP_API_HOST}/updaestacionamiento/${this.state.id}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: "asdssffsdff",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(this.state.registro),
-      }
-    )
+
+    const data = new FormData();
+
+    data.append("idlocalidad", this.state.registro.idlocalidad);
+    data.append("tpo_bco", this.state.registro.tpo_bco);
+    data.append("domicilio", this.state.registro.domicilio);
+    data.append("latitud", this.state.registro.latitud);
+    data.append("longitud", this.state.registro.longitud);
+
+    data.forEach((e) => {
+      console.log(e);
+    });
+
+    fetch(`${process.env.REACT_APP_API_HOST}/upcajero/${this.state.id}`, {
+      method: "POST",
+      headers: {
+        Authorization: "",
+      },
+      body: data,
+    })
       .then((res) => res.json())
       .then(
         (result) => {
@@ -106,19 +129,48 @@ class FormEstacionamiento extends Component {
         }
       );
   }
-
-  handleInputChange(event) {
-    const target = event.target.name;
-    const value =
-      event.target.type === "checkbox"
-        ? event.target.checked
-        : event.target.value;
+ 
+  setLatLng() {
+    let LatLng = ddToDms(
+      this.state.registro.latitud,
+      this.state.registro.longitud
+    );
     this.setState({
       registro: {
         ...this.state.registro,
-        [target]: value,
+        latitudg: LatLng.lat,
+        longitudg: LatLng.lng,
       },
     });
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState(
+      {
+        registro: {
+          ...this.state.registro,
+          [name]: value,
+        },
+      },
+      () => {
+        if (name === "latitud" || name === "longitud") {
+          let grados = ddToDms(
+            this.state.registro.latitud,
+            this.state.registro.longitud
+          );
+          this.setState({
+            registro: {
+              ...this.state.registro,
+              latitudg: grados.lat,
+              longitudg: grados.lng,
+            },
+          });
+        }
+      }
+    );
   }
 
   setData() {
@@ -127,18 +179,16 @@ class FormEstacionamiento extends Component {
       {
         id: this.props.id,
         localidades: this.props.localidades,
+        tipo_bco: this.props.tipo_bco,
       },
       () => {
-        fetch(
-          `${process.env.REACT_APP_API_HOST}/estacionamiento/${this.state.id}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: token,
-              //"Content-Type": "application/json"
-            },
-          }
-        )
+        fetch(`${process.env.REACT_APP_API_HOST}/cajero/${this.state.id}`, {
+          method: "GET",
+          headers: {
+            Authorization: token,
+            //"Content-Type": "application/json"
+          },
+        })
           .then((res) => res.json())
           .then(
             (result) => {
@@ -186,7 +236,44 @@ class FormEstacionamiento extends Component {
                     localidades: result.data.registros,
                   });
                 } else {
-                  console.log("No hay registro: " + this.state.id);
+                  console.log("No hay registros: " + this.state.id);
+                }
+              } else {
+                this.setState({
+                  msg: {
+                    visible: true,
+                    body: result.errMsg,
+                  },
+                });
+              }
+            },
+            (error) => {
+              //???
+              this.setState({
+                msg: {
+                  visible: true,
+                  body: error,
+                },
+              });
+            }
+          );
+        fetch(`${process.env.REACT_APP_API_HOST}/getbancos`, {
+          method: "GET",
+          headers: {
+            Authorization: token,
+            //"Content-Type": "application/json"
+          },
+        })
+          .then((res) => res.json())
+          .then(
+            (result) => {
+              if (!result.err) {
+                if (parseInt(result.data.count, 10) > 0) {
+                  this.setState({
+                    tipo_bco: result.data.registros,
+                  });
+                } else {
+                  console.log("No hay registros: " + this.state.id);
                 }
               } else {
                 this.setState({
@@ -210,6 +297,7 @@ class FormEstacionamiento extends Component {
       }
     );
   }
+
   componentDidMount() {
     this.setData();
   }
@@ -221,51 +309,30 @@ class FormEstacionamiento extends Component {
   }
 
   render() {
+    const tipo_bco = this.state.tipo_bco.map((tipo_banco) => {
+      return (
+        <option key={`tp-${tipo_banco.id}`} value={tipo_banco.id}>
+          {tipo_banco.nombre}
+        </option>
+      );
+    });
     const localidades = this.state.localidades.map((localidad) => {
       return (
         <option key={`loc-${localidad.id}`} value={localidad.id}>
-          {localidad.nombre}
+          {localidad.nombre.toUpperCase()}
         </option>
       );
     });
     return (
       <React.Fragment>
-        {this.state.loading ? (
+        {this.state.isLoaded ? (
           <h1>Cargando...</h1>
         ) : (
-          <form method="post" onSubmit={this.saveData} id="frm-novedades">
+          <form method="post" onSubmit={this.saveData} id="frm-cajeros">
             <div className="row border p-2 mb-3">
               <div className="col">
                 <div className="row">
-                  <div className="col">
-                    <div className="form-group">
-                      <label htmlFor="nombre">Nombre</label>
-                      <input
-                        type="text"
-                        name="nombre"
-                        id="nombre"
-                        className="form-control"
-                        value={this.state.registro.nombre}
-                        onChange={this.handleInputChange}
-                        maxLength="50"
-                      />
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="form-group">
-                      <label htmlFor="domicilio">Direccion</label>
-                      <input
-                        type="text"
-                        name="domicilio"
-                        id="domicilio"
-                        className="form-control"
-                        value={this.state.registro.domicilio}
-                        onChange={this.handleInputChange}
-                        maxLength="99"
-                      />
-                    </div>
-                  </div>
-                  <div className="col">
+                  <div className="col-sm-12 col-md-6 m-auto">
                     <div className="form-group">
                       <label htmlFor="idlocalidad">Localidad</label>
                       <select
@@ -279,66 +346,36 @@ class FormEstacionamiento extends Component {
                       </select>
                     </div>
                   </div>
-                </div>
-                <div className="row">
-                  <div className="col">
+                  <div className="col-sm-12 col-md-6 m-auto">
                     <div className="form-group">
-                      <label htmlFor="telefono">Telefono</label>
-                      <input
-                        type="text"
-                        name="telefono"
-                        id="telefono"
+                      <label htmlFor="tpo_bco">Bancos </label>
+                      <select
+                        name="tpo_bco"
+                        id="tpo_bco"
                         className="form-control"
-                        value={this.state.registro.telefono}
-                        onChange={this.handleInputChange}
-                        maxLength="99"
-                      />
+                        value={this.state.registro.tpo_bco}
+                        onChange={this.handleTpo_bco_loca_Change}
+                      >
+                        {tipo_bco}
+                      </select>
                     </div>
                   </div>
-                  <div className="col">
+                  <div className="col-sm-12 col-md-6 m-auto">
                     <div className="form-group">
-                      <label htmlFor="email">Email</label>
+                      <label htmlFor="domicilio">Domicilio</label>
                       <input
                         type="text"
-                        name="email"
-                        id="email"
+                        name="domicilio"
+                        id="domicilio"
                         className="form-control"
-                        value={this.state.registro.email}
+                        value={this.state.registro.domicilio}
                         onChange={this.handleInputChange}
                       />
                     </div>
                   </div>
-                  <div className="col">
+                  <div className="col-sm-12 col-md-3 m-auto">
                     <div className="form-group">
-                      <label htmlFor="web">Web</label>
-                      <input
-                        type="text"
-                        name="web"
-                        id="web"
-                        className="form-control"
-                        value={this.state.registro.web}
-                        onChange={this.handleInputChange}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col">
-                    <div className="form-group">
-                      <label htmlFor="horario">Horario</label>
-                      <input
-                        type="text"
-                        name="horario"
-                        id="horario"
-                        className="form-control"
-                        value={this.state.registro.horario}
-                        onChange={this.handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="form-group">
-                      <label htmlFor="titular">Latitud</label>
+                      <label htmlFor="latitud">Latitud</label>
                       <input
                         type="text"
                         name="latitud"
@@ -349,9 +386,9 @@ class FormEstacionamiento extends Component {
                       />
                     </div>
                   </div>
-                  <div className="col">
+                  <div className="col-sm-12 col-md-3 m-auto">
                     <div className="form-group">
-                      <label htmlFor="vencimiento">Longitud</label>
+                      <label htmlFor="longitud">Longitud</label>
                       <input
                         type="text"
                         name="longitud"
@@ -372,7 +409,7 @@ class FormEstacionamiento extends Component {
                         className="btn btn-danger"
                         onClick={
                           /*e =>
-                            this.props.eliminar(this.state.registro.id)*/ (
+                          this.props.eliminar(this.state.registro.id)*/ (
                             e
                           ) => {
                             this.askDelete(this.state.registro.nombre, e);
@@ -396,9 +433,7 @@ class FormEstacionamiento extends Component {
           visible={this.state.msg.visible}
           okAceptar={this.okDelete}
           okClose={() =>
-            this.setState({
-              msg: { ...this.state.msg, visible: false, tipo: 0 },
-            })
+            this.setState({ msg: { ...this.state.msg, visible: false } })
           }
           tipo={this.state.msg.tipo}
         >
@@ -408,6 +443,5 @@ class FormEstacionamiento extends Component {
     );
   }
 }
-FormEstacionamiento.contextType = Consumer;
-
-export default FormEstacionamiento;
+FormCajeros.contextType = Consumer;
+export default FormCajeros;

@@ -10,7 +10,7 @@ class Vehiculos extends Component {
     this.state = {
       loading: true,
       data: {
-        idvehiculo:1,
+        idvehiculo:0,
         idlocalidad: 0,
         nombre: "",
         domicilio: "",
@@ -60,7 +60,7 @@ class Vehiculos extends Component {
   }
 
   eliminarElemento(id) {
-    fetch(`${process.env.REACT_APP_API_HOST}/delVehiculo/${id}`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/delvehiculo/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: "asdssffsdff",

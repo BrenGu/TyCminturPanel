@@ -45,7 +45,6 @@ class FormGaleriaLocalidad extends Component {
       noresult: ""
     };
     this.setData = this.setData.bind(this);
-    //this.setTags = this.setTags.bind(this);
     this.getTags = this.getTags.bind(this);
     this.getCiudades = this.getCiudades.bind(this);
     this.handleImgChange = this.handleImgChange.bind(this);
@@ -105,7 +104,7 @@ class FormGaleriaLocalidad extends Component {
         return d;
       });
       //Si todos los tags estan ocultos
-      if(cont == this.state.tags.data.length){
+      if(cont === this.state.tags.data.length){
         this.setState({
           noresult: "Sin resultados...",
         });
@@ -178,20 +177,24 @@ class FormGaleriaLocalidad extends Component {
           },
         }
       )
-        .then((res) => {
-          res.json().then((data) => {
+        .then((res) => res.json())
+        .then(
+          (data) => {
             this.setState({
               registro: {
                 ...this.state.registro,
                 idloc: data.data.registros[0].id,
               },
               localidadSelected: data.data.registros[0].id,
-            });
+            }, () => {this.saveData(event)});
             //console.log("Localidad obtenida idLoc: " + this.state.registro.idloc);
             //console.log("Localidad obtenida selected: " + this.state.localidadSelected);
-            this.saveData(event);
-          });
-        })
+            //this.saveData(event);
+          },
+          (error) => {
+            console.log(error);
+          }
+        )
         .catch((err) => {
           this.setState({
             MsgVisible: true,
@@ -203,21 +206,32 @@ class FormGaleriaLocalidad extends Component {
 
   saveData(event) {
     event.preventDefault();
-
+    console.log("Soy save data")
     const formData = new FormData();
-    //console.log(this.state.registro);
 
     Object.keys(this.state.registro).forEach((key) =>
       formData.append(key, this.state.registro[key])
     );
 
+    //ID Tags concatenados
     let concatTags = this.state.tagsSelected.toString();
     formData.set("tags", concatTags);
+
+   
+
     //Imágen
     let imagen = document.getElementById(`file-1-${this.state.registro.id}`)
       .files[0];
+
     if (imagen) {//Si la imagen fue modificada
       formData.append("imagen", imagen, imagen.name);
+    }
+
+    for (let [name, value] of formData) {
+      console.log(`${name} = ${value}`); // key1 = value1, luego key2 = value2
+      // if(name == "imagen"){
+      //   console.log(value.src)
+      //}
     }
 
     //Verificar tamaño de las imágenes no mas de 4MB
@@ -233,9 +247,6 @@ class FormGaleriaLocalidad extends Component {
         return false;
       }
     }
-    // for (let [name, value] of formData) {
-    //   console.log(`${name} = ${value}`); // key1 = value1, luego key2 = value2
-    // }
 
     //Guardar los cambios
     let token = this.context.token;
@@ -475,8 +486,25 @@ class FormGaleriaLocalidad extends Component {
     reader.onload = function(e) {
       let imagen = document.getElementById(id);
       imagen.setAttribute("src", e.target.result);
+
     };
+      //console.log(e.target.result)
+
+    //   this.setState({
+    //     registro:{
+    //       ...this.state.registro,
+    //       imagen: imagen.nombre,
+    //     }
+    //   })
+    // };
     reader.readAsDataURL(event.target.files[0]);
+    // console.log(disparador);
+    // console.log(id);
+
+    
+
+    //console.log(this.state.registro.imagen);
+
   }
 
   componentDidMount() {

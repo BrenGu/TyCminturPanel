@@ -3,7 +3,7 @@ import { Form } from "reactstrap";
 //import { Consumer } from "../../context";
 import Msg from "../utiles/Msg";
 import FormGaleriaLocalidad from "./comgalerialocalidad/FormGaleriaLocalidad";
-//import { Helmet } from "react-helmet";
+import TagPopup from "./comgalerialocalidad/TagPopup";
 
 class GaleriaLocalidad extends Component {
   constructor(props) {
@@ -51,59 +51,60 @@ class GaleriaLocalidad extends Component {
     this.handleTagClick = this.handleTagClick.bind(this);
     this.handleLocalidadChange = this.handleLocalidadChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
-    this.addNewTag = this.addNewTag.bind(this);
+    //this.addNewTag = this.addNewTag.bind(this);
     this.handleBusquedaChange = this.handleBusquedaChange.bind(this);
     this.eliminarFoto = this.eliminarFoto.bind(this);
     //this.handleBuscadorTagChange = this.handleBuscadorTagChange.bind(this);
+    this.tagClose = this.tagClose.bind(this);
   }
 
+  //Elimitar una foto de la galeria
   eliminarFoto(id) {
-    this.setState(
-      {
-        loading: true,
+    //console.log("Id a eliminar: " + id)
+
+    fetch(`${process.env.REACT_APP_API_HOST}/delfotoloc/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: "",
       },
-      () => {
-        fetch(`${process.env.REACT_APP_API_HOST}/delfotoloc/${id}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: "",
-          },
-        })
-          .then((res) => res.json())
-          .then(
-            (result) => {
-              if (!result.err) {
-                this.setState(
-                  {
-                    msg: {
-                      visible: true,
-                      body: "Los datos se eliminaron correctamente.",
-                    },
-                  },
-                  () => {
-                    this.getData();
-                  }
-                );
-              } else {
-                this.setState({
-                  msg: {
-                    visible: true,
-                    body: result.errMsgs,
-                  },
-                });
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (!result.err) {
+            this.setState(
+              {
+                msg: {
+                  visible: true,
+                  body: "Los datos se eliminaron correctamente.",
+                },
+              },
+              () => {
+                this.getData();
+                this.getFotos();
+                this.getTags();
               }
-            },
-            (error) => {
-              //???
-              console.log(error);
-            }
-          );
-      }
-    );
+            );
+          } else {
+            this.setState({
+              msg: {
+                visible: true,
+                body: result.errMsgs,
+              },
+            });
+          }
+        },
+        (error) => {
+          //???
+          console.log(error);
+        }
+      );
+    //}
+    //);
   }
 
   getFotos() {
-    fetch(`${process.env.REACT_APP_API_HOST}/listfotos/30`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/listfotos/12`, {
       method: "GET",
       headers: {
         Authorization: "",
@@ -219,6 +220,7 @@ class GaleriaLocalidad extends Component {
   }
   //Guarda id de localidadad selected
   handleLocalidadChange(event) {
+    event.preventDefault();
     this.setState({
       ciudadSelected: event.target.value,
     });
@@ -228,12 +230,10 @@ class GaleriaLocalidad extends Component {
     //this.handleValue(event.target.value);
     //let cont = 0;
     //console.log("BusquedaChange");
+    event.preventDefault();
+    //console.log(this.state.filtro);
     let valor = "";
-    if (event) {
-      valor = event.target.value;
-    } else {
-      valor = "";
-    }
+    if (event) valor = event.target.value;
 
     this.setState({ filtro: valor }, () => {
       var copy = Object.assign([], this.state.tags.data);
@@ -248,14 +248,14 @@ class GaleriaLocalidad extends Component {
         return d;
       });
       //Si todos los tags estan ocultos
-      if(cont == this.state.tags.data.length){
-        document.getElementById("addtag").disabled = false;
+      if (cont == this.state.tags.data.length) {
+        //document.getElementById("addtag").disabled = false;
         this.setState({
-          noresult: "Sin resultados... Agreguelo a la lista a través el botón \"Crear Tag\".",
+          noresult:
+            'Sin resultados... Agreguelo a la lista a través el botón "Crear Tag".',
         });
-      }
-      else{
-        document.getElementById("addtag").disabled = true;
+      } else {
+        //document.getElementById("addtag").disabled = true;
         this.setState({
           noresult: "",
         });
@@ -298,6 +298,7 @@ class GaleriaLocalidad extends Component {
   // }
 
   handleImgChange(event) {
+    event.preventDefault();
     let id = "img-" + event.target.id;
     var reader = new FileReader();
     reader.onload = function(e) {
@@ -308,52 +309,80 @@ class GaleriaLocalidad extends Component {
     //console.log(event.target.id);
   }
 
-  addNewTag(event) {
-    event.preventDefault();
-    const data = new FormData();
-    data.append("nombre", this.state.filtro);
+  // addNewTag() {
+  //   //event.preventDefault();
+  //   console.log("newTag");
 
-    fetch(`${process.env.REACT_APP_API_HOST}/addtag`, {
-      method: "POST",
-      headers: {
-        Authorization: "",
-      },
-      body: data,
-    })
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          if (!result.err) {
-            this.setState(
-              {
-                msg: {
-                  visible: true,
-                  body: "Tag agregado correctamente",
-                },
-              },
-              () => {
-                this.getTags();
-              }
-            );
-          } else {
-            this.setState({
-              msg: {
-                visible: true,
-                body: result.errMsgs,
-              },
-            });
-          }
-        },
-        (error) => {
-          //???
-          console.log(error);
-        }
-      );
+  //   let newTag = this.state.filtro;
+  //   // const data = new FormData();
+  //   // data.append("nombre", newTag);
+  //   let data = {
+  //     nombre: newTag,
+  //   };
+  //   console.log(`${process.env.REACT_APP_API_HOST}/addtag`);
+  //   fetch(`${process.env.REACT_APP_API_HOST}/addtag`, {
+  //     method: "POST",
+  //     headers: {
+  //       Authorization: "asdssffsdff",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(data),
+  //   })
+  //     .then((res) => res.json())
+  //     .then(
+  //       (result) => {
+  //         if (!result.err) {
+  //           this.setState(
+  //             {
+  //               msg: {
+  //                 visible: true,
+  //                 body: "Tag agregado correctamente",
+  //               },
+  //             },
+  //             () => {
+  //               this.getTags();
+  //             }
+  //           );
+  //         } else {
+  //           this.setState({
+  //             msg: {
+  //               visible: true,
+  //               body: result.errMsgs,
+  //             },
+  //           });
+  //         }
+  //       },
+  //       (error) => {
+  //         //???
+  //         console.log(error);
+  //       }
+  //     );
 
+  //   this.getTags();
+  //   // this.setState({
+  //   //   filtro: "",
+  //   // });
+  // }
+
+  tagClose(guardo) {
+    console.log(guardo);
     this.getTags();
-    this.setState({
-      filtro: "",
-    });
+    // if(guardo === "OK"){
+    //   this.setState(
+    //     {
+    //       msg: {
+    //         visible: true,
+    //         body:  "Tag guardado correctamente",
+    //       },
+    //     },
+    //     () => {
+    //       this.getTags();
+    //     }
+    //   );
+    // }
+    // else{
+    //   //console.log(guardo)
+    // }
   }
 
   handleTagClick(id) {
@@ -379,8 +408,8 @@ class GaleriaLocalidad extends Component {
     //console.log(this.state.tagsSelected);
   }
 
-  handleSave(event) {
-    event.preventDefault();
+  handleSave() {
+    //event.preventDefault();
     const data = new FormData();
 
     let concatTags = this.state.tagsSelected.toString();
@@ -389,11 +418,10 @@ class GaleriaLocalidad extends Component {
 
     if (imagen) {
       data.append("imagen", imagen, imagen.name);
+    } else {
+      data.append("imagen", "default.jpg");
     }
-    else {
-      data.append("imagen", "default.jpg")
-    }
-    
+
     data.append("idloc", this.state.departamentoSelected);
     data.append("idciudad", this.state.ciudadSelected);
     data.append("tags", concatTags);
@@ -442,10 +470,10 @@ class GaleriaLocalidad extends Component {
       );
   }
 
-  handleFromGalLocSubmit(event) {
-    event.preventDefault();
+  handleFromGalLocSubmit() {
+    //event.preventDefault();
 
-    if(this.state.ciudadSelected){
+    if (this.state.ciudadSelected) {
       new Promise((resolve, reject) => {
         fetch(
           `${process.env.REACT_APP_API_HOST}/departamentos/ciudad/${
@@ -464,7 +492,7 @@ class GaleriaLocalidad extends Component {
                 departamentoSelected: data.data.registros[0].id,
               });
               //console.log(data);
-              this.handleSave(event);
+              this.handleSave();
             });
           })
           .catch((err) => {
@@ -474,13 +502,13 @@ class GaleriaLocalidad extends Component {
             });
           });
       });
-    }
-    else{
+    } else {
       this.setState({
-       msg: {
-        visible: true,
-        body: "Primero debe seleccionar la localidad a la que pertenece la foto",
-       },
+        msg: {
+          visible: true,
+          body:
+            "Primero debe seleccionar la localidad a la que pertenece la foto",
+        },
       });
     }
   }
@@ -492,7 +520,7 @@ class GaleriaLocalidad extends Component {
       },
       ciudadSelected: 0,
       tagsSelected: [],
-      filtro: ""
+      filtro: "",
     });
     document.getElementById("frm-foto").reset();
     document
@@ -503,7 +531,7 @@ class GaleriaLocalidad extends Component {
           process.env.REACT_APP_API_DIRECTORY_GALERIA_LOCALIDADES
         }/default.jpg`
       );
-      this.getTags();
+    this.getTags();
   }
 
   componentDidMount() {
@@ -515,11 +543,11 @@ class GaleriaLocalidad extends Component {
   render() {
     const lista_galeria = this.state.fotos.map((foto) => {
       return (
-      <FormGaleriaLocalidad
-      key={`foto-${foto.id}`}
-      id={foto.id}
-      eliminar={this.eliminarFoto}
-      />
+        <FormGaleriaLocalidad
+          key={`foto-${foto.id}`}
+          id={foto.id}
+          eliminar={this.eliminarFoto}
+        />
       );
     });
 
@@ -530,20 +558,6 @@ class GaleriaLocalidad extends Component {
         </option>
       );
     });
-
-    // const tags = this.state.tags.data.map((tag) => {
-    //   return (
-    //     <span
-    //       className={`spanloc ${
-    //         tag.id === this.state.tagsSelected ? "active" : ""
-    //       } `}
-    //       key={`tag-${tag.id}`}
-    //       onClick={(e) => this.handleTagClick(tag.id)}
-    //     >
-    //       #{tag.nombre}{" "}
-    //     </span>
-    //   );
-    // });
 
     const filtro = this.state.tags.data.map((tag) => {
       return (
@@ -565,16 +579,13 @@ class GaleriaLocalidad extends Component {
           <div>Cargando</div>
         ) : (
           <React.Fragment>
-            {/* <Helmet>
-            <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-            </Helmet> */}
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
               <i className="fas fa-newspaper" /> Galeria de Imagenes por
               Localidad
             </h4>
             <form
-              method="post"
-              onSubmit={this.handleFromGalLocSubmit}
+              //method="post"
+              //onSubmit={this.handleFromGalLocSubmit}
               id="frm-foto"
             >
               <div className="grid-galerialocalidad">
@@ -607,17 +618,19 @@ class GaleriaLocalidad extends Component {
                               value={this.state.filtro}
                               onChange={this.handleBusquedaChange}
                               autoComplete="off"
+                              placeholder="Busqueda de tags...."
                             />
                           </div>
                           <div className="col">
-                            <button
+                            {/* <button
                               id="addtag"
                               className="btn btn-primary btntag"
                               disabled
                               onClick={this.addNewTag}
                             >
                               <i className="fas fa-plus" /> Crear tag
-                            </button>
+                            </button> */}
+                            <TagPopup onClose={this.tagClose} />
                           </div>
                         </div>
                       </div>
@@ -677,8 +690,12 @@ class GaleriaLocalidad extends Component {
                     >
                       <i className="far fa-window-restore" />
                     </button>
-                    <button type="submit" className="btn btn-primary">
-                      <i className="fas fa-plus" /> Agregar Imagen
+                    <button
+                      type="button"
+                      onClick={this.handleFromGalLocSubmit}
+                      className="btn btn-primary"
+                    >
+                      {/* <i className="fas fa-plus" />*/} <i className="fas fa-save" /> Guardar Imagen
                     </button>
                   </div>
                 </div>

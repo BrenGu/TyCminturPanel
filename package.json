@@ -9,6 +9,7 @@
     "draft-js-export-html": "^1.4.1",
     "draft-js-import-html": "^1.4.1",
     "react": "^16.14.0",
+    "react-bootstrap": "^2.7.4",
     "react-dom": "^16.14.0",
     "react-export-excel": "^0.5.3",
     "react-router-dom": "^4.3.1",

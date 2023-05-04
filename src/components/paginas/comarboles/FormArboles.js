@@ -93,9 +93,6 @@ class FormArboles extends Component {
       formData.append(key, this.state.registro[key])
     );
 
-    for (let [name, value] of formData) {
-      console.log(`${name} = ${value}`); // key1 = value1, luego key2 = value2
-    }
     //Imágenes
     let img_uno = document.getElementById(`file-1-${this.state.registro.id}`)
       .files[0];
@@ -172,6 +169,10 @@ class FormArboles extends Component {
         return false;
       }
     }
+
+    // for (let [name, value] of formData) {
+    //   console.log(`${name} = ${value}`); // key1 = value1, luego key2 = value2
+    // }
 
     //Guardar los cambios
     let token = this.context.token;

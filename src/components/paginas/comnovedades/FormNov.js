@@ -130,6 +130,10 @@ class FormNov extends Component {
     if (img_cinco) {
       formData.append("img-cinco", img_cinco, img_cinco.name);
     }
+
+    for (let [name, value] of formData) {
+      console.log(`${name} = ${value}`); 
+    }
     
     /*
         for(var pair of formData.entries()) {

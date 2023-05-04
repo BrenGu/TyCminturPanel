@@ -78,7 +78,6 @@ class FormGaleriaLocalidad extends Component {
         }
       });
     }
-   //console.log("Activo: " + this.state.registro.activo);
   }
 
   handleBusquedaChange = (event) => {
@@ -206,7 +205,7 @@ class FormGaleriaLocalidad extends Component {
 
   saveData(event) {
     event.preventDefault();
-    console.log("Soy save data")
+
     const formData = new FormData();
 
     Object.keys(this.state.registro).forEach((key) =>
@@ -215,33 +214,24 @@ class FormGaleriaLocalidad extends Component {
 
     //ID Tags concatenados
     let concatTags = this.state.tagsSelected.toString();
-    formData.set("tags", concatTags);
-
-   
+    formData.append("tags", concatTags);
 
     //Imágen
-    let imagen = document.getElementById(`file-1-${this.state.registro.id}`)
+    let img = document.getElementById(`file-1-${this.state.registro.id}`)
       .files[0];
 
-    if (imagen) {//Si la imagen fue modificada
-      formData.append("imagen", imagen, imagen.name);
-    }
-
-    for (let [name, value] of formData) {
-      console.log(`${name} = ${value}`); // key1 = value1, luego key2 = value2
-      // if(name == "imagen"){
-      //   console.log(value.src)
-      //}
+    if (img) {//Si la imagen fue modificada
+      formData.append("img", img, img.name);
     }
 
     //Verificar tamaño de las imágenes no mas de 4MB
-    if (formData.has("imagen")) {
-      if (formData.get("imagen").size > 500000) {
+    if (formData.has("img")) {
+      if (formData.get("img").size > 500000) {
         this.setState({
           msg: {
             tipo: 0,
             visible: true,
-            body: "El tamaño de la primer imágen supera los 4MB.",
+            body: "El tamaño de la imágen supera los 4MB.",
           },
         });
         return false;
@@ -249,12 +239,12 @@ class FormGaleriaLocalidad extends Component {
     }
 
     //Guardar los cambios
-    let token = this.context.token;
-    
+
     fetch(`${process.env.REACT_APP_API_HOST}/altfotoloc/${this.state.id}`, {
       method: "POST",
       headers: {
-        Authorization: token,
+        Authorization: "",
+        "Content-Type": 'application/json'
       },
       body: formData,
     })
@@ -278,9 +268,6 @@ class FormGaleriaLocalidad extends Component {
                 visible: true,
                 body: result.errMsgs,
               },
-            },
-            () => {
-              //this.setData();
             }
             );
           }
@@ -417,13 +404,13 @@ class FormGaleriaLocalidad extends Component {
       },
 
       () => {
-        fetch(
-          `${process.env.REACT_APP_API_HOST}/galerialocalidad/${this.state.id}`,
+        console.log("Soy setData con: " + this.state.id);
+        fetch(`${process.env.REACT_APP_API_HOST}/galeria_localidad/${this.state.id}`,
           {
             method: "GET",
             headers: {
               Authorization: token,
-              //"Content-Type": "application/json"
+              "Content-Type" : "application/json",
             },
           }
         )
@@ -480,31 +467,16 @@ class FormGaleriaLocalidad extends Component {
   }
 
   handleImgChange(event) {
+
     let disparador = event.target.id.split("-");
     let id = `img-${disparador[1]}-${disparador[2]}`;
     var reader = new FileReader();
     reader.onload = function(e) {
       let imagen = document.getElementById(id);
       imagen.setAttribute("src", e.target.result);
-
     };
-      //console.log(e.target.result)
 
-    //   this.setState({
-    //     registro:{
-    //       ...this.state.registro,
-    //       imagen: imagen.nombre,
-    //     }
-    //   })
-    // };
     reader.readAsDataURL(event.target.files[0]);
-    // console.log(disparador);
-    // console.log(id);
-
-    
-
-    //console.log(this.state.registro.imagen);
-
   }
 
   componentDidMount() {
@@ -553,7 +525,7 @@ class FormGaleriaLocalidad extends Component {
         ) : (
           <form
             method="post"
-            onSubmit={this.handleSaveData}
+            onSubmit={this.saveData}
             id="frm-galerialocalidad"
           >
             <div className="row border p-2 mb-3">

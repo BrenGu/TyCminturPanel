@@ -3,7 +3,7 @@ import { Form } from "reactstrap";
 //import { Consumer } from "../../context";
 import Msg from "../utiles/Msg";
 import FormGaleriaLocalidad from "./comgalerialocalidad/FormGaleriaLocalidad";
-import TagPopup from "./comgalerialocalidad/TagPopup";
+//import TagPopup from "./comgalerialocalidad/TagPopup";
 
 class GaleriaLocalidad extends Component {
   constructor(props) {
@@ -630,7 +630,7 @@ class GaleriaLocalidad extends Component {
                             >
                               <i className="fas fa-plus" /> Crear tag
                             </button> */}
-                            <TagPopup onClose={this.tagClose} />
+                           {/* <TagPopup onClose={this.tagClose} /> */}
                           </div>
                         </div>
                       </div>

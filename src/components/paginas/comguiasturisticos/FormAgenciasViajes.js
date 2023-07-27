@@ -373,6 +373,18 @@ class FormAgenciasViajes extends Component {
                           onChange={this.handleInputChange}
                         />
                         </div>
+                     </div> <div className="col-sm-12 col-md-3">
+                      <div className="form-group">
+                        <label htmlFor="web">Representante</label>
+                        <input
+                          type="text"
+                          name="web"
+                          id="web"
+                          className="form-control"
+                          value={this.state.registro.representante}
+                          onChange={this.handleInputChange}
+                        />
+                        </div>
                      </div>
                     
                 </div>

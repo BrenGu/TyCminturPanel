@@ -250,17 +250,14 @@ class guiasdeturismo extends Component {
   aplicarFiltro() {
     let {nombreGuia} = this.state;
     let filtrado = this.state.guias.filter((value) => {
-        let respuesta = true;
-      
+        let respuesta = true;      
         if(nombreGuia.length) {
             if(value.nombre.toLowerCase().search(nombreGuia.toLowerCase()) === -1) {
                 respuesta = false;
             }
-        }
-    
+        }    
         return respuesta;
     });
-
     this.setState({
         filtro: filtrado
     });
@@ -558,8 +555,7 @@ class guiasdeturismo extends Component {
                           onChange={this.handleInputChange}
                         />
                       </div>
-                    </div>
-            
+                    </div>            
                   </div>
                 </div>
                 <div>
@@ -682,7 +678,6 @@ class guiasdeturismo extends Component {
             
             : ""
             }
-
             <div className="form-group">
                 <label htmlFor="nombreGuia">Buscar por nombre de guia</label>
                 <input style={{width: "50%"}} type="text" name="nombreGuia" id="nombreGuia" className="form-control" value={this.state.nombreGuia} onChange={this.handleBusquedaChange} autoComplete="off" />

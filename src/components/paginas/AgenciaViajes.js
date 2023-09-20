@@ -17,9 +17,9 @@ class agenciaviajes extends Component {
         mail: "",
         web: "",
         representante: "",
-        activo: "0",
-        adhiereDosep: "0",
-        adhiereCovid: "0",
+        activo: "1",
+        adhiereDosep: "1",
+        adhiereCovid: "1",
       },
       novedades: [],
       localidades: [],
@@ -155,7 +155,7 @@ class agenciaviajes extends Component {
         domicilio: "",
         telefono: "",
         mail: "",
-        activo: "",
+
         web: "",
         activo: "",
         representante: "",
@@ -440,6 +440,7 @@ class agenciaviajes extends Component {
                         type="checkbox"
                         value={this.state.novedad.adhiereDosep}
                         onChange={this.handleInputChange}
+                        defaultChecked={this.state.novedad.adhiereDosep} // Establece el valor "defaultChecked"
                       />
                       <label
                         className="form-check-label"
@@ -458,6 +459,7 @@ class agenciaviajes extends Component {
                         type="checkbox"
                         value={this.state.novedad.adhiereCovid}
                         onChange={this.handleInputChange}
+                        defaultChecked={this.state.novedad.adhiereCovid} // Establece el valor "defaultChecked"
                       />
                       <label
                         className="form-check-label"
@@ -471,11 +473,12 @@ class agenciaviajes extends Component {
                     <div className="form-check">
                       <input
                         name="activo"
-                        id="adhiereCovid"
+                        id="activo"
                         className="form-check-input"
                         type="checkbox"
-                        value={this.state.novedad.adhiereCovid}
+                        value={this.state.novedad.activo}
                         onChange={this.handleInputChange}
+                        defaultChecked={this.state.novedad.activo} // Establece el valor "defaultChecked"
                       />
                       <label className="form-check-label" htmlFor="activo">
                         Activo?

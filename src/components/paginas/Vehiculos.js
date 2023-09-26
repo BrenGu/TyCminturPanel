@@ -17,6 +17,7 @@ class Vehiculos extends Component {
         telefono: "",
         email: "",
         web: "",
+        activo: "1"  ,
         latitud: 0,
         longitud: 0,
       },
@@ -110,7 +111,7 @@ class Vehiculos extends Component {
       },
       loading: true,
     });
-    document.getElementById("frm-cajeros").reset();
+    document.getElementById("frm-vehiculo").reset();
   }
 
   handleFormVehiculosSubmit(event) {
@@ -123,6 +124,7 @@ class Vehiculos extends Component {
       telefono: this.state.data.telefono,
       email: this.state.data.email,
       web: this.state.data.web,
+      activo: this.state.data.web,
       latitud: this.state.data.latitud,
       longitud: this.state.data.longitud,
     };
@@ -339,12 +341,12 @@ class Vehiculos extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nuevo Vehiculo
+              <i className="fas fa-car"/> Nuevo Vehiculo Taxi o Remis
             </h4>
             <form
               method="post"
               onSubmit={this.handleFormVehiculosSubmit}
-              id="frm-cajeros"
+              id="frm-vehiculo"
             >
               <div className="row">
                 <div className="col-sm-12 col-md-6 m-auto">
@@ -468,9 +470,25 @@ class Vehiculos extends Component {
                 </div>
               </div>
               <div className="row ">
+              <div className="col">
+                    <div className="form-check">
+                      <input
+                        name="activo"
+                        id="activo"
+                        className="form-check-input"
+                        type="checkbox"
+                        value={this.state.data.activo}
+                        onChange={this.handleInputChange}
+                        defaultChecked={this.state.data.activo} // Establece el valor "defaultChecked"
+                      />
+                      <label className="form-check-label" htmlFor="activo">
+                        Activo?
+                      </label>
+                    </div>
+                  </div>
                 <div className="col">
                   {"<" ? (
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-end">
                       <button
                         type="submit"
                         className="btn btn-primary"

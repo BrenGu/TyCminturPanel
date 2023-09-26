@@ -350,6 +350,7 @@ class FormTirolesas extends Component {
                     </div>
                   </div>                 
                 </div>
+                <br />
                 <div className="row">
                 <div className="col">
                     <div className="form-check">
@@ -380,12 +381,8 @@ class FormTirolesas extends Component {
                       </label>
                     </div>
                   </div>
-
-                   </div>
-                <br />
-                <div className="row">
                   <div className="col">
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-end">
                       {/* <button
                         type="button"
                         className="btn btn-danger"
@@ -402,7 +399,7 @@ class FormTirolesas extends Component {
                       <button type="submit" className="btn btn-primary">
                         <i className="fas fa-save" /> Guardar Cambios
                       </button>
-                    </div>
+                    </div><br/>
                   </div>
                 </div>
               </div>

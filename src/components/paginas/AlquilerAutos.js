@@ -13,6 +13,7 @@ class alquilerautos extends Component {
         direccion:"",
         telefono: "",
         web:"",
+        activo: "1",
         mail: "",
         horario: ""
       },
@@ -88,6 +89,7 @@ class alquilerautos extends Component {
       "direccion": this.state.data.direccion,
       "telefono": this.state.data.telefono,
       "web": this.state.data.web,
+      "activo": this.state.data.activo,
       "mail": this.state.data.mail,
       "horario": this.state.data.horario
     };
@@ -270,7 +272,7 @@ class alquilerautos extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nuevo Alquiler de autos
+              <i className="fas fa-car-side" /> Nuevo Alquiler de autos
             </h4>
             <form
               method="post"
@@ -379,7 +381,23 @@ class alquilerautos extends Component {
                         onChange={this.handleInputChange}
                       />
                     </div>
-                  </div>       
+                  </div>   
+                  <div className="col">
+                    <div className="form-check">
+                      <input
+                        name="activo"
+                        id="activo"
+                        className="form-check-input"
+                        type="checkbox"
+                        value={this.state.data.activo}
+                        onChange={this.handleInputChange}
+                        defaultChecked={this.state.data.activo} // Establece el valor "defaultChecked"
+                      />
+                      <label className="form-check-label" htmlFor="activo">
+                        Activo?
+                      </label>
+                    </div>
+                  </div>    
                 </div>
             </div>
               <div className="row mt-3">

@@ -486,18 +486,17 @@ class FormAgenciasViajes extends Component {
                 <div className="row">
                   <div className="col">
                     <div className="d-flex justify-content-between">
-                      <button
+                      {/* <button
                         type="button"
                         className="btn btn-danger"
                         onClick={
-                          /*e =>
-                          this.props.eliminar(this.state.registro.id)*/ (e) => {
+                         (e) => {
                             this.askDelete(this.state.registro.nombre, e);
                           }
                         }
                       >
                         <i className="fas fa-trash" />
-                      </button>
+                      </button> */}
                       <button type="submit" className="btn btn-primary">
                         <i className="fas fa-save" /> Guardar Cambios
                       </button>

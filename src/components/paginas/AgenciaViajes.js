@@ -155,7 +155,6 @@ class agenciaviajes extends Component {
         domicilio: "",
         telefono: "",
         mail: "",
-
         web: "",
         activo: "",
         representante: "",
@@ -297,7 +296,7 @@ class agenciaviajes extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nueva Agencia de Viajes
+              <i className="fas fa-briefcase" /> Nueva Agencia de Viajes
             </h4>
             <form
               method="post"

@@ -280,7 +280,7 @@ class Tirolesas extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nueva Tirolesa
+              <i className="fas fa-walking" /> Nueva Tirolesa
             </h4>
             <form
               method="post"

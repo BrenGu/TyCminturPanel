@@ -11,9 +11,10 @@ class aeropuertos extends Component {
         idlocalidad: 6, //Ciudad de San Luis por defecto
         nombre: "",
         direccion:"",
+        codigo: "",
         telefono: "",
         web:"",
-        codigo: ""
+        activo: "1"        
       },
       aeropuertos: [],
       localidades: [],
@@ -85,9 +86,10 @@ class aeropuertos extends Component {
       "idlocalidad": this.state.data.idlocalidad,
       "nombre":this.state.data.nombre,
       "direccion": this.state.data.direccion,
+      "codigo": this.state.data.codigo,
       "telefono": this.state.data.telefono,
       "web": this.state.data.web,
-      "codigo": this.state.data.codigo
+      "activo": this.state.data.web,
     };
     
     fetch(`${process.env.REACT_APP_API_HOST}/addaeropuerto`, {
@@ -136,9 +138,10 @@ class aeropuertos extends Component {
         idlocalidad: 6, //Ciudad de San Luis por defecto
         nombre: "",
         direccion:"",
+        codigo: "",
         telefono: "",
         web:"",
-        codigo: ""
+        activo: ""
       },
       loading: true
     });
@@ -267,7 +270,7 @@ class aeropuertos extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nuevo Aeropuerto 
+              <i className="fas fa-plane" /> Nuevo Aeropuerto 
             </h4>
             <form
               method="post"
@@ -367,10 +370,26 @@ class aeropuertos extends Component {
                 </div>
             </div>
               <div className="row mt-3">
+              <div className="col">
+                    <div className="form-check">
+                      <input
+                        name="activo"
+                        id="activo"
+                        className="form-check-input"
+                        type="checkbox"
+                        value={this.state.data.activo}
+                        onChange={this.handleInputChange}
+                        defaultChecked={this.state.data.activo} // Establece el valor "defaultChecked"
+                      />
+                      <label className="form-check-label" htmlFor="activo">
+                        Activo?
+                      </label>
+                    </div>
+                  </div>
                 <div className="col">
                   <div className="d-flex justify-content-between">
                     <button type="button" className="btn btn-warning">
-                      <i className="far fa-window-restore" />
+                      <i className="far fa-window-restore" /> 
                     </button>
                     <button type="submit" className="btn btn-primary">
                       <i className="fas fa-arrow-down" /> Agregar Aeropuerto

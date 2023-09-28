@@ -367,14 +367,42 @@ class FormEstacionamiento extends Component {
                 </div>
                 <br />
                 <div className="row">
+                <div className="col">
+                    <div className="form-check">
+                      {this.state.registro.activo >= 1 ? (
+                        <input
+                          name="activo"
+                          id="activo"
+                          className="form-check-input"
+                          type="checkbox"
+                          value={this.state.registro.activo}
+                          onChange={this.handleInputChange}
+                          checked={
+                            this.state.registro.activo ? "checked" : false
+                          }
+                        />
+                      ) : (
+                        <input
+                          name="activo"
+                          id="activo"
+                          className="form-check-input"
+                          type="checkbox"
+                          value={this.state.registro.activo}
+                          onChange={this.handleInputChange}
+                        />
+                      )}
+                      <label className="form-check-label" htmlFor="activo">
+                        Activo?
+                      </label>
+                    </div>
+                  </div>
                   <div className="col">
-                    <div className="d-flex justify-content-between">
-                      <button
+                    <div className="d-flex justify-content-end">
+                      {/* <button
                         type="button"
                         className="btn btn-danger"
                         onClick={
-                          /*e =>
-                            this.props.eliminar(this.state.registro.id)*/ (
+                         (
                             e
                           ) => {
                             this.askDelete(this.state.registro.nombre, e);
@@ -382,11 +410,11 @@ class FormEstacionamiento extends Component {
                         }
                       >
                         <i className="fas fa-trash" />
-                      </button>
+                      </button> */}
                       <button type="submit" className="btn btn-primary">
                         <i className="fas fa-save" /> Guardar Cambios
                       </button>
-                    </div>
+                    </div><br/>
                   </div>
                 </div>
               </div>

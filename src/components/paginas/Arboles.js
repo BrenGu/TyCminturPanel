@@ -14,6 +14,7 @@ class Arboles extends Component {
         origen: "",
         descripcion: "",
         descripcionHTML: "",
+        activo: "1",
         foto_uno: "default.jpg",
         foto_dos: "default.jpg",
         foto_tres: "default.jpg",
@@ -99,7 +100,7 @@ class Arboles extends Component {
     data.append("origen", this.state.arbol.origen);
     data.append("descripcion", this.state.arbol.descripcion);
     data.append("descripcionHTML", this.state.arbol.descripcionHTML);
-
+    data.append("descripcionHTML", this.state.arbol.activo);
     //Imágenes
     var img_uno = document.getElementById("upl-arb-uno").files[0];
     if (img_uno) {
@@ -165,6 +166,7 @@ class Arboles extends Component {
         nombre_cientifico: "",
         origen: "",
         descripcion: "",
+        activo: "",
         foto_uno: "default.jpg",
         foto_dos: "default.jpg",
         foto_tres: "default.jpg",
@@ -285,7 +287,7 @@ class Arboles extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-newspaper" /> Carga de Árboles
+              <i className="fas fa-tree" /> Carga de Árboles
             </h4>
             <form
               method="post"
@@ -339,6 +341,22 @@ class Arboles extends Component {
                         />
                       </div>
                     </div>
+                    <div className="col">
+                    <div className="form-check">
+                      <input
+                        name="activo"
+                        id="activo"
+                        className="form-check-input"
+                        type="checkbox"
+                        value={this.state.arbol.activo}
+                        onChange={this.handleInputChange}
+                        defaultChecked={this.state.arbol.activo} // Establece el valor "defaultChecked"
+                      />
+                      <label className="form-check-label" htmlFor="activo">
+                        Activo?
+                      </label>
+                    </div>
+                  </div>    
                   </div>
                 </div>
                 {/* End primera columna */}

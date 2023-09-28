@@ -13,6 +13,7 @@ class Tirolesas extends Component {
         direccion:"",
         telefono: "",
         web:"",
+        activo: "1",
         icon: "", 
         url:"",
         titular:"",
@@ -90,6 +91,7 @@ class Tirolesas extends Component {
       "direccion": this.state.data.direccion,
       "telefono": this.state.data.telefono,
       "web": this.state.data.web,
+      "activo": this.state.data.activo,
       "icon":this.state.data.icon,
       "url": this.state.data.url,
       "titular": this.state.data.titular,
@@ -144,6 +146,7 @@ class Tirolesas extends Component {
         direccion:"",
         telefono: "",
         web:"",
+        activo: "",
         icon:"",
         url: "",
         titular:"",
@@ -167,7 +170,7 @@ class Tirolesas extends Component {
   }
 
   getData() {
-    fetch(`${process.env.REACT_APP_API_HOST}/gettirolesas`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/gettirolesasAll`, {
       method: "GET",
       headers: {
         Authorization: ""
@@ -277,7 +280,7 @@ class Tirolesas extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nueva Tirolesa
+              <i className="fas fa-walking" /> Nueva Tirolesa
             </h4>
             <form
               method="post"
@@ -400,7 +403,22 @@ class Tirolesas extends Component {
                         />
                         </div>
                     </div>   
-                             
+                    <div className="col">
+                    <div className="form-check">
+                      <input
+                        name="activo"
+                        id="activo"
+                        className="form-check-input"
+                        type="checkbox"
+                        value={this.state.data.activo}
+                        onChange={this.handleInputChange}
+                        defaultChecked={this.state.data.activo} // Establece el valor "defaultChecked"
+                      />
+                      <label className="form-check-label" htmlFor="activo">
+                        Activo?
+                      </label>
+                    </div>
+                  </div>    
                 </div>
                 
             </div>

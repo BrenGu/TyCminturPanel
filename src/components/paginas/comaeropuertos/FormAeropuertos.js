@@ -232,115 +232,92 @@ class FormAeropuertos extends Component {
         </option>
       );
     });
-    return (
-      <React.Fragment>
-        {this.state.loading ? (
-          <h1>Cargando...</h1>
-        ) : (
-          <form method="post" onSubmit={this.saveData} id="frm-novedades">
+    return <React.Fragment>
+        {this.state.loading ? <h1>
+            Cargando...
+          </h1> : <form method="post" onSubmit={this.saveData} id="frm-novedades">
             <div className="row border p-2 mb-3">
               <div className="col">
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
                       <label htmlFor="nombre">Nombre</label>
-                      <input
-                        type="text"
-                        name="nombre"
-                        id="nombre"
-                        className="form-control"
-                        value={this.state.registro.nombre}
-                        onChange={this.handleInputChange}
-                        maxLength="50"
-                      />
+                      <input type="text" name="nombre" id="nombre" className="form-control" value={this.state.registro.nombre} onChange={this.handleInputChange} maxLength="50" />
                     </div>
                   </div>
                   <div className="col">
                     <div className="form-group">
-                        <label htmlFor="direccion">Direccion</label>
-                        <input
-                          type="text"
-                          name="direccion"
-                          id="direccion"
-                          className="form-control"
-                          value={this.state.registro.direccion}
-                          onChange={this.handleInputChange}
-                          maxLength="99"
-                        />
+                      <label htmlFor="direccion">Direccion</label>
+                      <input type="text" name="direccion" id="direccion" className="form-control" value={this.state.registro.direccion} onChange={this.handleInputChange} maxLength="99" />
                     </div>
                   </div>
                   <div className="col">
-                      <div className="form-group">
-                        <label htmlFor="idlocalidad">Localidad</label>
-                        <select
-                            name="idlocalidad"
-                            id="idlocalidad"
-                            className="form-control"
-                            value={this.state.registro.idlocalidad}
-                            onChange={this.handleLocalidadChange}
-                        >
-                            {localidades}
-                        </select>
-                      </div>
+                    <div className="form-group">
+                      <label htmlFor="idlocalidad">Localidad</label>
+                      <select name="idlocalidad" id="idlocalidad" className="form-control" value={this.state.registro.idlocalidad} onChange={this.handleLocalidadChange}>
+                        {localidades}
+                      </select>
+                    </div>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                        <label htmlFor="codigo">Codigo</label>
-                        <input
-                          type="text"
-                          name="codigo"
-                          id="codigo"
-                          className="form-control"
-                          value={this.state.registro.codigo}
-                          onChange={this.handleInputChange}
-                          maxLength="49"
-                        />
+                      <label htmlFor="codigo">Codigo</label>
+                      <input type="text" name="codigo" id="codigo" className="form-control" value={this.state.registro.codigo} onChange={this.handleInputChange} maxLength="49" />
                     </div>
                   </div>
                   <div className="col">
                     <div className="form-group">
-                        <label htmlFor="telefono">Telefono</label>
-                        <input
-                          type="text"
-                          name="telefono"
-                          id="telefono"
-                          className="form-control"
-                          value={this.state.registro.telefono}
-                          onChange={this.handleInputChange}
-                          maxLength="99"
-                        />
+                      <label htmlFor="telefono">Telefono</label>
+                      <input type="text" name="telefono" id="telefono" className="form-control" value={this.state.registro.telefono} onChange={this.handleInputChange} maxLength="99" />
                     </div>
                   </div>
-                   <div className="col">
+                  <div className="col">
                     <div className="form-group">
-                     <label htmlFor="web">Web</label>
-                      <input
-                        type="text"
-                        name="web"
-                        id="web"
-                        className="form-control"
-                        value={this.state.registro.web}
-                        onChange={this.handleInputChange}
-                      />
+                      <label htmlFor="web">Web</label>
+                      <input type="text" name="web" id="web" className="form-control" value={this.state.registro.web} onChange={this.handleInputChange} />
                     </div>
                   </div>
                 </div>
-                <br></br>
+                <br />
                 <div className="row">
+                <div className="col-4">
+                    <div className="form-check">
+                      {this.state.registro.activo >= 1 ? (
+                        <input
+                          name="activo"
+                          id="activo"
+                          className="form-check-input"
+                          type="checkbox"
+                          value={this.state.registro.activo}
+                          onChange={this.handleInputChange}
+                          checked={
+                            this.state.registro.activo ? "checked" : false
+                          }
+                        />
+                      ) : (
+                        <input
+                          name="activo"
+                          id="activo"
+                          className="form-check-input"
+                          type="checkbox"
+                          value={this.state.registro.activo}
+                          onChange={this.handleInputChange}
+                        />
+                      )}
+                      <label className="form-check-label" htmlFor="activo">
+                        Activo?
+                      </label>
+                    </div>
+                  </div>
                   <div className="col">
-                    <div className="d-flex justify-content-between">
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={/*e =>
-                          this.props.eliminar(this.state.registro.id)*/(e) => { this.askDelete(this.state.registro.nombre, e) }
-                        }
-                      >
-                        
+                    <div className="d-flex justify-content-end">
+                      {/* <button type="button" className="btn btn-danger" onClick={(e) => {
+                          this.askDelete(this.state.registro.nombre, e);
+                        }}>
                         <i className="fas fa-trash" />
-                      </button>
+                      </button> */}
                       <button type="submit" className="btn btn-primary">
                         <i className="fas fa-save" /> Guardar Cambios
                       </button>
@@ -350,22 +327,15 @@ class FormAeropuertos extends Component {
               </div>
             </div>
             <hr className="mt-5 mb-5" />
-          </form>
-        )}
-        <Msg
-          visible={this.state.msg.visible}
-          okAceptar={this.okDelete}
-          okClose={() =>
-            this.setState({
-              msg: { ...this.state.msg, visible: false, tipo: 0 }
-            })
-          }
-          tipo={this.state.msg.tipo}
-        >
+          </form>}
+        <Msg visible={this.state.msg.visible} okAceptar={this.okDelete} okClose={() => this.setState(
+              {
+                msg: { ...this.state.msg, visible: false, tipo: 0 },
+              }
+            )} tipo={this.state.msg.tipo}>
           {this.state.msg.body}
         </Msg>
-      </React.Fragment>
-    );
+      </React.Fragment>;
   }
 }
 

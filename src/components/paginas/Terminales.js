@@ -14,6 +14,7 @@ class Terminales extends Component {
         interno: 0,
         email: "",
         web: "",
+        activo: "1"  ,
         responsable: "",
         latitud: 0,
         longitud: 0,
@@ -91,6 +92,7 @@ class Terminales extends Component {
       interno: this.state.data.interno,
       email: this.state.data.email,
       web: this.state.data.web,
+      activo: this.state.data.web,
       responsable: this.state.data.responsable,
       latitud: this.state.data.latitud,
       longitud: this.state.data.longitud,
@@ -144,6 +146,7 @@ class Terminales extends Component {
         interno: 0,
         email: "",
         web: "",
+        activo: "",
         responsable: "",
         latitud: 0,
         longitud: 0,
@@ -423,9 +426,25 @@ class Terminales extends Component {
                 </div>
               </div>
               <div className="row ">
+              <div className="col">
+                    <div className="form-check">
+                      <input
+                        name="activo"
+                        id="activo"
+                        className="form-check-input"
+                        type="checkbox"
+                        value={this.state.data.activo}
+                        onChange={this.handleInputChange}
+                        defaultChecked={this.state.data.activo} // Establece el valor "defaultChecked"
+                      />
+                      <label className="form-check-label" htmlFor="activo">
+                        Activo?
+                      </label>
+                    </div>
+                  </div>
                 <div className="col">
                   {"<" ? (
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-end">
                       <button type="submit" className="btn btn-primary">
                         Guardar
                       </button>

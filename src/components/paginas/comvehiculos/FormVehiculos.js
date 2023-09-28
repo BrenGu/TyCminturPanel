@@ -16,6 +16,7 @@ class FormVehiculos extends Component {
         telefono: 0,
         email: "",
         web: "",
+        activo: "1",
         latitud: 0,
         longitud: 0,
       },
@@ -134,6 +135,7 @@ class FormVehiculos extends Component {
       telefono: this.state.data.telefono,
       email: this.state.data.mail,
       web: this.state.data.web,
+      activo: this.state.data.activo,
       latitud: this.state.data.latitud,
       longitud: this.state.data.longitud,
     };
@@ -237,37 +239,6 @@ class FormVehiculos extends Component {
           );
       }
     );
-
-    // fetch(`${process.env.REACT_APP_API_HOST}/vehiculos/${this.state.id}`, {
-    //   method: "GET",
-    //   headers: {
-    //     Authorization: "",
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   .then(
-    //     (result) => {
-    //       if (!result.err) {
-    //         this.setState({
-    //           terminales: result.data.data,
-    //         });
-    //       } else {
-    //         this.setState({
-    //           msg: {
-    //             visible: true,
-    //             body: result.errMsg,
-    //           },
-    //         });
-    //       }
-    //     },
-    //     (error) => {
-    //       //???
-    //       console.log(error);
-    //     }
-    //   );
-    // this.setState({
-    //   loading: false,
-    // });
   }
 
   getTipoVehiculo() {
@@ -363,6 +334,7 @@ class FormVehiculos extends Component {
         telefono: 0,
         email: "",
         web: "",
+        activo:"",
         latitud: 0,
         longitud: 0,
       },
@@ -532,21 +504,34 @@ class FormVehiculos extends Component {
               </div>
 
               <div className="col">
-                <div className="d-flex justify-content-between">
-                <button
+              <div className="col">
+                    <div className="form-check">
+                      <input
+                        name="activo"
+                        id="activo"
+                        className="form-check-input"
+                        type="checkbox"
+                        value={this.state.data.activo}
+                        onChange={this.handleInputChange}
+                        defaultChecked={this.state.data.activo} // Establece el valor "defaultChecked"
+                      />
+                      <label className="form-check-label" htmlFor="activo">
+                        Activo?
+                      </label>
+                    </div>
+                  </div>
+                <div className="d-flex justify-content-end">
+                {/* <button
                         type="button"
                         className="btn btn-danger"
                         onClick={
-                          /*e =>
-                            this.props.eliminar(this.state.registro.id)*/ (
-                            e
-                          ) => {
+                          (e) => {
                             this.askDelete(this.state.data.nombre, e);
                           }
                         }
                       >
                         <i className="fas fa-trash" />
-                      </button>
+                </button> */}
                   <button type="submit" className="btn btn-primary">
                     <i className="fas fa-save" /> Guardar Cambios
                   </button>

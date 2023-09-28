@@ -474,7 +474,36 @@ class FormArboles extends Component {
                 <div className="row">
                   <div className="col">
                     <div className="d-flex justify-content-between">
-                      <button
+                    <div className="col">
+                    <div className="form-check">
+                      {this.state.registro.activo >= 1 ? (
+                        <input
+                          name="activo"
+                          id="activo"
+                          className="form-check-input"
+                          type="checkbox"
+                          value={this.state.registro.activo}
+                          onChange={this.handleInputChange}
+                          checked={
+                            this.state.registro.activo ? "checked" : false
+                          }
+                        />
+                      ) : (
+                        <input
+                          name="activo"
+                          id="activo"
+                          className="form-check-input"
+                          type="checkbox"
+                          value={this.state.registro.activo}
+                          onChange={this.handleInputChange}
+                        />
+                      )}
+                      <label className="form-check-label" htmlFor="activo">
+                        Activo?
+                      </label>
+                    </div>
+                  </div>
+                      {/* <button
                         type="button"
                         className="btn btn-danger"
                         onClick={(e) =>
@@ -482,7 +511,7 @@ class FormArboles extends Component {
                         }
                       >
                         <i className="fas fa-trash" />
-                      </button>
+                      </button> */}
                       <button type="submit" className="btn btn-primary">
                         <i className="fas fa-save" /> Guardar Cambios
                       </button>

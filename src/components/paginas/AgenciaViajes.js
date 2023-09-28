@@ -12,20 +12,21 @@ class agenciaviajes extends Component {
         legajo: "",
         registro: "",
         nombre: "",
-        domicilio:"",
+        domicilio: "",
         telefono: "",
-        mail:"",
-        web:"",
+        mail: "",
+        web: "",
         representante: "",
-        adhiereDosep:"0",
-        adhiereCovid: "0"
+        activo: "1",
+        adhiereDosep: "1",
+        adhiereCovid: "1",
       },
       novedades: [],
       localidades: [],
       msg: {
         visible: false,
-        body: ""
-      }
+        body: "",
+      },
     };
     this.getData = this.getData.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -40,8 +41,8 @@ class agenciaviajes extends Component {
     this.setState({
       novedad: {
         ...this.state.novedad,
-        idlocalidad: event.target.value
-      }
+        idlocalidad: event.target.value,
+      },
     });
   }
 
@@ -49,21 +50,21 @@ class agenciaviajes extends Component {
     fetch(`${process.env.REACT_APP_API_HOST}/agencias/${id}`, {
       method: "DELETE",
       headers: {
-        "Authorization": "asdssffsdff",
-        "Content-Type": "application/json"
-      }
+        Authorization: "asdssffsdff",
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => res.json())
-      .then((result) => {
+      .then((res) => res.json())
+      .then(
+        (result) => {
           if (!result.err) {
             this.setState(
               {
                 loading: false,
                 msg: {
                   visible: true,
-                  body: "El guía se elimino correctamente."
-                }
-  
+                  body: "El guía se elimino correctamente.",
+                },
               },
               () => {
                 this.getData();
@@ -74,52 +75,52 @@ class agenciaviajes extends Component {
               loading: false,
               msg: {
                 visible: true,
-                body: result.errMsgs
-              }
+                body: result.errMsgs,
+              },
             });
           }
         },
         (error) => {
           console.log(error);
-        });
-          
+        }
+      );
   }
 
   handleFromNovSubmit(event) {
     event.preventDefault();
     let data = {
-      "idlocalidad": this.state.novedad.idlocalidad,
-      "legajo": this.state.novedad.legajo,
-      "registro": this.state.novedad.registro,
-      "nombre":this.state.novedad.nombre,
-      "domicilio": this.state.novedad.domicilio,
-      "telefono": this.state.novedad.telefono,
-      "mail": this.state.novedad.mail,
-      "web": this.state.novedad.web,
-      "representante": this.state.novedad.representante,
-      "adhiereDosep": this.state.novedad.adhiereDosep,
-      "adhiereCovid": this.state.novedad.adhiereCovid
-      
+      idlocalidad: this.state.novedad.idlocalidad,
+      legajo: this.state.novedad.legajo,
+      registro: this.state.novedad.registro,
+      nombre: this.state.novedad.nombre,
+      domicilio: this.state.novedad.domicilio,
+      telefono: this.state.novedad.telefono,
+      mail: this.state.novedad.mail,
+      web: this.state.novedad.web,
+      activo: this.state.novedad.activo,
+      representante: this.state.novedad.representante,
+      adhiereDosep: this.state.novedad.adhiereDosep,
+      adhiereCovid: this.state.novedad.adhiereCovid,
     };
-    
+
     fetch(`${process.env.REACT_APP_API_HOST}/addagenciadeviajes`, {
       method: "POST",
       headers: {
         Authorization: "asdssffsdff",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     })
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(
-        result => {
+        (result) => {
           if (!result.err) {
             this.setState(
               {
                 msg: {
                   visible: true,
-                  body: "Los datos se agregaron correctamente"
-                }
+                  body: "Los datos se agregaron correctamente",
+                },
               },
               () => {
                 this.resetForm();
@@ -130,16 +131,15 @@ class agenciaviajes extends Component {
             this.setState({
               msg: {
                 visible: true,
-                body: result.errMsgs
-              }
+                body: result.errMsgs,
+              },
             });
           }
         },
-        error => {
+        (error) => {
           //???
           console.log(error);
           console.log(data);
-
         }
       );
   }
@@ -152,15 +152,16 @@ class agenciaviajes extends Component {
         legajo: "",
         registro: "",
         nombre: "",
-        domicilio:"",
+        domicilio: "",
         telefono: "",
-        mail:"",
-        web:"",
+        mail: "",
+        web: "",
+        activo: "",
         representante: "",
-        adhiereDosep:"",
-        adhiereCovid: ""
+        adhiereDosep: "",
+        adhiereCovid: "",
       },
-      loading: true
+      loading: true,
     });
     document.getElementById("frm-novedades").reset();
   }
@@ -172,15 +173,15 @@ class agenciaviajes extends Component {
     this.setState({
       novedad: {
         ...this.state.novedad,
-        [name]: value
-      }
+        [name]: value,
+      },
     });
   }
 
   handleImgChange(event) {
     let id = "img-" + event.target.id;
     var reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       let imagen = document.getElementById(id);
       imagen.setAttribute("src", e.target.result);
     };
@@ -188,53 +189,51 @@ class agenciaviajes extends Component {
   }
 
   getData() {
-    fetch(`${process.env.REACT_APP_API_HOST}/agencias/viaje`, {
+    fetch(`${process.env.REACT_APP_API_HOST}/agencias/allviaje`, {
       method: "GET",
       headers: {
-        Authorization: ""
-      }
+        Authorization: "",
+      },
     })
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(
-        result => {
+        (result) => {
           if (!result.err) {
             this.setState({
-              novedades: result.data.registros
+              novedades: result.data.registros,
             });
           } else {
             this.setState({
               msg: {
                 visible: true,
-                body: result.errMsg
-              }
+                body: result.errMsg,
+              },
             });
           }
         },
-        error => {
+        (error) => {
           //???
           console.log(error);
-          
         }
       );
     this.setState({
-      loading: false
+      loading: false,
     });
     //Localidades
     let ciudades = new Promise((resolve, reject) => {
       fetch(`${process.env.REACT_APP_API_HOST}/ciudades`, {
         method: "GET",
         headers: {
-          Authorization: ""
-        }
+          Authorization: "",
+        },
       })
-        .then(res => res.json())
+        .then((res) => res.json())
         .then(
-          result => {
-            if (!result.err) {       
-                  
+          (result) => {
+            if (!result.err) {
               this.setState(
                 {
-                  localidades: result.data.registros
+                  localidades: result.data.registros,
                 },
                 () => {
                   resolve("Ok Ciudades");
@@ -245,8 +244,8 @@ class agenciaviajes extends Component {
                 {
                   msg: {
                     visible: true,
-                    body: result.errMsg
-                  }
+                    body: result.errMsg,
+                  },
                 },
                 () => {
                   reject("Error");
@@ -254,16 +253,16 @@ class agenciaviajes extends Component {
               );
             }
           },
-          error => {
+          (error) => {
             //???
             console.log(error);
             reject("Error");
           }
         );
     });
-    Promise.all([ciudades]).then(values => {
+    Promise.all([ciudades]).then((values) => {
       this.setState({
-        loading: false
+        loading: false,
       });
     });
   }
@@ -273,7 +272,7 @@ class agenciaviajes extends Component {
   }
 
   render() {
-    const lista_guias = this.state.novedades.map(novedad => {
+    const lista_guias = this.state.novedades.map((novedad) => {
       return (
         <FormAgenciasViajes
           key={`novedad-${novedad.id}`}
@@ -283,8 +282,7 @@ class agenciaviajes extends Component {
         />
       );
     });
-    const localidades = this.state.localidades.map(localidad => {
-        
+    const localidades = this.state.localidades.map((localidad) => {
       return (
         <option key={`loc-${localidad.id}`} value={localidad.id}>
           {localidad.nombre}
@@ -298,7 +296,7 @@ class agenciaviajes extends Component {
         ) : (
           <React.Fragment>
             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-              <i className="fas fa-user" /> Nueva Agencia de Viajes 
+              <i className="fas fa-briefcase" /> Nueva Agencia de Viajes
             </h4>
             <form
               method="post"
@@ -418,7 +416,7 @@ class agenciaviajes extends Component {
                         onChange={this.handleInputChange}
                       />
                     </div>
-                  </div>   
+                  </div>
                   <div className="col">
                     <div className="form-group">
                       <label htmlFor="representante">Representante</label>
@@ -431,35 +429,62 @@ class agenciaviajes extends Component {
                         onChange={this.handleInputChange}
                       />
                     </div>
-                  </div>       
-                  <div className="col">
-                  <div className="form-check">                   
-                        <input name="adhiereDosep" id="adhiereDosep" 
-                        className="form-check-input" 
-                        type="checkbox" 
-                        value={this.state.novedad.adhiereDosep} 
-                        onChange={this.handleInputChange} />                          
-                        <label className="form-check-label" htmlFor="adhiereDosep">
-                            Adhiere Dosep?
-                        </label>
-                        
-                      </div>
                   </div>
                   <div className="col">
-                  <div className="form-check">                   
-                        <input name="adhiereCovid" id="adhiereCovid" 
-                        className="form-check-input" 
-                        type="checkbox" 
-                        value={this.state.novedad.adhiereCovid} 
-                        onChange={this.handleInputChange} />                          
-                        <label className="form-check-label" htmlFor="adhiereCovid">
-                            Adhiere Covid?
-                        </label>
-                        
-                      </div>
-                  </div>                
+                    <div className="form-check">
+                      <input
+                        name="adhiereDosep"
+                        id="adhiereDosep"
+                        className="form-check-input"
+                        type="checkbox"
+                        value={this.state.novedad.adhiereDosep}
+                        onChange={this.handleInputChange}
+                        defaultChecked={this.state.novedad.adhiereDosep} // Establece el valor "defaultChecked"
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="adhiereDosep"
+                      >
+                        Adhiere Dosep?
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-check">
+                      <input
+                        name="adhiereCovid"
+                        id="adhiereCovid"
+                        className="form-check-input"
+                        type="checkbox"
+                        value={this.state.novedad.adhiereCovid}
+                        onChange={this.handleInputChange}
+                        defaultChecked={this.state.novedad.adhiereCovid} // Establece el valor "defaultChecked"
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="adhiereCovid"
+                      >
+                        Adhiere Covid?
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-check">
+                      <input
+                        name="activo"
+                        id="activo"
+                        className="form-check-input"
+                        type="checkbox"
+                        value={this.state.novedad.activo}
+                        onChange={this.handleInputChange}
+                        defaultChecked={this.state.novedad.activo} // Establece el valor "defaultChecked"
+                      />
+                      <label className="form-check-label" htmlFor="activo">
+                        Activo?
+                      </label>
+                    </div>
+                  </div>
                 </div>
-              
               </div>
               <div className="row mt-3">
                 <div className="col">
@@ -468,7 +493,7 @@ class agenciaviajes extends Component {
                       <i className="far fa-window-restore" />
                     </button>
                     <button type="submit" className="btn btn-primary">
-                      <i className="fas fa-arrow-down" /> Agregar Guía
+                      <i className="fas fa-arrow-down" /> Agregar Agencia
                     </button>
                   </div>
                 </div>
@@ -476,7 +501,7 @@ class agenciaviajes extends Component {
             </form>
             <hr />
             <h5 className="bg-dark text-white p-3 mb-3 rounded">
-              Listado de Agencia de Viajes 
+              Listado de Agencia de Viajes
             </h5>
             <div className="row">
               <div className="col">

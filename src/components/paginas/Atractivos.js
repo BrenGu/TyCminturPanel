@@ -51,7 +51,9 @@ class Atractivos extends Component {
         activo: 1,
       };
       fetch(
-        `${process.env.REACT_APP_API_HOST}/atractivo/new/${this.state.localidadSelect.id}`,
+        `${process.env.REACT_APP_API_HOST}/atractivo/new/${
+          this.state.localidadSelect.id
+        }`,
         {
           method: "POST",
           headers: {
@@ -87,7 +89,9 @@ class Atractivos extends Component {
         () => {
           //Buscar los atractivos si es que tiene cargado alguno
           fetch(
-            `${process.env.REACT_APP_API_HOST}/ciudad/${this.state.localidadSelect.id}/atractivos`,
+            `${process.env.REACT_APP_API_HOST}/ciudad/${
+              this.state.localidadSelect.id
+            }/atractivos`,
             {
               method: "GET",
               headers: {
@@ -148,7 +152,7 @@ class Atractivos extends Component {
           return (
             <React.Fragment>
               <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s">
-                <i className="fas fa-city"></i> Atractivos
+                <i className="fas fa-city" /> Atractivos
               </h4>
               <div className="row mb-5">
                 <div className="col-sm-12 col-md-12">
@@ -164,7 +168,7 @@ class Atractivos extends Component {
                         <div className="col-sm-12 col-md-12 bg-primary text-white p-2 mb-3 d-flex justify-content-between">
                           <div style={{ fontSize: "1.4rem" }}>
                             {this.state.localidadSelect.departamento}{" "}
-                            <i className="fas fa-arrows-alt-h"></i>{" "}
+                            <i className="fas fa-arrows-alt-h" />{" "}
                             {this.state.localidadSelect.nombre}
                           </div>
                           <button

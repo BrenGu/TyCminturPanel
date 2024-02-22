@@ -267,7 +267,7 @@ class Zona extends Component {
                     this.state.isLoaded ?
                     <div className="row mb-3">
                         <div className="col">
-                            <button className="btn btn-block" style={{backgroundColor: "#" + this.state.zona.color, color: "#fff"}} type="button" data-toggle="collapse" data-target={`#collapse-${this.state.zona.id}`} aria-expanded="false" aria-controls={`collapse-${this.state.zona.id}`}>
+                            <button className="btn btn-block" disabled style={{backgroundColor: "#" + this.state.zona.color, color: "#fff"}} type="button" data-toggle="collapse" data-target={`#collapse-${this.state.zona.id}`} aria-expanded="false" aria-controls={`collapse-${this.state.zona.id}`}>
                             {this.state.zona.nombre}
                             </button>
                             <div className="collapse" id={`collapse-${this.state.zona.id}`}>

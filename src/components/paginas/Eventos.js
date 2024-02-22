@@ -317,7 +317,7 @@ class Eventos extends Component {
     });
     //Eventos
     let eventos = new Promise((resolve, reject) => {
-      fetch(`${process.env.REACT_APP_API_HOST}/eventos/panel/100`, {
+      fetch(`${process.env.REACT_APP_API_HOST}/eventos/panel/5`, {
         method: "GET",
         headers: {
           Authorization: "",

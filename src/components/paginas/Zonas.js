@@ -83,7 +83,7 @@ class Zonas extends Component {
                             <h4 className="bg-info text-white p-3 mb-3 rounded animated bounceInLeft delay-2s"><i className="fas fa-map-marked-alt"></i> Zonas</h4>
                             <div className="row mb-3">
                                 <div className="col">
-                                    <button className="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#nueva_zona" aria-expanded="false" aria-controls="nueva_zona">
+                                    <button className="btn btn-dark btn-block" disabled type="button" data-toggle="collapse" data-target="#nueva_zona" aria-expanded="false" aria-controls="nueva_zona">
                                         Nueva Zona
                                     </button>
                                     <div className="collapse" id="nueva_zona">

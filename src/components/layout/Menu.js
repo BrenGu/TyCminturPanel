@@ -7,6 +7,11 @@ const ExcelFile = ExportExcel.ExcelFile; // Indica el archivo que se va a crer
 const ExcelSheet = ExportExcel.ExcelSheet; // Indica una hoja
 const ExcelColumn = ExportExcel.ExcelColumn; // Indica una columna
 
+const CustomLink = ({ to, children, disabled, ...rest }) => {
+    const linkStyle = disabled ? { pointerEvents: 'none', color: 'gray' } : {};
+  
+    return <Link to={to} style={linkStyle} {...rest}>{children}</Link>;
+  };
 class Menu extends Component {
     constructor(props) {
         super(props);
@@ -55,16 +60,17 @@ class Menu extends Component {
                             {this.props.permiso == 1 ? (
                                 <ul className="d-flex flex-direction-row justify-content-center h-menu">
                                     <li className="nav-item dropdown">
-                                        <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Carrusel</button>
+                                        <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"disabled>Carrusel</button>
                                         <div className="dropdown-menu">
                                             <Link className="dropdown-item" to="/carruselhome">Carrusel Home</Link>
                                             {/*<div className="dropdown-divider"></div>
                                             <Link className="dropdown-item" to="/galeriahome">Galerias Home</Link>*/}                                       
                                         </div>                                    
                                         </li>
-                                    <li><Link to="/">Zonas</Link></li>
+                                    <li><CustomLink to="/" disabled>Zonas</CustomLink></li>
+                                    {/* <li><Link to="/">Zonas</Link></li> */}
                                     <li className="nav-item dropdown">
-                                        <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Localidades</button>
+                                        <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"disabled>Localidades</button>
                                         <div className="dropdown-menu">
                                             <Link className="dropdown-item" to="/localidades">Registros</Link>
                                             <div className="dropdown-divider"></div>
@@ -73,12 +79,17 @@ class Menu extends Component {
                                             <Link className="dropdown-item" to="/gastronomia">Gastronomía</Link>
                                         </div>
                                     </li>
-                                    <li><Link to="/prensa">Prensa</Link></li>
+                                    <li><CustomLink to="/prensa" disabled>Prensa</CustomLink></li>                                   
+                                     {/* <li><Link to="/prensa">Prensa</Link></li> */}
+
                                     <li><Link to="/eventos">Eventos</Link></li>
-                                    <li><Link to="/estadisticas">Estadísticas</Link></li>
-                                    <li><Link to="/guiasturismo">Guías de Turismo</Link></li>
+
+                                    <li><CustomLink to="/estadisticas" disabled>Estadísticas</CustomLink></li>
+                                     {/* <li><Link to="/estadisticas">Estadísticas</Link></li> */}
+                                     <li><CustomLink to="/guiasturismo" disabled>Guías de Turismo</CustomLink></li>
+                                    {/* <li><Link to="/guiasturismo">Guías de Turismo</Link></li> */}
                                     <li className="nav-item dropdown">
-                                        <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Extras</button>
+                                        <button className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"disabled>Extras</button>
                                         <div className="dropdown-menu">
                                             <Link className="dropdown-item" to="/paneladmin">Panel Admin</Link>
                                             <div className="dropdown-divider"></div>
